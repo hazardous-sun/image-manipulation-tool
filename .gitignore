@@ -38,3 +38,5 @@ fabric.properties
 go.work
 image-manipulation-tool
 .idea
+frontend/package-lock.json
+frontend/package.json.md5
