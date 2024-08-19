@@ -37,3 +37,4 @@ fabric.properties
 *.out
 go.work
 image-manipulation-tool
+.idea
