@@ -40,3 +40,4 @@ image-manipulation-tool
 .idea
 frontend/package-lock.json
 frontend/package.json.md5
+frontend/dist
