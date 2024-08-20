@@ -41,3 +41,4 @@ image-manipulation-tool
 frontend/package-lock.json
 frontend/package.json.md5
 frontend/dist
+frontend/node_modules
