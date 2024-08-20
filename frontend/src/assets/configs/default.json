@@ -1,7 +1,10 @@
 {
-  "background_color": "353535",
-  "editor_color": "545454",
-  "menu_color": "FFFFFF",
-  "font_color": "EDEDED",
+  "title": "Image Manipulation Tool",
+  "width": 1024,
+  "height": 768,
+  "background_color": "35 35 35 1",
+  "editor_color": "54 54 54 1",
+  "menu_color": "255 255 255 1",
+  "font_color": "237 237 237 1",
   "menu_font_size": 16
 }
