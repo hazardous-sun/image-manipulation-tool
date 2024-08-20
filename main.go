@@ -20,7 +20,7 @@ func main() {
 	app := NewApp()
 
 	// Set menu
-	setMenuBar(app)
+	AppMenu := setMenuBar(app)
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -43,10 +43,13 @@ func main() {
 	}
 }
 
-func setMenuBar(app *App) {
+func setMenuBar(app *App) *menu.Menu {
 	AppMenu := menu.NewMenu()
+
+	// File
 	FileMenu := AppMenu.AddSubmenu("File")
-	FileMenu.AddText("&Open", keys.CmdOrCtrl("o"), func(_ *menu.CallbackData) {
+	// -- Open image
+	FileMenu.AddText("Open", keys.CmdOrCtrl("o"), func(_ *menu.CallbackData) {
 		cwd, err := os.Getwd()
 
 		if err != nil {
@@ -80,7 +83,23 @@ func setMenuBar(app *App) {
 		println(imagePath)
 	})
 	FileMenu.AddSeparator()
+	// -- Save image
+	FileMenu.AddSeparator()
+
+	// -- About
+	FileMenu.AddText("About", keys.CmdOrCtrl("f1"), func(_ *menu.CallbackData) {
+		runtime.MessageDialog(app.ctx, runtime.MessageDialogOptions{
+			Type:          runtime.InfoDialog,
+			Title:         "About",
+			Message:       "This is an image manipulation tool written in Go using Wails framework to build the frontend.",
+			DefaultButton: "Back",
+		})
+	})
+	// -- Exit
+	FileMenu.AddSeparator()
 	FileMenu.AddText("Exit", keys.CmdOrCtrl("q"), func(_ *menu.CallbackData) {
 		runtime.Quit(app.ctx)
 	})
+
+	return AppMenu
 }
