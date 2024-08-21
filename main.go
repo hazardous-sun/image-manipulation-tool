@@ -46,7 +46,7 @@ func main() {
 func setMenuBar(app *App) *menu.Menu {
 	AppMenu := menu.NewMenu()
 	setFileMenu(app, AppMenu)
-
+	setGeoTransformMenu(app, AppMenu)
 	return AppMenu
 }
 
@@ -105,4 +105,23 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 	FileMenu.AddText("Exit", keys.CmdOrCtrl("q"), func(_ *menu.CallbackData) {
 		runtime.Quit(app.ctx)
 	})
+}
+
+func setGeoTransformMenu(app *App, AppMenu *menu.Menu) {
+	// Geometric Transformations
+	GeoTransformMenu := AppMenu.AddSubmenu("Geometric Transformations")
+	// -- Translate
+	GeoTransformMenu.AddText("Translate", keys.Key("t"), func(_ *menu.CallbackData) {})
+	GeoTransformMenu.AddSeparator()
+	// -- Rotate
+	GeoTransformMenu.AddText("Rotate", keys.Key("r"), func(_ *menu.CallbackData) {})
+	GeoTransformMenu.AddSeparator()
+	// -- Horizontal mirroring
+	GeoTransformMenu.AddText("Horizontal Mirroring", keys.CmdOrCtrl("h"), func(_ *menu.CallbackData) {})
+	GeoTransformMenu.AddSeparator()
+	// -- Vertical mirroring
+	GeoTransformMenu.AddText("Vertical Mirroring", keys.Key("v"), func(_ *menu.CallbackData) {})
+	GeoTransformMenu.AddSeparator()
+	// -- Resize
+	GeoTransformMenu.AddText("Resize", keys.Key("w"), func(_ *menu.CallbackData) {})
 }
