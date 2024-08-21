@@ -118,10 +118,10 @@ func setGeoTransformMenu(app *App, AppMenu *menu.Menu) {
 	GeoTransformMenu.AddText("Rotate", keys.Key("r"), func(_ *menu.CallbackData) {})
 	GeoTransformMenu.AddSeparator()
 	// -- Horizontal mirroring
-	GeoTransformMenu.AddText("Horizontal Mirroring", keys.CmdOrCtrl("h"), func(_ *menu.CallbackData) {})
+	GeoTransformMenu.AddText("Horizontal mirroring", keys.CmdOrCtrl("h"), func(_ *menu.CallbackData) {})
 	GeoTransformMenu.AddSeparator()
 	// -- Vertical mirroring
-	GeoTransformMenu.AddText("Vertical Mirroring", keys.Key("v"), func(_ *menu.CallbackData) {})
+	GeoTransformMenu.AddText("Vertical mirroring", keys.Key("v"), func(_ *menu.CallbackData) {})
 	GeoTransformMenu.AddSeparator()
 	// -- Resize
 	GeoTransformMenu.AddText("Resize", keys.Key("w"), func(_ *menu.CallbackData) {})
@@ -141,4 +141,20 @@ func setFiltersMenu(app *App, AppMenu *menu.Menu) {
 	FiltersMenu.AddSeparator()
 	// -- Threshold
 	FiltersMenu.AddText("Threshold", nil, func(_ *menu.CallbackData) {})
+}
+
+func setMathMofologyMenu(app *App, AppMenu *menu.Menu) {
+	// Mathematical morfology
+	MathMorfoMenu := AppMenu.AddSubmenu("Mathematical Mofology")
+	// -- Dilatation
+	MathMorfoMenu.AddText("Dilatation", nil, func(_ *menu.CallbackData) {})
+	MathMorfoMenu.AddSeparator()
+	// -- Erosion
+	MathMorfoMenu.AddText("Erosion", nil, func(_ *menu.CallbackData) {})
+	MathMorfoMenu.AddSeparator()
+	// -- Opening
+	MathMorfoMenu.AddText("Opening", nil, func(_ *menu.CallbackData) {})
+	MathMorfoMenu.AddSeparator()
+	// -- Closing
+	MathMorfoMenu.AddText("Closing", nil, func(_ *menu.CallbackData) {})
 }
