@@ -44,3 +44,4 @@ frontend/dist
 frontend/node_modules
 frontend/go/main
 frontend/go/main/*
+frontend/go
