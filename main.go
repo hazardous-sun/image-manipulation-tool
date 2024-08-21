@@ -49,6 +49,7 @@ func setMenuBar(app *App) *menu.Menu {
 	setGeoTransformMenu(app, AppMenu)
 	setFiltersMenu(app, AppMenu)
 	setMathMorphologyMenu(app, AppMenu)
+	setFeatureExtractionMenu(app, AppMenu)
 	return AppMenu
 }
 
