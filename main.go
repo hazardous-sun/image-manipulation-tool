@@ -45,7 +45,12 @@ func main() {
 
 func setMenuBar(app *App) *menu.Menu {
 	AppMenu := menu.NewMenu()
+	setFileMenu(app, AppMenu)
 
+	return AppMenu
+}
+
+func setFileMenu(app *App, AppMenu *menu.Menu) {
 	// File
 	FileMenu := AppMenu.AddSubmenu("File")
 	// -- Open image
@@ -100,6 +105,4 @@ func setMenuBar(app *App) *menu.Menu {
 	FileMenu.AddText("Exit", keys.CmdOrCtrl("q"), func(_ *menu.CallbackData) {
 		runtime.Quit(app.ctx)
 	})
-
-	return AppMenu
 }
