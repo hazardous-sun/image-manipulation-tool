@@ -2,7 +2,7 @@ import './style.css';
 import './app.css';
 
 import logo from './assets/images/logo-universal.png';
-import {Greet, GreetMany} from '../wailsjs/go/main/App';
+import {Greet} from '../wailsjs/go/main/App';
 
 document.querySelector('#imagesPanel').innerHTML = `
 <!--    <img id="logo" class="logo">-->
@@ -40,19 +40,6 @@ window.greet = function () {
             .then((result) => {
                 // Update result with data back from App.Greet()
                 tempValue += result;
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    } catch (err) {
-        console.error(err);
-    }
-
-    try {
-        GreetMany()
-            .then((result) => {
-                tempValue += result
-                resultElement.innerText = tempValue;
             })
             .catch((err) => {
                 console.error(err);
