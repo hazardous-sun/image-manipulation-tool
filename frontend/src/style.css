@@ -21,6 +21,39 @@ body {
 }
 
 #app {
+    /*display: grid;*/
+    /*grid-template-columns: repeat(3, 1fr);*/
+}
+
+#imagesPanel {
     height: 100vh;
     text-align: center;
+}
+
+.centerHV {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.image-container {
+    display: flex;
+    max-width: 50%;
+    gap: 10px;
+}
+
+img {
+    max-width: 100%;
+}
+
+/*
+Make images stack on top of one another when screen size decreases.
+ */
+@media (max-width: 700px) {
+    .image-container {
+        flex-direction: column;
+    }
 }
