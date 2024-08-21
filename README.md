@@ -1,6 +1,34 @@
-# README
+# Image Manipulation Tool
 
 ## About
+
+This is project is being developed as tool to manipulate some aspects of an image. When finished, this project is 
+expected to contain a GUI where the user will be able to apply filters and manipulate images. The following 
+functionalitiesare planned to be added:
+
+- Open image
+- Save image
+- Geometric transformations
+  - Translate
+  - Rotate
+  - Horizontal mirroring
+  - Vertical Mirroring
+  - Resize
+  - Increase
+  - Decrease
+- Filters
+  - Grayscale
+  - Low fade
+  - High fade
+  - Threshold
+- Mathematical Morfology
+  - Dilation
+  - Erosion
+  - Opening
+  - Closing
+- Feature extraction
+
+## Wails
 
 This is the official Wails Vanilla template.
 
