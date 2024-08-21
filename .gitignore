@@ -42,3 +42,4 @@ frontend/package-lock.json
 frontend/package.json.md5
 frontend/dist
 frontend/node_modules
+frontend/go/main
