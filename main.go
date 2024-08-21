@@ -48,6 +48,7 @@ func setMenuBar(app *App) *menu.Menu {
 	setFileMenu(app, AppMenu)
 	setGeoTransformMenu(app, AppMenu)
 	setFiltersMenu(app, AppMenu)
+	setMathMofologyMenu(app, AppMenu)
 	return AppMenu
 }
 
