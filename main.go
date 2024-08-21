@@ -89,8 +89,8 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 	})
 	FileMenu.AddSeparator()
 	// -- Save image
+	FileMenu.AddText("Save", keys.CmdOrCtrl("s"), func(_ *menu.CallbackData) {})
 	FileMenu.AddSeparator()
-
 	// -- About
 	FileMenu.AddText("About", keys.CmdOrCtrl("f1"), func(_ *menu.CallbackData) {
 		runtime.MessageDialog(app.ctx, runtime.MessageDialogOptions{
