@@ -47,6 +47,7 @@ func setMenuBar(app *App) *menu.Menu {
 	AppMenu := menu.NewMenu()
 	setFileMenu(app, AppMenu)
 	setGeoTransformMenu(app, AppMenu)
+	setFiltersMenu(app, AppMenu)
 	return AppMenu
 }
 
@@ -100,8 +101,8 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 			DefaultButton: "Back",
 		})
 	})
-	// -- Exit
 	FileMenu.AddSeparator()
+	// -- Exit
 	FileMenu.AddText("Exit", keys.CmdOrCtrl("q"), func(_ *menu.CallbackData) {
 		runtime.Quit(app.ctx)
 	})
@@ -124,4 +125,20 @@ func setGeoTransformMenu(app *App, AppMenu *menu.Menu) {
 	GeoTransformMenu.AddSeparator()
 	// -- Resize
 	GeoTransformMenu.AddText("Resize", keys.Key("w"), func(_ *menu.CallbackData) {})
+}
+
+func setFiltersMenu(app *App, AppMenu *menu.Menu) {
+	// Filters
+	FiltersMenu := AppMenu.AddSubmenu("Filters")
+	// -- Grayscale
+	FiltersMenu.AddText("Grayscale", nil, func(_ *menu.CallbackData) {})
+	FiltersMenu.AddSeparator()
+	// -- Low fade
+	FiltersMenu.AddText("Low fade", nil, func(_ *menu.CallbackData) {})
+	FiltersMenu.AddSeparator()
+	// -- High fade
+	FiltersMenu.AddText("High fade", nil, func(_ *menu.CallbackData) {})
+	FiltersMenu.AddSeparator()
+	// -- Threshold
+	FiltersMenu.AddText("Threshold", nil, func(_ *menu.CallbackData) {})
 }
