@@ -48,7 +48,7 @@ func setMenuBar(app *App) *menu.Menu {
 	setFileMenu(app, AppMenu)
 	setGeoTransformMenu(app, AppMenu)
 	setFiltersMenu(app, AppMenu)
-	setMathMofologyMenu(app, AppMenu)
+	setMathMorphologyMenu(app, AppMenu)
 	return AppMenu
 }
 
@@ -144,18 +144,23 @@ func setFiltersMenu(app *App, AppMenu *menu.Menu) {
 	FiltersMenu.AddText("Threshold", nil, func(_ *menu.CallbackData) {})
 }
 
-func setMathMofologyMenu(app *App, AppMenu *menu.Menu) {
-	// Mathematical morfology
-	MathMorfoMenu := AppMenu.AddSubmenu("Mathematical Mofology")
+func setMathMorphologyMenu(app *App, AppMenu *menu.Menu) {
+	// Mathematical morphology
+	MathMorphoMenu := AppMenu.AddSubmenu("Mathematical Morphology")
 	// -- Dilatation
-	MathMorfoMenu.AddText("Dilatation", nil, func(_ *menu.CallbackData) {})
-	MathMorfoMenu.AddSeparator()
+	MathMorphoMenu.AddText("Dilatation", nil, func(_ *menu.CallbackData) {})
+	MathMorphoMenu.AddSeparator()
 	// -- Erosion
-	MathMorfoMenu.AddText("Erosion", nil, func(_ *menu.CallbackData) {})
-	MathMorfoMenu.AddSeparator()
+	MathMorphoMenu.AddText("Erosion", nil, func(_ *menu.CallbackData) {})
+	MathMorphoMenu.AddSeparator()
 	// -- Opening
-	MathMorfoMenu.AddText("Opening", nil, func(_ *menu.CallbackData) {})
-	MathMorfoMenu.AddSeparator()
+	MathMorphoMenu.AddText("Opening", nil, func(_ *menu.CallbackData) {})
+	MathMorphoMenu.AddSeparator()
 	// -- Closing
-	MathMorfoMenu.AddText("Closing", nil, func(_ *menu.CallbackData) {})
+	MathMorphoMenu.AddText("Closing", nil, func(_ *menu.CallbackData) {})
+}
+
+func setFeatureExtractionMenu(app *App, AppMenu *menu.Menu) {
+	// Feature extraction
+	AppMenu.AddSubmenu("Feature Extraction")
 }
