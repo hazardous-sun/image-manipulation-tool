@@ -44,3 +44,6 @@ frontend/dist
 frontend/node_modules
 frontend/wailsjs/go
 build/bin
+
+# Test images
+frontend/src/assets/images/testimage*
