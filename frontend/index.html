@@ -3,15 +3,59 @@
 <head>
     <meta charset="UTF-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>image-manipulation-tool</title>
+    <title>tool</title>
 </head>
 <body>
-<div id="app">
-    <div id="imagesPanel"></div>
-    <div id="rightPanel">
-        asdasd
+
+<div id="app" class="centerHV">
+
+
+
+    <div id="imagesPanel" class="image-container centerHV">
+        <img src="src/assets/images/cat3.jpg" alt="Image 1" id="originalImage">
+        <img src="src/assets/images/cat3.jpg" alt="Image 2" id="previewImage">
     </div>
+
+
+
+    <div id="rightPanel">
+        <ul>
+            <li>
+                <a href="#">Geometric Transformations</a>
+                <ul class="dropdown">
+                    <li><a href="#">Resize</a></li>
+                    <li><a href="#">Rotate</a></li>
+                    <li><a href="#">Translate</a></li>
+                    <li><a href="#">Horizontal mirroring</a></li>
+                    <li><a href="#">Vertical mirroring</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">Filters</a>
+                <ul class="dropdown">
+                    <li><a href="#">Grayscale</a></li>
+                    <li><a href="#">High fade</a></li>
+                    <li><a href="#">Low fade</a></li>
+                    <li><a href="#">Threshold</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">Mathematical morphology</a>
+                <ul class="dropdown">
+                    <li><a href="#">Dilatation</a></li>
+                    <li><a href="#">Erosion</a></li>
+                    <li><a href="#">Opening</a></li>
+                    <li><a href="#">Closing</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Feature extraction</a></li>
+        </ul>
+    </div>
+
+
+
 </div>
+
 <script src="./src/main.js" type="module"></script>
 </body>
 </html>
