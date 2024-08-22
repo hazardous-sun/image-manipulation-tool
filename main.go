@@ -79,8 +79,8 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 				Title:            "Select image",
 				Filters: []runtime.FileFilter{
 					{
-						DisplayName: "Image Files (*.jpg, *.png)",
-						Pattern:     "*.jpg;*.png;*.gif",
+						DisplayName: "Image Files (*.gif, *.jpeg, *.jpg, *.png)",
+						Pattern:     "*.gif;*.jpeg;*.jpg;*.png;",
 					},
 				},
 				ShowHiddenFiles:            false,
