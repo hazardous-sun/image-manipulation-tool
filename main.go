@@ -24,14 +24,16 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:  "Image Manipulation Tool",
-		Width:  1024,
-		Height: 768,
-		Menu:   AppMenu,
+		Title:     "Image Manipulation Tool",
+		Width:     1366,
+		MinWidth:  800,
+		Height:    768,
+		MinHeight: 500,
+		Menu:      AppMenu,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		BackgroundColour: &options.RGBA{R: 35, G: 35, B: 35, A: 1},
+		BackgroundColour: &options.RGBA{R: 5, G: 255, B: 255, A: 1},
 		OnStartup:        app.startup,
 		Bind: []interface{}{
 			app,
@@ -46,10 +48,10 @@ func main() {
 func setMenuBar(app *App) *menu.Menu {
 	AppMenu := menu.NewMenu()
 	setFileMenu(app, AppMenu)
-	setGeoTransformMenu(app, AppMenu)
-	setFiltersMenu(app, AppMenu)
-	setMathMorphologyMenu(app, AppMenu)
-	setFeatureExtractionMenu(app, AppMenu)
+	//setGeoTransformMenu(app, AppMenu)
+	//setFiltersMenu(app, AppMenu)
+	//setMathMorphologyMenu(app, AppMenu)
+	//setFeatureExtractionMenu(app, AppMenu)
 	return AppMenu
 }
 
@@ -72,10 +74,15 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 		imagePath, err := runtime.OpenFileDialog(
 			app.ctx,
 			runtime.OpenDialogOptions{
-				DefaultDirectory:           cwd,
-				DefaultFilename:            "",
-				Title:                      "Select image",
-				Filters:                    nil,
+				DefaultDirectory: cwd,
+				DefaultFilename:  "",
+				Title:            "Select image",
+				Filters: []runtime.FileFilter{
+					{
+						DisplayName: "Image Files (*.jpg, *.png)",
+						Pattern:     "*.jpg;*.png;*.gif",
+					},
+				},
 				ShowHiddenFiles:            false,
 				CanCreateDirectories:       false,
 				ResolvesAliases:            false,
