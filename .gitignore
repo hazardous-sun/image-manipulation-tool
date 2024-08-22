@@ -43,3 +43,4 @@ frontend/package.json.md5
 frontend/dist
 frontend/node_modules
 frontend/wailsjs/go
+build/bin
