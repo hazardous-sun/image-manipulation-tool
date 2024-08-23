@@ -34,6 +34,8 @@ func (b Build) build() (Build, error) {
 		return Build{}, err
 	}
 
+	appImages = DisplayedImages{}
+
 	return Build{
 		AppInstance:        appInstance,
 		AppOptions:         appOptions,
