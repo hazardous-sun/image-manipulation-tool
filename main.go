@@ -20,13 +20,8 @@ var assets embed.FS
 func main() {
 	err := initializeTemporaryDir()
 
-	if err != nil { // TODO implement a way to delete the directory with a graceful shutdown
-		if os.IsExist(err) {
-			println(err.Error())
-		} else {
-			println(err.Error())
-			return
-		}
+	if err != nil {
+		return
 	}
 
 	// Create an instance of the app structure
@@ -56,13 +51,32 @@ func main() {
 	if err != nil {
 		println("Error:", err.Error())
 	}
+
+	err = removeTemporaryDir()
+
+	if err != nil {
+		println("Error:", err.Error())
+	}
 }
 
 func initializeTemporaryDir() error {
 	dir := "frontend/src/assets/temp"
 	err := os.Mkdir(dir, os.ModePerm)
 	if err != nil {
-		println("Error while creating the temp directory:", err.Error())
+		if os.IsExist(err) {
+			return nil
+		} else {
+			println("Error while creating the temp directory:", err.Error())
+			return err
+		}
+	}
+	return nil
+}
+
+func removeTemporaryDir() error {
+	dir := "frontend/src/assets/temp"
+	err := os.RemoveAll(dir)
+	if err != nil {
 		return err
 	}
 	return nil
