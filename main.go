@@ -18,6 +18,17 @@ import (
 var assets embed.FS
 
 func main() {
+	err := initializeTemporaryDir()
+
+	if err != nil {
+		if os.IsExist(err) {
+			println(err.Error())
+		} else {
+			println(err.Error())
+			return
+		}
+	}
+
 	// Create an instance of the app structure
 	app := NewApp()
 
@@ -25,7 +36,7 @@ func main() {
 	AppMenu := setMenuBar(app)
 
 	// Create application with options
-	err := wails.Run(&options.App{
+	err = wails.Run(&options.App{
 		Title:     "Image Manipulation Tool",
 		Width:     1366,
 		MinWidth:  800,
@@ -45,6 +56,16 @@ func main() {
 	if err != nil {
 		println("Error:", err.Error())
 	}
+}
+
+func initializeTemporaryDir() error {
+	dir := "frontend/src/assets/temp"
+	err := os.Mkdir(dir, os.ModePerm)
+	if err != nil {
+		println("Error while creating the temp directory:", err.Error())
+		return err
+	}
+	return nil
 }
 
 func setMenuBar(app *App) *menu.Menu {
