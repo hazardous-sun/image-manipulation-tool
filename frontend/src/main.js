@@ -4,10 +4,10 @@ import './app.css';
 import {EventsOn} from "../wailsjs/runtime";
 
 EventsOn('set-theme', (data) => async function () {
-    let themeName = getThemeName()
+    let themeName = getThemeData()
 });
 
-async function getThemeName() {
+async function getThemeData() {
     try {
         const response = await fetch('your_initial_json_file.json');
         const data = await response.json();
