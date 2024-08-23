@@ -257,38 +257,6 @@ func setFeatureExtractionMenu(app *App, AppMenu *menu.Menu) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-func getFileFromMemory(path string) (string, error) {
-	fileExt := filepath.Ext(path)
-	destPath := "frontend/src/assets/temp/origin" + fileExt
-
-	// Load file
-	sourceFile, err := os.Open(path)
-
-	if err != nil {
-		println("Error during file opening:", err.Error())
-		return "", err
-	}
-	defer sourceFile.Close()
-
-	// Create new file
-	destFile, err := os.Create(destPath)
-
-	if err != nil {
-		println("Error during file creation:", err.Error())
-		return "", err
-	}
-	defer destFile.Close()
-
-	// Copy content from file 1 to file 2
-	_, err = io.Copy(destFile, sourceFile)
-	if err != nil {
-		println("Error during data copying:", err.Error())
-		return "", err
-	}
-
-	return fileExt, nil
-}
-
 func setOriginPrev(app *App, path string) {
 	createImage(path, true)
 	createImage(path, false)
@@ -329,4 +297,10 @@ func createImage(originalPath string, origin bool) {
 		println("Error during data copying:", err.Error())
 		return
 	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+func updateTheme(app *App) {
+	runtime.EventsEmit(app.ctx, "set-image", map[string]interface{}{})
 }
