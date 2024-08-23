@@ -8,7 +8,7 @@ expected to contain a GUI where the user will be able to apply filters and manip
 ### TODO
 
 - [X] Basic GUI
-- [ ] Open image
+- [X] Open image
 - [ ] Save image
 - [ ] Geometric transformations
   - [ ] Translate
