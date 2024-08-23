@@ -3,6 +3,7 @@ import './app.css';
 
 import logo from './assets/images/logo-universal.png';
 import {Greet} from '../wailsjs/go/main/App';
+import {EventsOn} from "../wailsjs/runtime";
 
 // document.querySelector('#imagesPanel').innerHTML = `
 // <!--    <img src="src/assets/images/cat3.jpg" alt="Image 1">-->
@@ -17,3 +18,9 @@ function setImage(path) {
     originalImage.src = path;
     previewImage.src = path;
 }
+
+EventsOn('set-image', (data) => {
+    console.log(data.image);
+    setImage("src/assets/temp/" + data.image);
+});
+
