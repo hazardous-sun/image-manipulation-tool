@@ -8,6 +8,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/menu/keys"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
+	"github.com/wailsapp/wails/v2/pkg/options/linux"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"io"
 	"os"
@@ -26,14 +27,34 @@ func Run() {
 		return
 	}
 
+	// Create the
+	app, AppMenu := setApp()
+	// Collect appOptions
+	appOptions := setOptions(app, AppMenu)
+	// Initialize the application with the chosen appOptions
+	err = wails.Run(&appOptions)
+
+	if err != nil {
+		println("Error:", err.Error())
+	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+func setApp() (*App, *menu.Menu) {
 	// Create an instance of the app structure
 	app := NewApp()
 
 	// Set menu
 	AppMenu := setMenu(app)
 
-	// Create application with options
-	err = wails.Run(&options.App{
+	return app, AppMenu
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+func setOptions(app *App, AppMenu *menu.Menu) options.App {
+	return options.App{
 		Title:     "Image Manipulation Tool",
 		Width:     1366,
 		MinWidth:  800,
@@ -46,7 +67,7 @@ func Run() {
 		BackgroundColour: &options.RGBA{R: 5, G: 255, B: 255, A: 1},
 		OnStartup:        app.startup,
 		OnShutdown: func(ctx context.Context) {
-			err = removeTemporaryDir()
+			err := removeTemporaryDir()
 
 			if err != nil {
 				println("Error:", err.Error())
@@ -55,10 +76,13 @@ func Run() {
 		Bind: []interface{}{
 			app,
 		},
-	})
-
-	if err != nil {
-		println("Error:", err.Error())
+		Linux: &linux.Options{
+			Icon:                []byte{},
+			WindowIsTranslucent: false,
+			Messages:            nil,
+			WebviewGpuPolicy:    linux.WebviewGpuPolicyOnDemand,
+			ProgramName:         "The Tool",
+		},
 	}
 }
 
