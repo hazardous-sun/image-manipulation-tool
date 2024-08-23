@@ -47,3 +47,5 @@ build/bin
 
 # Test images
 frontend/src/assets/images/testimage*
+
+frontend/src/assets/temp

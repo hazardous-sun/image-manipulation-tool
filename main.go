@@ -20,7 +20,7 @@ var assets embed.FS
 func main() {
 	err := initializeTemporaryDir()
 
-	if err != nil {
+	if err != nil { // TODO implement a way to delete the directory with a graceful shutdown
 		if os.IsExist(err) {
 			println(err.Error())
 		} else {
