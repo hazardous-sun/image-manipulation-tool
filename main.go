@@ -8,7 +8,9 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"io"
 	"os"
+	"path/filepath"
 	goRuntime "runtime"
 )
 
@@ -63,7 +65,7 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 		cwd, err := os.Getwd()
 
 		if err != nil {
-			println("Error:", err.Error())
+			println("Error during CWD collection:", err.Error())
 			if goRuntime.GOOS == "windows" {
 				cwd = "%USERPROFILE%"
 			} else {
@@ -71,7 +73,7 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 			}
 		}
 
-		imagePath, err := runtime.OpenFileDialog(
+		path, err := runtime.OpenFileDialog(
 			app.ctx,
 			runtime.OpenDialogOptions{
 				DefaultDirectory: cwd,
@@ -91,11 +93,23 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 		)
 
 		if err != nil {
-			println("Error:", err.Error())
+			println("Error during dialog:", err.Error())
 			return
 		}
 
-		println(imagePath)
+		path, err = duplicateFile(path)
+
+		if err != nil {
+			println("Error during file duplication:", err.Error())
+			return
+		}
+
+		runtime.EventsEmit(app.ctx, "set-image", map[string]interface{}{
+			"image": path,
+		})
+
+		println(cwd)
+		println(path)
 	})
 	FileMenu.AddSeparator()
 	// -- Save image
@@ -115,6 +129,34 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 	FileMenu.AddText("Exit", keys.CmdOrCtrl("q"), func(_ *menu.CallbackData) {
 		runtime.Quit(app.ctx)
 	})
+}
+
+func duplicateFile(path string) (string, error) {
+	fileName := filepath.Base(path)
+	destPath := "frontend/src/assets/temp/" + fileName
+	sourceFile, err := os.Open(path)
+
+	if err != nil {
+		println("Error during file opening:", err.Error())
+		return "", err
+	}
+	defer sourceFile.Close()
+
+	destFile, err := os.Create(destPath)
+
+	if err != nil {
+		println("Error during file creation:", err.Error())
+		return "", err
+	}
+	defer destFile.Close()
+
+	_, err = io.Copy(destFile, sourceFile)
+	if err != nil {
+		println("Error during data copying:", err.Error())
+		return "", err
+	}
+
+	return fileName, nil
 }
 
 func setGeoTransformMenu(app *App, AppMenu *menu.Menu) {
