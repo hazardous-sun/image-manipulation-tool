@@ -9,7 +9,8 @@ expected to contain a GUI where the user will be able to apply filters and manip
 
 
 - [X] Basic GUI
-- [ ] Separate the build process into its own file
+- [X] Separate the build process into its own file
+- [ ] Theme customization
 - Tools:
   - [X] Open image
   - [ ] Save image
