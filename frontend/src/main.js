@@ -10,31 +10,10 @@ import {Greet} from '../wailsjs/go/main/App';
 // `;
 // document.getElementById('logo').src = logo;
 
-let nameElement = document.getElementById("name");
-nameElement.focus();
-let resultElement = document.getElementById("result");
+function setImage(path) {
+    var originalImage = document.getElementById("originalImage");
+    var previewImage = document.getElementById("previewImage");
 
-// Setup the greet function
-window.greet = function () {
-    // Get name
-    let name = nameElement.value;
-
-    let tempValue = ""
-
-    // Check if the input is empty
-    if (name === "") return;
-
-    // Call App.Greet(name)
-    try {
-        Greet(name)
-            .then((result) => {
-                // Update result with data back from App.Greet()
-                tempValue += result;
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    } catch (err) {
-        console.error(err);
-    }
-};
+    originalImage.src = path;
+    previewImage.src = path;
+}
