@@ -7,28 +7,31 @@ expected to contain a GUI where the user will be able to apply filters and manip
 
 ### TODO
 
+
 - [X] Basic GUI
-- [X] Open image
-- [ ] Save image
-- [ ] Geometric transformations
-  - [ ] Translate
-  - [ ] Rotate
-  - [ ] Horizontal mirroring
-  - [ ] Vertical Mirroring
-  - [ ] Resize
-  - [ ] Increase
-  - [ ] Decrease
-- [ ] Filters
-  - [ ] Grayscale
-  - [ ] Low fade
-  - [ ] High fade
-  - [ ] Threshold
-- [ ] Mathematical Morfology
-  - [ ] Dilation
-  - [ ] Erosion
-  - [ ] Opening
-  - [ ] Closing
-- [ ] Feature extraction
+- [ ] Separate the build process into its own file
+- Tools:
+  - [X] Open image
+  - [ ] Save image
+  - [ ] Geometric transformations
+    - [ ] Translate
+    - [ ] Rotate
+    - [ ] Horizontal mirroring
+    - [ ] Vertical Mirroring
+    - [ ] Resize
+    - [ ] Increase
+    - [ ] Decrease
+  - [ ] Filters
+    - [ ] Grayscale
+    - [ ] Low fade
+    - [ ] High fade
+    - [ ] Threshold
+  - [ ] Mathematical Morfology
+    - [ ] Dilation
+    - [ ] Erosion
+    - [ ] Opening
+    - [ ] Closing
+  - [ ] Feature extraction
 
 ## Wails
 
