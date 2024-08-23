@@ -177,16 +177,7 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 			return
 		}
 
-		path, err = duplicateFile(path)
-
-		if err != nil {
-			println("Error during file duplication:", err.Error())
-			return
-		}
-
-		runtime.EventsEmit(app.ctx, "set-image", map[string]interface{}{
-			"image": path,
-		})
+		setOriginPrev(app, path)
 	})
 	FileMenu.AddSeparator()
 	// -- Save image
@@ -266,9 +257,9 @@ func setFeatureExtractionMenu(app *App, AppMenu *menu.Menu) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-func duplicateFile(path string) (string, error) {
-	fileName := filepath.Base(path)
-	destPath := "frontend/src/assets/temp/" + fileName
+func getFileFromMemory(path string) (string, error) {
+	fileExt := filepath.Ext(path)
+	destPath := "frontend/src/assets/temp/origin" + fileExt
 
 	// Load file
 	sourceFile, err := os.Open(path)
@@ -295,5 +286,47 @@ func duplicateFile(path string) (string, error) {
 		return "", err
 	}
 
-	return fileName, nil
+	return fileExt, nil
+}
+
+func setOriginPrev(app *App, path string) {
+	createImage(path, true)
+	createImage(path, false)
+
+	runtime.EventsEmit(app.ctx, "set-image", map[string]interface{}{
+		"fileExt": filepath.Ext(path),
+	})
+}
+
+func createImage(originalPath string, origin bool) {
+	var path string
+	if origin {
+		path = "frontend/src/assets/temp/origin" + filepath.Ext(originalPath)
+	} else {
+		path = "frontend/src/assets/temp/prev" + filepath.Ext(originalPath)
+	}
+
+	// Load original file
+	originalFile, err := os.Open(originalPath)
+
+	if err != nil {
+		println("Error during file opening:", err.Error())
+	}
+	defer originalFile.Close()
+
+	// Create new file
+	destFile, err := os.Create(path)
+
+	if err != nil {
+		println("Error during file creation:", err.Error())
+		return
+	}
+	defer destFile.Close()
+
+	// Copy content from file 1 to file 2
+	_, err = io.Copy(destFile, originalFile)
+	if err != nil {
+		println("Error during data copying:", err.Error())
+		return
+	}
 }
