@@ -56,16 +56,15 @@ func setApp() (*App, *menu.Menu) {
 func setOptions(app *App, AppMenu *menu.Menu) options.App {
 	return options.App{
 		Title:     "Image Manipulation Tool",
-		Width:     1366,
-		MinWidth:  800,
-		Height:    768,
+		Height:    1000,
 		MinHeight: 1000,
+		Width:     1200,
+		MinWidth:  800,
 		Menu:      AppMenu,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		BackgroundColour: &options.RGBA{R: 5, G: 255, B: 255, A: 1},
-		OnStartup:        app.startup,
+		OnStartup: app.startup,
 		OnShutdown: func(ctx context.Context) {
 			err := removeTemporaryDir()
 
