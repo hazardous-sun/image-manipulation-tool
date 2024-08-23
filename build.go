@@ -19,20 +19,31 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
-func Run() {
-	// Create a temp directory to store the images being manipulated
+type Build struct {
+	AppInstance        *App
+	AppOptions         options.App
+	TempDirInitialized bool
+}
+
+func (b Build) build() (Build, error) {
+	appInstance, appMenu := setApp()
+	appOptions := setOptions(appInstance, appMenu)
 	err := initializeTemporaryDir()
 
 	if err != nil {
-		return
+		return Build{}, err
 	}
 
-	// Create the
-	app, AppMenu := setApp()
-	// Collect appOptions
-	appOptions := setOptions(app, AppMenu)
+	return Build{
+		AppInstance:        appInstance,
+		AppOptions:         appOptions,
+		TempDirInitialized: true,
+	}, nil
+}
+
+func Run(build Build) {
 	// Initialize the application with the chosen appOptions
-	err = wails.Run(&appOptions)
+	err := wails.Run(&build.AppOptions)
 
 	if err != nil {
 		println("Error:", err.Error())
@@ -174,9 +185,6 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 		runtime.EventsEmit(app.ctx, "set-image", map[string]interface{}{
 			"image": path,
 		})
-
-		println(cwd)
-		println(path)
 	})
 	FileMenu.AddSeparator()
 	// -- Save image
@@ -259,6 +267,8 @@ func setFeatureExtractionMenu(app *App, AppMenu *menu.Menu) {
 func duplicateFile(path string) (string, error) {
 	fileName := filepath.Base(path)
 	destPath := "frontend/src/assets/temp/" + fileName
+
+	// Load file
 	sourceFile, err := os.Open(path)
 
 	if err != nil {
@@ -267,6 +277,7 @@ func duplicateFile(path string) (string, error) {
 	}
 	defer sourceFile.Close()
 
+	// Create new file
 	destFile, err := os.Create(destPath)
 
 	if err != nil {
@@ -275,6 +286,7 @@ func duplicateFile(path string) (string, error) {
 	}
 	defer destFile.Close()
 
+	// Copy content from file 1 to file 2
 	_, err = io.Copy(destFile, sourceFile)
 	if err != nil {
 		println("Error during data copying:", err.Error())
