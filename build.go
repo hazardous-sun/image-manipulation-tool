@@ -282,14 +282,14 @@ func createImage(originalPath string, origin bool) {
 	}
 	defer originalFile.Close()
 
-	err = saveImage(path, originalFile)
+	err = copyFile(path, originalFile)
 
 	if err != nil {
 		println("Error during image saving:", err.Error())
 	}
 }
 
-func saveImage(path string, content *os.File) error {
+func copyFile(path string, content *os.File) error {
 	// Create new file
 	destFile, err := os.Create(path)
 
