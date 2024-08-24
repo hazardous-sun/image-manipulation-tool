@@ -282,21 +282,29 @@ func createImage(originalPath string, origin bool) {
 	}
 	defer originalFile.Close()
 
+	err = saveImage(path, originalFile)
+
+	if err != nil {
+		println("Error during image saving:", err.Error())
+	}
+}
+
+func saveImage(path string, content *os.File) error {
 	// Create new file
 	destFile, err := os.Create(path)
 
 	if err != nil {
-		println("Error during file creation:", err.Error())
-		return
+		return err
 	}
 	defer destFile.Close()
 
-	// Copy content from file 1 to file 2
-	_, err = io.Copy(destFile, originalFile)
+	// Copy content the created file
+	_, err = io.Copy(destFile, content)
 	if err != nil {
-		println("Error during data copying:", err.Error())
-		return
+		return err
 	}
+
+	return nil
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
