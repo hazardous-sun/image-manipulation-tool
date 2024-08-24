@@ -2,6 +2,9 @@ import './style.css';
 import './app.css';
 
 import {EventsOn} from "../wailsjs/runtime";
+import {GrayScale} from "../wailsjs/go/main/App";
+
+// Theme ---------------------------------------------------------------------------------------------------------------
 
 EventsOn('set-theme', (data) => async function () {
     let themeName = getThemeData()
@@ -44,6 +47,8 @@ function applyTheme(themeData) {
         })
 }
 
+// Image handling ------------------------------------------------------------------------------------------------------
+
 EventsOn('set-origin-prev', (data) => {
     setOriginPrev(data.fileExt);
 });
@@ -56,3 +61,10 @@ function setOriginPrev(fileExt) {
     previewImage.src = "src/assets/temp/prev" + fileExt;
 }
 
+// Filter --------------------------------------------------------------------------------------------------------------
+
+window.filterGrayScale = function () {
+    let prevImageSrc = document.getElementById('previewImage').src
+    console.log(prevImageSrc)
+    GrayScale(prevImageSrc).then()
+}
