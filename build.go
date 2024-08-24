@@ -261,7 +261,7 @@ func setOriginPrev(app *App, path string) {
 	createImage(path, true)
 	createImage(path, false)
 
-	runtime.EventsEmit(app.ctx, "set-image", map[string]interface{}{
+	runtime.EventsEmit(app.ctx, "set-origin-prev", map[string]interface{}{
 		"fileExt": filepath.Ext(path),
 	})
 }

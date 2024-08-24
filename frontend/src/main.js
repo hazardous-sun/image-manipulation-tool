@@ -9,7 +9,7 @@ EventsOn('set-theme', (data) => async function () {
 
 async function getThemeData() {
     try {
-        const response = await fetch('your_initial_json_file.json');
+        const response = await fetch('config.json');
         const data = await response.json();
 
         const themePath = `src/assets/themes/${data.theme}`;
@@ -44,11 +44,11 @@ function applyTheme(themeData) {
         })
 }
 
-EventsOn('set-image', (data) => {
-    setImage(data.fileExt);
+EventsOn('set-origin-prev', (data) => {
+    setOriginPrev(data.fileExt);
 });
 
-function setImage(fileExt) {
+function setOriginPrev(fileExt) {
     var originalImage = document.getElementById("originalImage");
     var previewImage = document.getElementById("previewImage");
 
