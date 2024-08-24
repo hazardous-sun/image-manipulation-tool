@@ -10,9 +10,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/linux"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
-	"io"
 	"os"
-	"path/filepath"
 	goRuntime "runtime"
 )
 
@@ -33,8 +31,6 @@ func (b Build) build() (Build, error) {
 	if err != nil {
 		return Build{}, err
 	}
-
-	appImages = DisplayedImages{}
 
 	return Build{
 		AppInstance:        appInstance,
@@ -253,58 +249,6 @@ func setMathMorphologyMenu(app *App, AppMenu *menu.Menu) {
 func setFeatureExtractionMenu(app *App, AppMenu *menu.Menu) {
 	// Feature extraction
 	AppMenu.AddSubmenu("Feature Extraction")
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-
-func setOriginPrev(app *App, path string) {
-	createImage(path, true)
-	createImage(path, false)
-
-	runtime.EventsEmit(app.ctx, "set-origin-prev", map[string]interface{}{
-		"fileExt": filepath.Ext(path),
-	})
-}
-
-func createImage(originalPath string, origin bool) {
-	var path string
-	if origin {
-		path = "frontend/src/assets/temp/origin" + filepath.Ext(originalPath)
-	} else {
-		path = "frontend/src/assets/temp/prev" + filepath.Ext(originalPath)
-	}
-
-	// Load original file
-	originalFile, err := os.Open(originalPath)
-
-	if err != nil {
-		println("Error during file opening:", err.Error())
-	}
-	defer originalFile.Close()
-
-	err = copyFile(path, originalFile)
-
-	if err != nil {
-		println("Error during image saving:", err.Error())
-	}
-}
-
-func copyFile(path string, content *os.File) error {
-	// Create new file
-	destFile, err := os.Create(path)
-
-	if err != nil {
-		return err
-	}
-	defer destFile.Close()
-
-	// Copy content the created file
-	_, err = io.Copy(destFile, content)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
