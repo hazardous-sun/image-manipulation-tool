@@ -30,7 +30,7 @@ func loadImage(path string) (image.Image, error) {
 	fileExt := filepath.Ext(path)
 	switch fileExt {
 	case ".jpg", ".jpeg":
-		image.RegisterFormat("jpeg", "jepg", jpeg.Decode, jpeg.DecodeConfig)
+		image.RegisterFormat("jpeg", "jpeg", jpeg.Decode, jpeg.DecodeConfig)
 		return jpeg.Decode(file)
 	case ".png":
 		image.RegisterFormat("png", "png", png.Decode, png.DecodeConfig)
