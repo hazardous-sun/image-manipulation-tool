@@ -38,3 +38,28 @@ func loadImage(path string) (image.Image, error) {
 		return image.Image(nil), fmt.Errorf("unsupported image format: '%s'", fileExt)
 	}
 }
+
+func saveImage(path string, fileExt string, img image.Image) error {
+	file, err := os.Create(path)
+
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	switch fileExt {
+	case ".jpg", ".jpeg":
+		err = jpeg.Encode(file, img, nil)
+		if err != nil {
+			return err
+		}
+	case ".png":
+		err = png.Encode(file, img)
+		if err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("unsupported image format: '%s'", fileExt)
+	}
+	return nil
+}
