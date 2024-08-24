@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"path/filepath"
 )
 
 // App struct
@@ -21,7 +21,23 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
+// GrayScale
+/*
+Applies the grayscale filter to the preview image.
+*/
+func (a *App) GrayScale(path string) {
+	println("\n\n\nENTERED GrayScale()")
+	img, err := loadImage(path)
+
+	if err != nil {
+		println("Error loading image:", err.Error())
+	}
+
+	img = filterGrayScale(img)
+	fileExt := filepath.Ext(path)
+	err = saveImage("frontend/src/assets/temp/prev."+fileExt, fileExt, img)
+
+	if err != nil {
+		println("Error saving image:", err.Error())
+	}
 }
