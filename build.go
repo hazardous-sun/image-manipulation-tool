@@ -133,6 +133,9 @@ func setMenu(app *App) *menu.Menu {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+/*
+Sets the "File" menu at the top menu bar.
+*/
 func setFileMenu(app *App, AppMenu *menu.Menu) {
 	// File
 	FileMenu := AppMenu.AddSubmenu("File")
@@ -195,6 +198,9 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 	})
 }
 
+/*
+Sets the "Geometric Transformations" menu at the top menu bar.
+*/
 func setGeoTransformMenu(app *App, AppMenu *menu.Menu) {
 	// Geometric Transformations
 	GeoTransformMenu := AppMenu.AddSubmenu("Geometric Transformations")
@@ -214,6 +220,9 @@ func setGeoTransformMenu(app *App, AppMenu *menu.Menu) {
 	GeoTransformMenu.AddText("Resize", keys.Key("w"), func(_ *menu.CallbackData) {})
 }
 
+/*
+Sets the "Filters" menu at the top menu bar.
+*/
 func setFiltersMenu(app *App, AppMenu *menu.Menu) {
 	// Filters
 	FiltersMenu := AppMenu.AddSubmenu("Filters")
@@ -230,6 +239,9 @@ func setFiltersMenu(app *App, AppMenu *menu.Menu) {
 	FiltersMenu.AddText("Threshold", nil, func(_ *menu.CallbackData) {})
 }
 
+/*
+Sets the "Mathematical morphology" menu at the top menu bar.
+*/
 func setMathMorphologyMenu(app *App, AppMenu *menu.Menu) {
 	// Mathematical morphology
 	MathMorphoMenu := AppMenu.AddSubmenu("Mathematical Morphology")
@@ -246,6 +258,9 @@ func setMathMorphologyMenu(app *App, AppMenu *menu.Menu) {
 	MathMorphoMenu.AddText("Closing", nil, func(_ *menu.CallbackData) {})
 }
 
+/*
+Sets the "Feature Extractio" menu at the top menu bar.
+*/
 func setFeatureExtractionMenu(app *App, AppMenu *menu.Menu) {
 	// Feature extraction
 	AppMenu.AddSubmenu("Feature Extraction")
@@ -253,6 +268,9 @@ func setFeatureExtractionMenu(app *App, AppMenu *menu.Menu) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+/*
+Sends a message to the JavaScript listener informing the theme needs to be updated.
+*/
 func updateTheme(app *App) {
 	runtime.EventsEmit(app.ctx, "set-image", map[string]interface{}{})
 }

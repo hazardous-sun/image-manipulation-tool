@@ -12,6 +12,10 @@ import (
 	"path/filepath"
 )
 
+/*
+Sends a message to the JavaScript listener informing that both the original and preview images should be updated.
+Useful when the extension for the image changes and the file cannot simply be overwritten.
+*/
 func setOriginPrev(app *App, path string) {
 	createImage(path, true)
 	createImage(path, false)
@@ -21,6 +25,10 @@ func setOriginPrev(app *App, path string) {
 	})
 }
 
+/*
+Collects a file from the system and replicates it at "frontend/src/assets/temp", where it can be accessed by the
+frontend.
+*/
 func createImage(originalPath string, origin bool) {
 	var path string
 	if origin {
@@ -44,6 +52,9 @@ func createImage(originalPath string, origin bool) {
 	}
 }
 
+/*
+Copies the content from a file to a new one.
+*/
 func copyFile(path string, content *os.File) error {
 	// Create new file
 	destFile, err := os.Create(path)
@@ -53,7 +64,7 @@ func copyFile(path string, content *os.File) error {
 	}
 	defer destFile.Close()
 
-	// Copy content the created file
+	// Copy content to the created file
 	_, err = io.Copy(destFile, content)
 	if err != nil {
 		return err
@@ -62,6 +73,9 @@ func copyFile(path string, content *os.File) error {
 	return nil
 }
 
+/*
+Decodes an image file and transform it into an "image.Image".
+*/
 func loadImage(path string) (image.Image, error) {
 	// Open the file
 	file, err := os.Open(path)
@@ -85,6 +99,9 @@ func loadImage(path string) (image.Image, error) {
 	}
 }
 
+/*
+Encodes an image into a file.
+*/
 func saveImage(path string, fileExt string, img image.Image) error {
 	file, err := os.Create(path)
 
@@ -113,6 +130,9 @@ func saveImage(path string, fileExt string, img image.Image) error {
 // Filters -------------------------------------------------------------------------------------------------------------
 
 // Grayscale
+/*
+Applies the grayscale filter to an image.
+*/
 func filterGrayScale(img image.Image) image.Image {
 	grayImage := image.NewGray(img.Bounds())
 	for x := 0; x < img.Bounds().Dx(); x++ {
