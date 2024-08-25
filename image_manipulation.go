@@ -17,12 +17,37 @@ Sends a message to the JavaScript listener informing that both the original and 
 Useful when the extension for the image changes and the file cannot simply be overwritten.
 */
 func setOriginPrev(app *App, path string) {
+	println(path)
+
 	createImage(path, true)
 	createImage(path, false)
 
+	println("mandando para o JAVASCRIPT")
+	notifyImagesChange(app, path)
+}
+
+func notifyImagesChange(app *App, path string) {
 	runtime.EventsEmit(app.ctx, "set-origin-prev", map[string]interface{}{
 		"fileExt": filepath.Ext(path),
 	})
+}
+
+func removeAllFiles(dirPath string) error {
+	// Get a list of all files in the directory
+	files, err := os.ReadDir(dirPath)
+	if err != nil {
+		return fmt.Errorf("error reading directory: %w", err)
+	}
+
+	// Iterate through each file and remove it
+	for _, file := range files {
+		filePath := filepath.Join(dirPath, file.Name())
+		if err := os.Remove(filePath); err != nil {
+			return fmt.Errorf("error removing file: %w", err)
+		}
+	}
+
+	return nil
 }
 
 /*
@@ -103,6 +128,12 @@ func loadImage(path string) (image.Image, error) {
 Encodes an image into a file.
 */
 func saveImage(path string, fileExt string, img image.Image) error {
+	err := removeAllFiles("frontend/src/assets/temp")
+
+	if err != nil {
+		return err
+	}
+
 	file, err := os.Create(path)
 
 	if err != nil {

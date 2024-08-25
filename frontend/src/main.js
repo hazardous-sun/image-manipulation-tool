@@ -54,6 +54,8 @@ EventsOn('set-origin-prev', (data) => {
 });
 
 function setOriginPrev(fileExt) {
+    console.log("ATIVEI O LISTENER")
+
     var originalImage = document.getElementById("originalImage");
     var previewImage = document.getElementById("previewImage");
 
@@ -63,7 +65,9 @@ function setOriginPrev(fileExt) {
 
 // Filter --------------------------------------------------------------------------------------------------------------
 
+// Grayscale
 window.filterGrayScale = function () {
+    // send from [29::]
     let prevImageSrc = document.getElementById('previewImage').src
     console.log(prevImageSrc)
     GrayScale(prevImageSrc).then()

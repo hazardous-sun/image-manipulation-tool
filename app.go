@@ -27,17 +27,23 @@ Applies the grayscale filter to the preview image.
 */
 func (a *App) GrayScale(path string) {
 	println("\n\n\nENTERED GrayScale()")
+	path = "frontend" + path[29:]
 	img, err := loadImage(path)
 
 	if err != nil {
 		println("Error loading image:", err.Error())
+		return
 	}
 
 	img = filterGrayScale(img)
 	fileExt := filepath.Ext(path)
-	err = saveImage("frontend/src/assets/temp/prev."+fileExt, fileExt, img)
+	path = "frontend/src/assets/temp/prev" + fileExt
+	err = saveImage(path, fileExt, img)
 
 	if err != nil {
 		println("Error saving image:", err.Error())
+		return
 	}
+
+	notifyImagesChange(a, path)
 }
