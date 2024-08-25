@@ -23,13 +23,19 @@ func setOriginPrev(app *App, path string) {
 	createImage(path, false)
 
 	println("mandando para o JAVASCRIPT")
-	notifyImagesChange(app, path)
+	notifyImagesChange(app, path, true)
 }
 
-func notifyImagesChange(app *App, path string) {
-	runtime.EventsEmit(app.ctx, "set-origin-prev", map[string]interface{}{
-		"fileExt": filepath.Ext(path),
-	})
+func notifyImagesChange(app *App, path string, both bool) {
+	if both {
+		runtime.EventsEmit(app.ctx, "set-origin-prev", map[string]interface{}{
+			"fileExt": filepath.Ext(path),
+		})
+	} else {
+		runtime.EventsEmit(app.ctx, "set-prev", map[string]interface{}{
+			"fileExt": filepath.Ext(path),
+		})
+	}
 }
 
 func removeAllFiles(dirPath string) error {
@@ -56,10 +62,25 @@ frontend.
 */
 func createImage(originalPath string, origin bool) {
 	var path string
+
 	if origin {
-		path = "frontend/src/assets/temp/origin" + filepath.Ext(originalPath)
+		fileCount, err := countFiles("frontend/src/assets/temp/origin/")
+
+		if err != nil {
+			println(err.Error())
+			return
+		}
+
+		path = "frontend/src/assets/temp/origin/" + string(rune(fileCount)) + filepath.Ext(originalPath)
 	} else {
-		path = "frontend/src/assets/temp/prev" + filepath.Ext(originalPath)
+		fileCount, err := countFiles("frontend/src/assets/temp/origin/")
+
+		if err != nil {
+			println(err.Error())
+			return
+		}
+
+		path = "frontend/src/assets/temp/prev/" + string(rune(fileCount)) + filepath.Ext(originalPath)
 	}
 
 	// Load original file
@@ -75,6 +96,19 @@ func createImage(originalPath string, origin bool) {
 	if err != nil {
 		println("Error during image saving:", err.Error())
 	}
+}
+
+/*
+Returns the file count of a directory.
+*/
+func countFiles(path string) (int, error) {
+	files, err := os.ReadDir(path)
+
+	if err != nil {
+		return -1, err
+	}
+
+	return len(files), nil
 }
 
 /*
@@ -128,11 +162,11 @@ func loadImage(path string) (image.Image, error) {
 Encodes an image into a file.
 */
 func saveImage(path string, fileExt string, img image.Image) error {
-	err := removeAllFiles("frontend/src/assets/temp")
-
-	if err != nil {
-		return err
-	}
+	//err := removeAllFiles("frontend/src/assets/temp")
+	//
+	//if err != nil {
+	//	return err
+	//}
 
 	file, err := os.Create(path)
 
@@ -169,11 +203,13 @@ func filterGrayScale(img image.Image) image.Image {
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
 			r, g, b, _ := img.At(x, y).RGBA()
+			grayIntensity := (r + g + b) / 3
 			grayImage.Set(x, y, color2.Gray{
-				Y: uint8((r + g + b) / 3),
+				Y: uint8(grayIntensity),
 			})
 		}
 	}
+	fmt.Println(grayImage.GrayAt(10, 10))
 	return grayImage
 }
 

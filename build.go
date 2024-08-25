@@ -99,6 +99,7 @@ func setOptions(app *App, AppMenu *menu.Menu) options.App {
 func initializeTemporaryDir() error {
 	dir := "frontend/src/assets/temp"
 	err := os.Mkdir(dir, os.ModePerm)
+
 	if err != nil {
 		if os.IsExist(err) {
 			return nil
@@ -107,6 +108,29 @@ func initializeTemporaryDir() error {
 			return err
 		}
 	}
+
+	err = os.Mkdir(dir+"/origin", os.ModePerm)
+
+	if err != nil {
+		if os.IsExist(err) {
+			return nil
+		} else {
+			println("Error while creating the temp origin directory:", err.Error())
+			return err
+		}
+	}
+
+	err = os.Mkdir(dir+"/prev", os.ModePerm)
+
+	if err != nil {
+		if os.IsExist(err) {
+			return nil
+		} else {
+			println("Error while creating the temp prev directory:", err.Error())
+			return err
+		}
+	}
+
 	return nil
 }
 
