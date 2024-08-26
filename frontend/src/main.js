@@ -53,13 +53,23 @@ EventsOn('set-origin-prev', (data) => {
     setOriginPrev(data.fileExt);
 });
 
+EventsOn('set-prev', (data) => {
+    setPrev(data.fileExt);
+});
+
 function setOriginPrev(fileExt) {
-    console.log("ATIVEI O LISTENER")
+    console.log("ATIVEI O LISTENER ORIGIN PREV")
 
-    var originalImage = document.getElementById("originalImage");
-    var previewImage = document.getElementById("previewImage");
-
+    let originalImage = document.getElementById("originalImage");
+    let previewImage = document.getElementById("previewImage");
     originalImage.src = "src/assets/temp/origin" + fileExt;
+    previewImage.src = "src/assets/temp/prev" + fileExt;
+}
+
+function setPrev(fileExt) {
+    console.log("ATIVEI O LISTENER PREV")
+
+    let previewImage = document.getElementById("previewImage");
     previewImage.src = "src/assets/temp/prev" + fileExt;
 }
 
