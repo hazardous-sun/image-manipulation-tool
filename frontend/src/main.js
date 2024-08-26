@@ -60,10 +60,8 @@ EventsOn('set-prev', (data) => {
 function setOriginPrev(path) {
     let originalImage = document.getElementById("originalImage");
     let previewImage = document.getElementById("previewImage");
-
     originalImage.src = "";
     previewImage.src = "";
-
     originalImage.src = "src/assets/temp/origin/" + path;
     previewImage.src = "src/assets/temp/prev/" + path;
 }
