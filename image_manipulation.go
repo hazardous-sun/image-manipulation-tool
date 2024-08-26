@@ -5,6 +5,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"image"
 	color2 "image/color"
+	"image/draw"
 	"image/jpeg"
 	"image/png"
 	"io"
@@ -199,6 +200,12 @@ func saveImage(path string, fileExt string, img image.Image) error {
 Applies the grayscale filter to an image.
 */
 func filterGrayScale(img image.Image) image.Image {
+	grayImage := image.NewGray(img.Bounds())
+	draw.Draw(grayImage, grayImage.Bounds(), img, image.Point{}, draw.Src)
+	return grayImage
+}
+
+func oldFilterGrayScale(img image.Image) image.Image {
 	grayImage := image.NewGray(img.Bounds())
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
