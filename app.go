@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 )
 
@@ -26,8 +27,9 @@ func (a *App) startup(ctx context.Context) {
 Applies the grayscale filter to the preview image.
 */
 func (a *App) GrayScale(path string) {
-	// TODO FIX THE PATH PASSED TO THE FRONTEND
-	println("\n\n\nENTERED GrayScale()")
+	// Collect the path to the preview image
+	// This solution needs to be refactored to avoid bugs in a situation where wails will initialize using a port with
+	// a length != 5 (the standard port wails uses is 34115)
 	path = "frontend" + path[29:]
 	img, err := loadImage(path)
 
@@ -38,7 +40,14 @@ func (a *App) GrayScale(path string) {
 
 	img = filterGrayScale(img)
 	fileExt := filepath.Ext(path)
-	path = "frontend/src/assets/temp/prev" + fileExt
+	fileCount, err := countFiles("frontend/src/assets/temp/prev/")
+
+	if err != nil {
+		println("Error counting files:", err.Error())
+		return
+	}
+
+	path = "frontend/src/assets/temp/prev/" + fmt.Sprintf("%d", fileCount) + fileExt
 	err = saveImage(path, fileExt, img)
 
 	if err != nil {

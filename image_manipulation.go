@@ -25,7 +25,9 @@ func setOriginPrev(app *App, path string) {
 	// Create images
 	createImage(path, true)
 	createImage(path, false)
-	notifyImagesChange(app, path, true)
+
+	// Passes the path in frontend/src/assets/temp/...
+	notifyImagesChange(app, filepath.Ext(path), true)
 }
 
 func notifyImagesChange(app *App, path string, both bool) {
@@ -44,8 +46,12 @@ func notifyImagesChange(app *App, path string, both bool) {
 			return
 		}
 
+		if fileCount > 1 {
+			fileCount -= 1
+		}
+
 		runtime.EventsEmit(app.ctx, "set-prev", map[string]interface{}{
-			"path": string(rune(fileCount)) + filepath.Ext(path),
+			"path": fmt.Sprintf("%d", fileCount) + filepath.Ext(path),
 		})
 	}
 }
@@ -73,26 +79,23 @@ Collects a file from the system and replicates it at "frontend/src/assets/temp",
 frontend.
 */
 func createImage(originalPath string, origin bool) {
-	var path string
+	var newImagePath string
 
 	if origin {
-		fileCount, err := countFiles("frontend/src/assets/temp/origin/")
-
-		if err != nil {
-			println(err.Error())
-			return
-		}
-
-		path = "frontend/src/assets/temp/origin/" + string(rune(fileCount)) + filepath.Ext(originalPath)
+		newImagePath = "frontend/src/assets/temp/origin/0" + filepath.Ext(originalPath)
 	} else {
-		fileCount, err := countFiles("frontend/src/assets/temp/origin/")
+		fileCount, err := countFiles("frontend/src/assets/temp/prev/")
 
 		if err != nil {
 			println(err.Error())
 			return
 		}
 
-		path = "frontend/src/assets/temp/prev/" + string(rune(fileCount)) + filepath.Ext(originalPath)
+		if fileCount > 0 {
+			fileCount = fileCount - 1
+		}
+
+		newImagePath = "frontend/src/assets/temp/prev/" + fmt.Sprintf("%d", fileCount) + filepath.Ext(originalPath)
 	}
 
 	// Load original file
@@ -103,7 +106,7 @@ func createImage(originalPath string, origin bool) {
 	}
 	defer originalFile.Close()
 
-	err = copyFile(path, originalFile)
+	err = copyFile(newImagePath, originalFile)
 
 	if err != nil {
 		println("Error during image saving:", err.Error())
