@@ -18,23 +18,34 @@ Sends a message to the JavaScript listener informing that both the original and 
 Useful when the extension for the image changes and the file cannot simply be overwritten.
 */
 func setOriginPrev(app *App, path string) {
-	println(path)
+	// Clean origin and prev directories
+	removeAllFiles("frontend/src/assets/temp/origin")
+	removeAllFiles("frontend/src/assets/temp/prev")
 
+	// Create images
 	createImage(path, true)
 	createImage(path, false)
-
-	println("mandando para o JAVASCRIPT")
 	notifyImagesChange(app, path, true)
 }
 
 func notifyImagesChange(app *App, path string, both bool) {
+	// Check if both images will change
 	if both {
+		// If both will change, origin and prev directories will be cleared, so the file can be save as "0.{file ext}"
 		runtime.EventsEmit(app.ctx, "set-origin-prev", map[string]interface{}{
-			"fileExt": filepath.Ext(path),
+			"path": "0" + filepath.Ext(path),
 		})
 	} else {
+		// If only the preview image will change, it is required to check how many prev images already exist in the dir
+		fileCount, err := countFiles("frontend/src/assets/temp/prev/")
+
+		if err != nil {
+			println(err.Error())
+			return
+		}
+
 		runtime.EventsEmit(app.ctx, "set-prev", map[string]interface{}{
-			"fileExt": filepath.Ext(path),
+			"path": string(rune(fileCount)) + filepath.Ext(path),
 		})
 	}
 }
