@@ -13,23 +13,68 @@ import (
 	"path/filepath"
 )
 
+// File handling -------------------------------------------------------------------------------------------------------
+
 /*
-Sends a message to the JavaScript listener informing that both the original and preview images should be updated.
-Useful when the extension for the image changes and the file cannot simply be overwritten.
+Removes all files in the desired path.
 */
-func setOriginPrev(app *App, path string) {
-	// Clean origin and prev directories
-	removeAllFiles("frontend/src/assets/temp/origin")
-	removeAllFiles("frontend/src/assets/temp/prev")
+func removeAllFiles(dirPath string) error {
+	// Get a list of all files in the directory
+	files, err := os.ReadDir(dirPath)
+	if err != nil {
+		return fmt.Errorf("error reading directory: %w", err)
+	}
 
-	// Create images
-	createImage(path, true)
-	createImage(path, false)
+	// Iterate through each file and remove it
+	for _, file := range files {
+		filePath := filepath.Join(dirPath, file.Name())
+		if err := os.Remove(filePath); err != nil {
+			return fmt.Errorf("error removing file: %w", err)
+		}
+	}
 
-	// Passes the path in frontend/src/assets/temp/...
-	notifyImagesChange(app, filepath.Ext(path), true)
+	return nil
 }
 
+/*
+Returns the file count of a directory.
+*/
+func countFiles(path string) (int, error) {
+	files, err := os.ReadDir(path)
+
+	if err != nil {
+		return -1, err
+	}
+
+	return len(files), nil
+}
+
+/*
+Copies the content from a file to a new one.
+*/
+func copyFile(path string, content *os.File) error {
+	// Create new file
+	destFile, err := os.Create(path)
+
+	if err != nil {
+		return err
+	}
+	defer destFile.Close()
+
+	// Copy content to the created file
+	_, err = io.Copy(destFile, content)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Image handling ------------------------------------------------------------------------------------------------------
+
+/*
+Informs the frontend that the images need to be reloaded.
+*/
 func notifyImagesChange(app *App, path string, both bool) {
 	// Check if both images will change
 	if both {
@@ -56,22 +101,21 @@ func notifyImagesChange(app *App, path string, both bool) {
 	}
 }
 
-func removeAllFiles(dirPath string) error {
-	// Get a list of all files in the directory
-	files, err := os.ReadDir(dirPath)
-	if err != nil {
-		return fmt.Errorf("error reading directory: %w", err)
-	}
+/*
+Sends a message to the JavaScript listener informing that both the original and preview images should be updated.
+Useful when the extension for the image changes and the file cannot simply be overwritten.
+*/
+func setOriginPrev(app *App, path string) {
+	// Clean origin and prev directories
+	removeAllFiles("frontend/src/assets/temp/origin")
+	removeAllFiles("frontend/src/assets/temp/prev")
 
-	// Iterate through each file and remove it
-	for _, file := range files {
-		filePath := filepath.Join(dirPath, file.Name())
-		if err := os.Remove(filePath); err != nil {
-			return fmt.Errorf("error removing file: %w", err)
-		}
-	}
+	// Create images
+	createImage(path, true)
+	createImage(path, false)
 
-	return nil
+	// Passes the path in frontend/src/assets/temp/...
+	notifyImagesChange(app, filepath.Ext(path), true)
 }
 
 /*
@@ -111,40 +155,6 @@ func createImage(originalPath string, origin bool) {
 	if err != nil {
 		println("Error during image saving:", err.Error())
 	}
-}
-
-/*
-Returns the file count of a directory.
-*/
-func countFiles(path string) (int, error) {
-	files, err := os.ReadDir(path)
-
-	if err != nil {
-		return -1, err
-	}
-
-	return len(files), nil
-}
-
-/*
-Copies the content from a file to a new one.
-*/
-func copyFile(path string, content *os.File) error {
-	// Create new file
-	destFile, err := os.Create(path)
-
-	if err != nil {
-		return err
-	}
-	defer destFile.Close()
-
-	// Copy content to the created file
-	_, err = io.Copy(destFile, content)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 /*
