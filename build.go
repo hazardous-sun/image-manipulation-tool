@@ -67,9 +67,9 @@ func setOptions(app *App, AppMenu *menu.Menu) options.App {
 	return options.App{
 		Title:     "Image Manipulation Tool",
 		Height:    1000,
-		MinHeight: 1000,
+		MinHeight: 500,
 		Width:     1200,
-		MinWidth:  800,
+		MinWidth:  500,
 		Menu:      AppMenu,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
