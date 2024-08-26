@@ -165,6 +165,7 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 	FileMenu := AppMenu.AddSubmenu("File")
 	// -- Open image
 	FileMenu.AddText("Open", keys.CmdOrCtrl("o"), func(_ *menu.CallbackData) {
+		// Try to collect current working directory
 		cwd, err := os.Getwd()
 
 		if err != nil {
