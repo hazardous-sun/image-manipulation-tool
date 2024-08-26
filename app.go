@@ -26,6 +26,7 @@ func (a *App) startup(ctx context.Context) {
 Applies the grayscale filter to the preview image.
 */
 func (a *App) GrayScale(path string) {
+	// TODO FIX THE PATH PASSED TO THE FRONTEND
 	println("\n\n\nENTERED GrayScale()")
 	path = "frontend" + path[29:]
 	img, err := loadImage(path)
@@ -45,5 +46,5 @@ func (a *App) GrayScale(path string) {
 		return
 	}
 
-	notifyImagesChange(a, path)
+	notifyImagesChange(a, path, false)
 }
