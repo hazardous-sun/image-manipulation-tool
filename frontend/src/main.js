@@ -50,27 +50,30 @@ function applyTheme(themeData) {
 // Image handling ------------------------------------------------------------------------------------------------------
 
 EventsOn('set-origin-prev', (data) => {
-    setOriginPrev(data.fileExt);
+    setOriginPrev(data.path);
 });
 
 EventsOn('set-prev', (data) => {
-    setPrev(data.fileExt);
+    setPrev(data.path);
 });
 
 function setOriginPrev(fileExt) {
-    console.log("ATIVEI O LISTENER ORIGIN PREV")
-
     let originalImage = document.getElementById("originalImage");
     let previewImage = document.getElementById("previewImage");
-    originalImage.src = "src/assets/temp/origin" + fileExt;
-    previewImage.src = "src/assets/temp/prev" + fileExt;
+
+    originalImage.src = "";
+    previewImage.src = "";
+
+    originalImage.src = path;
+    previewImage.src = path;
 }
 
-function setPrev(fileExt) {
+function setPrev(path) {
     console.log("ATIVEI O LISTENER PREV")
 
     let previewImage = document.getElementById("previewImage");
-    previewImage.src = "src/assets/temp/prev" + fileExt;
+    previewImage.src = "";
+    previewImage.src = path;
 }
 
 // Filter --------------------------------------------------------------------------------------------------------------
