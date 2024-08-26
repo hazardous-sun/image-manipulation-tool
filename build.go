@@ -11,6 +11,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options/linux"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"os"
+	"path/filepath"
 	goRuntime "runtime"
 )
 
@@ -205,7 +206,47 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 	})
 	FileMenu.AddSeparator()
 	// -- Save image
-	FileMenu.AddText("Save", keys.CmdOrCtrl("s"), func(_ *menu.CallbackData) {})
+	FileMenu.AddText("Save", keys.CmdOrCtrl("s"), func(_ *menu.CallbackData) {
+		cwd, err := os.Getwd()
+
+		if err != nil {
+			println("Error during CWD collection:", err.Error())
+			if goRuntime.GOOS == "windows" {
+				cwd = "%USERPROFILE%"
+			} else {
+				cwd = "~"
+			}
+		}
+
+		path, err := runtime.SaveFileDialog(
+			app.ctx,
+			runtime.SaveDialogOptions{
+				DefaultDirectory:           cwd,
+				DefaultFilename:            "",
+				Title:                      "Save image",
+				Filters:                    nil,
+				ShowHiddenFiles:            true,
+				CanCreateDirectories:       true,
+				TreatPackagesAsDirectories: false,
+			},
+		)
+
+		//runtime.EventsOn(app.ctx, "receive-prev", func(optionalData ...interface{}))
+
+		img, err := loadImage(path)
+
+		if err != nil {
+			println("Error during loading image:", err.Error())
+			return
+		}
+
+		err = saveImage(path, filepath.Ext(path), img)
+
+		if err != nil {
+			println("Error during saving image:", err.Error())
+			return
+		}
+	})
 	FileMenu.AddSeparator()
 	// -- About
 	FileMenu.AddText("About", keys.CmdOrCtrl("f1"), func(_ *menu.CallbackData) {

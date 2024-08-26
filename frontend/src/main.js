@@ -72,6 +72,10 @@ function setPrev(path) {
     previewImage.src = "src/assets/temp/prev/" + path;
 }
 
+EventsOn('get-prev', () => {
+
+})
+
 // Filter --------------------------------------------------------------------------------------------------------------
 
 // Grayscale
