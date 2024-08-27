@@ -9,17 +9,24 @@ import (
 
 func transformImage(img image.Image, matrix [][]int) image.Image {
 	transformedImage := image.NewRGBA(img.Bounds())
-
-	/*
-						[
-							[v1, v2, v3]
-		[Xf, Yf, 1] =		[v1, v2, v3]   *   [X1, Y1, 1]
-							[v1, v2, v3]
-						]
-	*/
-
+	// ---------------------------------------- Travel through img
+	for x := 0; x < img.Bounds().Dx(); x++ { // -----------------+
+		for y := 0; y < img.Bounds().Dy(); y++ { //--------------+
+			pixelMatrix := []int{x, y, 1}
+			tempValues := []int{0, 0, 0}
+			// --------------------------------------------------------- Travel through tempValues
+			for row := 0; row < len(matrix); row++ { // ----------------------------------------+
+				for column := 0; column < len(matrix[0]); column++ { // ------------------------+
+					tempValues[row] += pixelMatrix[row] * matrix[row][column]
+				}
+			}
+			transformedImage.Set(tempValues[0], tempValues[1], img.At(x, y))
+		}
+	}
 	return transformedImage
 }
+
+// --------- Matrices
 
 /*
 Returns the matrix used for translating images:
