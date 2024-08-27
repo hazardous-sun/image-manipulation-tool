@@ -2,7 +2,7 @@ import './style.css';
 import './app.css';
 
 import {EventsOn} from "../wailsjs/runtime";
-import {GrayScale} from "../wailsjs/go/main/App";
+import {GrayScale, Transform} from "../wailsjs/go/main/App";
 
 // Theme ---------------------------------------------------------------------------------------------------------------
 
@@ -75,6 +75,30 @@ function setPrev(path) {
 EventsOn('get-prev', () => {
 
 })
+
+// Geometric transformations -------------------------------------------------------------------------------------------
+
+function geoTransform(code, x, y) {
+    console.log("ENTREI EM geoTransform() no JS")
+
+    let prevImageSrc = document.getElementById('previewImage').src
+
+    if (prevImageSrc === "") {
+        return
+    }
+
+    console.log("CHAMANDO O CÓDIGO EM GO")
+    Transform(prevImageSrc, code, x, y) 
+}
+// 2 e 3
+
+window.mirrorH = function () {
+    geoTransform(2, 0, 0)
+}
+
+window.mirrorV = function () {
+    geoTransform(3, 0, 0)
+}
 
 // Filter --------------------------------------------------------------------------------------------------------------
 
