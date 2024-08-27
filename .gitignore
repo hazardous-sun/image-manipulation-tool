@@ -41,7 +41,8 @@ go.work
 
 # Wails automatic generated files
 image-manipulation-tool
-frontend/package.*
+frontend/package.json
+frontend/package.json.md5
 frontend/package-lock.json
 frontend/dist
 frontend/node_modules
