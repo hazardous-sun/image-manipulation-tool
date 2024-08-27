@@ -40,6 +40,8 @@ func (b Build) build() (Build, error) {
 	}, nil
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+
 func Run(build Build) {
 	// Initialize the application with the chosen appOptions
 	err := wails.Run(&build.AppOptions)
@@ -95,7 +97,7 @@ func setOptions(app *App, AppMenu *menu.Menu) options.App {
 	}
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
+// Temp dir ------------------------------------------------------------------------------------------------------------
 
 func initializeTemporaryDir() error {
 	dir := "frontend/src/assets/temp"
@@ -144,7 +146,7 @@ func removeTemporaryDir() error {
 	return nil
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
+// Menu ----------------------------------------------------------------------------------------------------------------
 
 func setMenu(app *App) *menu.Menu {
 	AppMenu := menu.NewMenu()
@@ -156,7 +158,7 @@ func setMenu(app *App) *menu.Menu {
 	return AppMenu
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
+// ---------- Menu items
 
 /*
 Sets the "File" menu at the top menu bar.
@@ -332,7 +334,7 @@ func setFeatureExtractionMenu(app *App, AppMenu *menu.Menu) {
 	AppMenu.AddSubmenu("Feature Extraction")
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
+// Theme ---------------------------------------------------------------------------------------------------------------
 
 /*
 Sends a message to the JavaScript listener informing the theme needs to be updated.
