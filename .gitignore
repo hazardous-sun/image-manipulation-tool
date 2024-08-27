@@ -36,16 +36,17 @@ fabric.properties
 *.test
 *.out
 go.work
-image-manipulation-tool
+
 .idea
-frontend/package-lock.json
-frontend/package.json.md5
+
+# Wails automatic generated files
+image-manipulation-tool
+frontend/package.*
 frontend/dist
 frontend/node_modules
 frontend/wailsjs/go
 build/bin
 
 # Test images
-frontend/src/assets/images/testimage*
-
+frontend/src/assets/images
 frontend/src/assets/temp
