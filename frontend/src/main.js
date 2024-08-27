@@ -1,7 +1,7 @@
 import './style.css';
 import './app.css';
 
-import {EventsOn} from "../wailsjs/runtime";
+import {EventsEmit, EventsOn} from "../wailsjs/runtime";
 import {GrayScale, Transform} from "../wailsjs/go/main/App";
 
 // Theme ---------------------------------------------------------------------------------------------------------------
@@ -73,7 +73,8 @@ function setPrev(path) {
 }
 
 EventsOn('get-prev', () => {
-
+    let previewImage = document.getElementById("previewImage").src.toString();
+    EventsEmit("receive-prev", {"path": previewImage})
 })
 
 // Geometric transformations -------------------------------------------------------------------------------------------

@@ -233,21 +233,24 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 			},
 		)
 
-		//runtime.EventsOn(app.ctx, "receive-prev", func(optionalData ...interface{}))
+		runtime.EventsEmit(app.ctx, "get-prev", nil)
 
-		img, err := loadImage(path)
+		runtime.EventsOn(app.ctx, "receive-prev", func(optionalData ...interface{}) {
+			println("path received from JS:", optionalData) // TODO fix this
+			img, err := loadImage(path)
 
-		if err != nil {
-			println("Error during loading image:", err.Error())
-			return
-		}
+			if err != nil {
+				println("Error during loading image:", err.Error())
+				return
+			}
 
-		err = saveImage(path, filepath.Ext(path), img)
+			err = saveImage(path, filepath.Ext(path), img)
 
-		if err != nil {
-			println("Error during saving image:", err.Error())
-			return
-		}
+			if err != nil {
+				println("Error during saving image:", err.Error())
+				return
+			}
+		})
 	})
 	FileMenu.AddSeparator()
 	// -- About
