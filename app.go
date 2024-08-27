@@ -22,6 +22,51 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
+// Geometric transformations -------------------------------------------------------------------------------------------
+
+func (a *App) Transform(path string, code int, x float64, y float64) {
+	var matrix [][]int
+	switch code {
+	case 0:
+		matrix = getTranslationMatrix(int(x), int(y))
+	case 1:
+		matrix = getScaleMatrix(int(x), int(y))
+	case 2:
+		matrix = getMirrorHMatrix()
+	case 3:
+		matrix = getMirrorVMatrix()
+	case 4:
+		matrix = getRotationMatrix(x)
+	}
+	path = "frontend" + path[29:]
+	img, err := loadImage(path)
+
+	if err != nil {
+		println("Error while loading image:", err.Error())
+	}
+
+	img = transformImage(img, matrix)
+	fileExt := filepath.Ext(path)
+	fileCount, err := countFiles("frontend/src/assets/temp/prev/")
+
+	if err != nil {
+		println("Error counting files:", err.Error())
+		return
+	}
+
+	path = "frontend/src/assets/temp/prev/" + fmt.Sprintf("%d", fileCount) + fileExt
+	err = saveImage(path, fileExt, img)
+
+	if err != nil {
+		println("Error saving image:", err.Error())
+		return
+	}
+
+	notifyImagesChange(a, path, false)
+}
+
+// Filters -------------------------------------------------------------------------------------------------------------
+
 // GrayScale
 /*
 Applies the grayscale filter to the preview image.
