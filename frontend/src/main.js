@@ -91,7 +91,27 @@ function geoTransform(code, x, y) {
     console.log("CHAMANDO O CÓDIGO EM GO")
     Transform(prevImageSrc, code, x, y) 
 }
-// 2 e 3
+
+window.translate = function () {
+    let x = document.getElementById('xAxis').value
+
+    if (x === "") {
+        x = 0
+    } else {
+        x = Number(x)
+    }
+
+    let y = document.getElementById('xAxis').value
+
+    if (y === "") {
+        y = 0
+    } else {
+        y = Number(y)
+    }
+
+    console.log("SENDING TRANSLATE DATE TO geoTransform()")
+    geoTransform(0, x, y)
+}
 
 window.mirrorH = function () {
     geoTransform(2, 0, 0)
