@@ -34,7 +34,13 @@ expected to contain a GUI where the user will be able to apply filters and manip
     - [ ] Closing
   - [ ] Feature extraction
 
-## Wails
+## Requirements
+
+### Go
+
+The machine should have Go version 1.23 or higher installed.
+
+### Wails
 
 This is the official Wails Vanilla template.
 
