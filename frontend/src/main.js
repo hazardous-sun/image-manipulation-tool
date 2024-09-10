@@ -91,7 +91,6 @@ function geoTransform(code, x, y) {
 }
 
 window.imgTranslate = function () {
-    console.log("ENTREI EM window.translate")
     let x = document.getElementById('xAxis').value
 
     if (x === "") {
