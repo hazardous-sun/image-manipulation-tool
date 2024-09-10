@@ -80,7 +80,6 @@ EventsOn('get-prev', () => {
 // Geometric transformations -------------------------------------------------------------------------------------------
 
 function geoTransform(code, x, y) {
-    console.log("ENTREI EM geoTransform() no JS")
 
     let prevImageSrc = document.getElementById('previewImage').src
 
@@ -88,14 +87,12 @@ function geoTransform(code, x, y) {
         return
     }
 
-    console.log("CHAMANDO O CÓDIGO EM GO")
     Transform(prevImageSrc, code, x, y) 
 }
 
 window.imgTranslate = function () {
     console.log("ENTREI EM window.translate")
     let x = document.getElementById('xAxis').value
-    console.log("x = " + x)
 
     if (x === "") {
         x = 0
@@ -104,7 +101,6 @@ window.imgTranslate = function () {
     }
 
     let y = document.getElementById('xAxis').value
-    console.log("y = " + y)
 
     if (y === "") {
         y = 0
@@ -112,7 +108,6 @@ window.imgTranslate = function () {
         y = Number(y)
     }
 
-    console.log("SENDING TRANSLATE DATE TO geoTransform()")
     geoTransform(0, x, y)
 }
 
