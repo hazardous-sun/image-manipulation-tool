@@ -90,24 +90,34 @@ function geoTransform(code, x, y) {
     Transform(prevImageSrc, code, x, y) 
 }
 
-window.imgTranslate = function () {
+function getXY(baseValue) {
     let x = document.getElementById('xAxis').value
 
     if (x === "") {
-        x = 0
+        x = baseValue
     } else {
         x = Number(x)
     }
 
-    let y = document.getElementById('xAxis').value
+    let y = document.getElementById('yAxis').value
 
     if (y === "") {
-        y = 0
+        y = baseValue
     } else {
         y = Number(y)
     }
 
-    geoTransform(0, x, y)
+    return [x, y]
+}
+
+window.imgTranslate = function () {
+    let values = getXY(0)
+    geoTransform(0, values[0], values[1])
+}
+
+window.imgResize = function () {
+    let values = getXY(1)
+    geoTransform(1, values[0], values[1])
 }
 
 window.mirrorH = function () {
@@ -116,6 +126,11 @@ window.mirrorH = function () {
 
 window.mirrorV = function () {
     geoTransform(3, 0, 0)
+}
+
+window.imgRotate = function () {
+    let values = getXY(0)
+    geoTransform(4, values[0], values[1])
 }
 
 // Filter --------------------------------------------------------------------------------------------------------------

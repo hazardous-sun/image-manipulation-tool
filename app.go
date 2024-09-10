@@ -25,12 +25,12 @@ func (a *App) startup(ctx context.Context) {
 // Geometric transformations -------------------------------------------------------------------------------------------
 
 func (a *App) Transform(path string, code int, x float64, y float64) {
-	var matrix [][]int
+	var matrix [][]float64
 	switch code {
 	case 0:
-		matrix = getTranslationMatrix(int(x), int(y))
+		matrix = getTranslationMatrix(x, y)
 	case 1:
-		matrix = getScaleMatrix(int(x), int(y))
+		matrix = getResizeMatrix(x, y)
 	case 2:
 		matrix = getMirrorHMatrix()
 	case 3:
@@ -38,6 +38,9 @@ func (a *App) Transform(path string, code int, x float64, y float64) {
 	case 4:
 		matrix = getRotationMatrix(x)
 	}
+
+	println(matrix)
+
 	path = "frontend" + path[29:]
 	img, err := loadImage(path)
 

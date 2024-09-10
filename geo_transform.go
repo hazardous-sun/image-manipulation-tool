@@ -7,7 +7,7 @@ import (
 
 // Geometric transformations -------------------------------------------------------------------------------------------
 
-func transformImage(img image.Image, matrix [][]int) image.Image {
+func transformImage(img image.Image, matrix [][]float64) image.Image {
 	println("ENTREI EM transformImage()")
 	transformedImage := image.NewRGBA(img.Bounds())
 	// ---------------------------------------- Travel through img
@@ -19,18 +19,18 @@ func transformImage(img image.Image, matrix [][]int) image.Image {
 	return transformedImage
 }
 
-func applyChange(img image.Image, transformedImage *image.RGBA, matrix [][]int, x int, y int) {
+func applyChange(img image.Image, transformedImage *image.RGBA, matrix [][]float64, x int, y int) {
 	halfX := img.Bounds().Dx() / 2
 	halfY := img.Bounds().Dy() / 2
-	tmpX := x - halfX
-	tmpY := y - halfY
+	tmpX := float64(x - halfX)
+	tmpY := float64(y - halfY)
 	newX := tmpX*matrix[0][0] + tmpY*matrix[0][1] + 1*matrix[0][2]
 	newY := tmpX*matrix[1][0] + tmpY*matrix[1][1] + 1*matrix[1][2]
-	newX += halfX
-	newY += halfY
+	newX += float64(halfX)
+	newY += float64(halfY)
 
-	if newX < img.Bounds().Dx() && newY < img.Bounds().Dy() && newX >= 0 && newY >= 0 {
-		transformedImage.Set(x, y, img.At(newX, newY))
+	if newX < float64(img.Bounds().Dx()) && newY < float64(img.Bounds().Dy()) && newX >= 0 && newY >= 0 {
+		transformedImage.Set(x, y, img.At(int(newX), int(newY)))
 	}
 }
 
@@ -49,8 +49,8 @@ Returns the matrix used for translating images:
 
 Since we are dealing with images that only have two axis, we can set 'z' to 1.
 */
-func getTranslationMatrix(x int, y int) [][]int {
-	return [][]int{
+func getTranslationMatrix(x float64, y float64) [][]float64 {
+	return [][]float64{
 		{1, 0, x},
 		{0, 1, y},
 		{0, 0, 1},
@@ -70,10 +70,10 @@ Returns the matrix used for scaling images:
 
 Since we are dealing with images that only have two axis, we can set 'z' to 1.
 */
-func getScaleMatrix(x int, y int) [][]int {
-	return [][]int{
-		{x, 0, 0},
-		{0, y, 0},
+func getResizeMatrix(x float64, y float64) [][]float64 {
+	return [][]float64{
+		{1 / x, 0, 0},
+		{0, 1 / y, 0},
 		{0, 0, 1},
 	}
 }
@@ -89,8 +89,8 @@ Returns the matrix used to mirror images in the X axis:
 
 ]
 */
-func getMirrorHMatrix() [][]int {
-	return [][]int{
+func getMirrorHMatrix() [][]float64 {
+	return [][]float64{
 		{-1, 0, 0},
 		{0, 1, 0},
 		{0, 0, 1},
@@ -108,8 +108,8 @@ Returns the matrix used to mirror images in the Y axis:
 
 ]
 */
-func getMirrorVMatrix() [][]int {
-	return [][]int{
+func getMirrorVMatrix() [][]float64 {
+	return [][]float64{
 		{1, 0, 0},
 		{0, -1, 0},
 		{0, 0, 1},
@@ -127,10 +127,10 @@ Returns the matrix used for rotating images in the X axis:
 
 ]
 */
-func getRotationMatrix(x float64) [][]int {
-	return [][]int{
-		{1, 0, 0},
-		{int(math.Cos(x)), -int(math.Sin(x)), 0},
-		{int(math.Sin(x)), int(math.Cos(x)), 0},
+func getRotationMatrix(x float64) [][]float64 {
+	return [][]float64{
+		{math.Cos(x), math.Sin(x), 0},
+		{-math.Sin(x), math.Cos(x), 0},
+		{0, 0, 1},
 	}
 }
