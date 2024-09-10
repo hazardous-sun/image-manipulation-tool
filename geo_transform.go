@@ -13,18 +13,25 @@ func transformImage(img image.Image, matrix [][]int) image.Image {
 	// ---------------------------------------- Travel through img
 	for x := 0; x < img.Bounds().Dx(); x++ { // -----------------+
 		for y := 0; y < img.Bounds().Dy(); y++ { //--------------+
-			pixelMatrix := []int{x, y, 1}
-			tempValues := []int{0, 0, 0}
-			// --------------------------------------------------------- Travel through pixelMatrix
-			for row := 0; row < len(matrix); row++ { // ------------------------------------------+
-				for column := 0; column < len(matrix[0]); column++ { // --------------------------+
-					tempValues[row] += pixelMatrix[row] * matrix[row][column]
-				}
-			}
-			transformedImage.Set(tempValues[0], tempValues[1], img.At(x, y))
+			applyChange(img, transformedImage, matrix, x, y)
 		}
 	}
 	return transformedImage
+}
+
+func applyChange(img image.Image, transformedImage *image.RGBA, matrix [][]int, x int, y int) {
+	halfX := img.Bounds().Dx() / 2
+	halfY := img.Bounds().Dy() / 2
+	tmpX := x - halfX
+	tmpY := y - halfY
+	newX := tmpX*matrix[0][0] + tmpY*matrix[0][1] + 1*matrix[0][2]
+	newY := tmpX*matrix[1][0] + tmpY*matrix[1][1] + 1*matrix[1][2]
+	newX += halfX
+	newY += halfY
+
+	if newX < img.Bounds().Dx() && newY < img.Bounds().Dy() && newX >= 0 && newY >= 0 {
+		transformedImage.Set(x, y, img.At(newX, newY))
+	}
 }
 
 // --------- Matrices
@@ -84,8 +91,8 @@ Returns the matrix used to mirror images in the X axis:
 */
 func getMirrorHMatrix() [][]int {
 	return [][]int{
-		{0, 0, 0},
-		{0, -1, 0},
+		{-1, 0, 0},
+		{0, 1, 0},
 		{0, 0, 1},
 	}
 }
@@ -103,8 +110,8 @@ Returns the matrix used to mirror images in the Y axis:
 */
 func getMirrorVMatrix() [][]int {
 	return [][]int{
-		{-1, 0, 0},
-		{0, 1, 0},
+		{1, 0, 0},
+		{0, -1, 0},
 		{0, 0, 1},
 	}
 }
