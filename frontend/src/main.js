@@ -92,8 +92,10 @@ function geoTransform(code, x, y) {
     Transform(prevImageSrc, code, x, y) 
 }
 
-window.translate = function () {
+window.imgTranslate = function () {
+    console.log("ENTREI EM window.translate")
     let x = document.getElementById('xAxis').value
+    console.log("x = " + x)
 
     if (x === "") {
         x = 0
@@ -102,6 +104,7 @@ window.translate = function () {
     }
 
     let y = document.getElementById('xAxis').value
+    console.log("y = " + y)
 
     if (y === "") {
         y = 0
