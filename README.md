@@ -7,21 +7,20 @@ expected to contain a GUI where the user will be able to apply filters and manip
 
 ### TODO
 
-
 - [X] Basic GUI
 - [X] Separate the build process into its own file
 - [ ] Theme customization
 - Tools:
   - [X] Open image
   - [ ] Save image
-  - [ ] Geometric transformations
-    - [ ] Translate
-    - [ ] Rotate
-    - [ ] Horizontal mirroring
-    - [ ] Vertical Mirroring
-    - [ ] Resize
-    - [ ] Increase
-    - [ ] Decrease
+  - [X] Geometric transformations
+    - [X] Translate
+    - [X] Rotate
+    - [X] Horizontal mirroring
+    - [X] Vertical Mirroring
+    - [X] Resize
+      - [X] Increase
+      - [X] Decrease
   - [ ] Filters
     - [ ] Grayscale
     - [ ] Low fade
