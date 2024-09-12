@@ -26,7 +26,7 @@ expected to contain a GUI where the user will be able to apply filters and manip
     - [ ] Low fade
     - [ ] High fade
     - [ ] Threshold
-  - [ ] Mathematical Morfology
+  - [ ] Mathematical Morphology
     - [ ] Dilation
     - [ ] Erosion
     - [ ] Opening
