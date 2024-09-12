@@ -8,9 +8,8 @@ import (
 // Filters -------------------------------------------------------------------------------------------------------------
 
 // -------- Grayscale
-/*
-Applies the grayscale filter to an image.
-*/
+
+// Removes the color channels of an image and returns a image with only shades of gray.
 func filterGrayScale(img image.Image) image.Image {
 	grayImage := image.NewGray(img.Bounds())
 	draw.Draw(grayImage, grayImage.Bounds(), img, image.Point{}, draw.Src)

@@ -70,10 +70,7 @@ func (a *App) Transform(path string, code int, x float64, y float64) {
 
 // Filters -------------------------------------------------------------------------------------------------------------
 
-// GrayScale
-/*
-Applies the grayscale filter to the preview image.
-*/
+// GrayScale : Applies the grayscale filter to the preview image.
 func (a *App) GrayScale(path string) {
 	// Collect the path to the preview image
 	// This solution needs to be refactored to avoid bugs in a situation where wails will initialize using a port with

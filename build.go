@@ -18,12 +18,14 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+// Build : Holds the application instance, the menu and the options used for the display.
 type Build struct {
 	AppInstance        *App
 	AppOptions         options.App
 	TempDirInitialized bool
 }
 
+// Constructs the application instance, the menu and the options used for the display.
 func (b Build) build() (Build, error) {
 	appInstance, appMenu := setApp()
 	appOptions := setOptions(appInstance, appMenu)
@@ -42,6 +44,7 @@ func (b Build) build() (Build, error) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+// Run : Initializes the application.
 func Run(build Build) {
 	// Initialize the application with the chosen appOptions
 	err := wails.Run(&build.AppOptions)
@@ -53,6 +56,7 @@ func Run(build Build) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+// Passes the menu to the app instance.
 func setApp() (*App, *menu.Menu) {
 	// Create an instance of the app structure
 	app := NewApp()
@@ -65,6 +69,7 @@ func setApp() (*App, *menu.Menu) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+// Returns the options used for building the application.
 func setOptions(app *App, AppMenu *menu.Menu) options.App {
 	return options.App{
 		Title:     "Image Manipulation Tool",
@@ -99,6 +104,8 @@ func setOptions(app *App, AppMenu *menu.Menu) options.App {
 
 // Temp dir ------------------------------------------------------------------------------------------------------------
 
+// Creates a directory under "frontend/src/assets/temp" that holds a copy of the original image, along with the preview
+// images.
 func initializeTemporaryDir() error {
 	dir := "frontend/src/assets/temp"
 	err := os.Mkdir(dir, os.ModePerm)
@@ -137,6 +144,7 @@ func initializeTemporaryDir() error {
 	return nil
 }
 
+// Removes the temporary directory that holds the copy of the original and preview images.
 func removeTemporaryDir() error {
 	dir := "frontend/src/assets/temp"
 	err := os.RemoveAll(dir)
@@ -148,6 +156,7 @@ func removeTemporaryDir() error {
 
 // Menu ----------------------------------------------------------------------------------------------------------------
 
+// Creates the items in the menu bar at the top of the application.
 func setMenu(app *App) *menu.Menu {
 	AppMenu := menu.NewMenu()
 	setFileMenu(app, AppMenu)
@@ -160,9 +169,7 @@ func setMenu(app *App) *menu.Menu {
 
 // ---------- Menu items
 
-/*
-Sets the "File" menu at the top menu bar.
-*/
+// Sets the "File" menu at the top menu bar.
 func setFileMenu(app *App, AppMenu *menu.Menu) {
 	// File
 	FileMenu := AppMenu.AddSubmenu("File")
@@ -269,9 +276,7 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 	})
 }
 
-/*
-Sets the "Geometric Transformations" menu at the top menu bar.
-*/
+// Sets the "Geometric Transformations" menu at the top menu bar.
 func setGeoTransformMenu(app *App, AppMenu *menu.Menu) {
 	// Geometric Transformations
 	GeoTransformMenu := AppMenu.AddSubmenu("Geometric Transformations")
@@ -291,9 +296,7 @@ func setGeoTransformMenu(app *App, AppMenu *menu.Menu) {
 	GeoTransformMenu.AddText("Resize", keys.Key("w"), func(_ *menu.CallbackData) {})
 }
 
-/*
-Sets the "Filters" menu at the top menu bar.
-*/
+// Sets the "Filters" menu at the top menu bar.
 func setFiltersMenu(app *App, AppMenu *menu.Menu) {
 	// Filters
 	FiltersMenu := AppMenu.AddSubmenu("Filters")
@@ -310,9 +313,7 @@ func setFiltersMenu(app *App, AppMenu *menu.Menu) {
 	FiltersMenu.AddText("Threshold", nil, func(_ *menu.CallbackData) {})
 }
 
-/*
-Sets the "Mathematical morphology" menu at the top menu bar.
-*/
+// Sets the "Mathematical morphology" menu at the top menu bar.
 func setMathMorphologyMenu(app *App, AppMenu *menu.Menu) {
 	// Mathematical morphology
 	MathMorphoMenu := AppMenu.AddSubmenu("Mathematical Morphology")
@@ -329,9 +330,7 @@ func setMathMorphologyMenu(app *App, AppMenu *menu.Menu) {
 	MathMorphoMenu.AddText("Closing", nil, func(_ *menu.CallbackData) {})
 }
 
-/*
-Sets the "Feature Extractio" menu at the top menu bar.
-*/
+// Sets the "Feature Extractio" menu at the top menu bar.
 func setFeatureExtractionMenu(app *App, AppMenu *menu.Menu) {
 	// Feature extraction
 	AppMenu.AddSubmenu("Feature Extraction")
@@ -339,9 +338,7 @@ func setFeatureExtractionMenu(app *App, AppMenu *menu.Menu) {
 
 // Theme ---------------------------------------------------------------------------------------------------------------
 
-/*
-Sends a message to the JavaScript listener informing the theme needs to be updated.
-*/
+// Sends a message to the JavaScript listener informing the theme needs to be updated.
 func updateTheme(app *App) {
 	runtime.EventsEmit(app.ctx, "set-image", map[string]interface{}{})
 }

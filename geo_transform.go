@@ -36,19 +36,15 @@ func applyChange(img image.Image, transformedImage *image.RGBA, matrix [][]float
 
 // --------- Matrices
 
-/*
-Returns the matrix used for translating images:
-
-[
-
-	[1, 0, x],
-	[0, 1, y],
-	[0, 0, z],
-
-]
-
-Since we are dealing with images that only have two axis, we can set 'z' to 1.
-*/
+// Returns the matrix used for translating images:
+// [
+//
+//	[1, 0, x],
+//	[0, 1, y],
+//	[0, 0, z],
+//
+// ]
+// Since we are dealing with images that only have two axis, we can set 'z' to 1.
 func getTranslationMatrix(x float64, y float64) [][]float64 {
 	return [][]float64{
 		{1, 0, x},
@@ -57,19 +53,17 @@ func getTranslationMatrix(x float64, y float64) [][]float64 {
 	}
 }
 
-/*
-Returns the matrix used for scaling images:
-
-[
-
-	[x, 0, 0],
-	[0, y, 0],
-	[0, 0, z],
-
-]
-
-Since we are dealing with images that only have two axis, we can set 'z' to 1.
-*/
+// Returns the matrix used for scaling images:
+//
+// [
+//
+//	[x, 0, 0],
+//	[0, y, 0],
+//	[0, 0, z],
+//
+// ]
+//
+// Since we are dealing with images that only have two axis, we can set 'z' to 1.
 func getResizeMatrix(x float64, y float64) [][]float64 {
 	return [][]float64{
 		{1 / x, 0, 0},
@@ -78,17 +72,15 @@ func getResizeMatrix(x float64, y float64) [][]float64 {
 	}
 }
 
-/*
-Returns the matrix used to mirror images in the X axis:
-
-[
-
-	[0, 0, 0],
-	[0, -1, 0],
-	[0, 0, 1],
-
-]
-*/
+// Returns the matrix used to mirror images in the X axis:
+//
+// [
+//
+//	[0, 0, 0],
+//	[0, -1, 0],
+//	[0, 0, 1],
+//
+// ]
 func getMirrorHMatrix() [][]float64 {
 	return [][]float64{
 		{-1, 0, 0},
@@ -97,17 +89,15 @@ func getMirrorHMatrix() [][]float64 {
 	}
 }
 
-/*
-Returns the matrix used to mirror images in the Y axis:
-
-[
-
-	[0, 0, 0],
-	[0, -1, 0],
-	[0, 0, 1],
-
-]
-*/
+// Returns the matrix used to mirror images in the Y axis:
+//
+// [
+//
+//	[0, 0, 0],
+//	[0, -1, 0],
+//	[0, 0, 1],
+//
+// ]
 func getMirrorVMatrix() [][]float64 {
 	return [][]float64{
 		{1, 0, 0},
@@ -116,17 +106,15 @@ func getMirrorVMatrix() [][]float64 {
 	}
 }
 
-/*
-Returns the matrix used for rotating images in the X axis:
-
-[
-
-	[1,       0,      0],
-	[cos(α), -sen(α), 0],
-	[sen(α),  cos(α), 0],
-
-]
-*/
+// Returns the matrix used for rotating images in the X axis:
+//
+// [
+//
+//	[1,       0,      0],
+//	[cos(α), -sen(α), 0],
+//	[sen(α),  cos(α), 0],
+//
+// ]
 func getRotationMatrix(x float64) [][]float64 {
 	return [][]float64{
 		{math.Cos(x), math.Sin(x), 0},

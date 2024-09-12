@@ -13,9 +13,7 @@ import (
 
 // File handling -------------------------------------------------------------------------------------------------------
 
-/*
-Removes all files in the desired path.
-*/
+// Removes all files in the desired path.
 func removeAllFiles(dirPath string) error {
 	// Get a list of all files in the directory
 	files, err := os.ReadDir(dirPath)
@@ -34,9 +32,7 @@ func removeAllFiles(dirPath string) error {
 	return nil
 }
 
-/*
-Returns the file count of a directory.
-*/
+// Returns the file count of a directory.
 func countFiles(path string) (int, error) {
 	files, err := os.ReadDir(path)
 
@@ -47,9 +43,7 @@ func countFiles(path string) (int, error) {
 	return len(files), nil
 }
 
-/*
-Copies the content from a file to a new one.
-*/
+// Copies the content from a file to a new one.
 func copyFile(path string, content *os.File) error {
 	// Create new file
 	destFile, err := os.Create(path)
@@ -70,9 +64,7 @@ func copyFile(path string, content *os.File) error {
 
 // Image handling ------------------------------------------------------------------------------------------------------
 
-/*
-Informs the frontend that the images need to be reloaded.
-*/
+// Informs the frontend that the images need to be reloaded.
 func notifyImagesChange(app *App, path string, both bool) {
 	// Check if both images will change
 	if both {
@@ -99,10 +91,8 @@ func notifyImagesChange(app *App, path string, both bool) {
 	}
 }
 
-/*
-Sends a message to the JavaScript listener informing that both the original and preview images should be updated.
-Useful when the extension for the image changes and the file cannot simply be overwritten.
-*/
+// Sends a message to the JavaScript listener informing that both the original and preview images should be updated.
+// Useful when the extension for the image changes and the file cannot simply be overwritten.
 func setOriginPrev(app *App, path string) {
 	// Clean origin and prev directories
 	removeAllFiles("frontend/src/assets/temp/origin")
@@ -116,10 +106,8 @@ func setOriginPrev(app *App, path string) {
 	notifyImagesChange(app, filepath.Ext(path), true)
 }
 
-/*
-Collects a file from the system and replicates it at "frontend/src/assets/temp", where it can be accessed by the
-frontend.
-*/
+// Collects a file from the system and replicates it at "frontend/src/assets/temp", where it can be accessed by the
+// frontend.
 func createImage(originalPath string, origin bool) {
 	var newImagePath string
 
@@ -155,9 +143,7 @@ func createImage(originalPath string, origin bool) {
 	}
 }
 
-/*
-Decodes an image file and transform it into an "image.Image".
-*/
+// Decodes an image file and transform it into an "image.Image".
 func loadImage(path string) (image.Image, error) {
 	// Open the file
 	file, err := os.Open(path)
@@ -181,9 +167,7 @@ func loadImage(path string) (image.Image, error) {
 	}
 }
 
-/*
-Encodes an image into a file.
-*/
+// Encodes an image into a file.
 func saveImage(path string, fileExt string, img image.Image) error {
 	//err := removeAllFiles("frontend/src/assets/temp")
 	//
