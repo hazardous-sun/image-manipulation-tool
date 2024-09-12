@@ -8,7 +8,6 @@ import (
 // Geometric transformations -------------------------------------------------------------------------------------------
 
 func transformImage(img image.Image, matrix [][]float64) image.Image {
-	println("ENTREI EM transformImage()")
 	transformedImage := image.NewRGBA(img.Bounds())
 	// ---------------------------------------- Travel through img
 	for x := 0; x < img.Bounds().Dx(); x++ { // -----------------+

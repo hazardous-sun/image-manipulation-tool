@@ -39,13 +39,12 @@ func (a *App) Transform(path string, code int, x float64, y float64) {
 		matrix = getRotationMatrix(x)
 	}
 
-	println(matrix)
-
 	path = "frontend" + path[29:]
 	img, err := loadImage(path)
 
 	if err != nil {
 		println("Error while loading image:", err.Error())
+		return
 	}
 
 	img = transformImage(img, matrix)
