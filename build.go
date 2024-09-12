@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"embed"
+	"fmt"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/menu"
 	"github.com/wailsapp/wails/v2/pkg/menu/keys"
@@ -92,12 +93,16 @@ func setOptions(app *App, AppMenu *menu.Menu) options.App {
 			Assets: assets,
 		},
 		OnStartup: app.startup,
-		OnShutdown: func(ctx context.Context) {
+		OnShutdown: func(ctx context.Context) { // TODO implement a dialog questioning if the user really wants to quit
 			err := removeTemporaryDir()
 
 			if err != nil {
 				println(pError()+":", err.Error())
 			}
+		},
+		OnDomReady: func(ctx context.Context) {
+			fmt.Println("sending updateTheme signal to JS")
+			updateTheme(app)
 		},
 		Bind: []interface{}{
 			app,

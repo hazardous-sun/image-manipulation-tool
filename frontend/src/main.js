@@ -7,6 +7,9 @@ import {GrayScale, Transform} from "../wailsjs/go/main/App";
 // Theme ---------------------------------------------------------------------------------------------------------------
 
 EventsOn('set-theme', (data) => async function () {
+    for (let i = 0; i < 1000; i++) {
+        console.log("JS theme triggered")
+    }
     let themeName = getThemeData()
 });
 
@@ -22,7 +25,7 @@ async function getThemeData() {
         // Use themeData to apply the theme to your application
         applyTheme(themeData);
     } catch (error) {
-        console.error('Error loading theme:', error);
+        console.error('error when loading theme:', error);
     }
 }
 

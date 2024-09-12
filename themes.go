@@ -6,5 +6,5 @@ import "github.com/wailsapp/wails/v2/pkg/runtime"
 
 // Sends a message to the JavaScript listener informing the theme needs to be updated.
 func updateTheme(app *App) {
-	runtime.EventsEmit(app.ctx, "set-image", map[string]interface{}{})
+	runtime.EventsEmit(app.ctx, "set-theme", map[string]interface{}{})
 }
