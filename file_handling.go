@@ -202,12 +202,6 @@ func loadImageToBytes(path string) ([]byte, error) {
 
 // Encodes an image into a file.
 func saveImage(path string, fileExt string, img image.Image) error {
-	//err := removeAllFiles("frontend/src/assets/temp")
-	//
-	//if err != nil {
-	//	return err
-	//}
-
 	file, err := os.Create(path)
 
 	if err != nil {
