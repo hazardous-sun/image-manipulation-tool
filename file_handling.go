@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"image"
@@ -165,6 +166,38 @@ func loadImage(path string) (image.Image, error) {
 	default:
 		return image.Image(nil), fmt.Errorf("unsupported image format: '%s'", fileExt)
 	}
+}
+
+func loadImageToBytes(path string) ([]byte, error) {
+	file, err := os.Open(path)
+
+	if err != nil {
+		return nil, fmt.Errorf("error opening file: %w", err)
+	}
+	defer file.Close()
+
+	img, fileName, err := image.Decode(file)
+
+	if err != nil {
+		return nil, fmt.Errorf("error decoding file: %w", err)
+	}
+
+	buf := &bytes.Buffer{}
+	switch filepath.Ext(fileName) {
+	case ".jpg", ".jpeg":
+		err = jpeg.Encode(buf, img, &jpeg.Options{Quality: 100})
+		if err != nil {
+			return nil, fmt.Errorf("error encoding file to bytes: %w", err)
+		}
+	case ".png":
+		err = png.Encode(buf, img)
+		if err != nil {
+			return nil, fmt.Errorf("error encoding file to bytes: %w", err)
+		}
+	default:
+		return nil, fmt.Errorf("unsupported image format: '%s'", fileName)
+	}
+	return buf.Bytes(), nil
 }
 
 // Encodes an image into a file.
