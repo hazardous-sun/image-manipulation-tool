@@ -206,27 +206,19 @@ func loadImageToBytes(path string) ([]byte, error) {
 		}
 	}(file)
 
-	img, fileName, err := image.Decode(file)
+	img, _, err := image.Decode(file)
 
 	if err != nil {
 		return nil, fmt.Errorf("error decoding file: %w", err)
 	}
 
 	buf := &bytes.Buffer{}
-	switch filepath.Ext(fileName) {
-	case ".jpg", ".jpeg":
-		err = jpeg.Encode(buf, img, &jpeg.Options{Quality: 100})
-		if err != nil {
-			return nil, fmt.Errorf("error encoding file to bytes: %w", err)
-		}
-	case ".png":
-		err = png.Encode(buf, img)
-		if err != nil {
-			return nil, fmt.Errorf("error encoding file to bytes: %w", err)
-		}
-	default:
-		return nil, fmt.Errorf("unsupported image format: '%s'", fileName)
+	err = png.Encode(buf, img)
+
+	if err != nil {
+		return nil, fmt.Errorf("error encoding file to bytes: %w", err)
 	}
+
 	return buf.Bytes(), nil
 }
 
