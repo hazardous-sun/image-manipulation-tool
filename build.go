@@ -71,6 +71,13 @@ func setApp() (*App, *menu.Menu) {
 
 // Returns the options used for building the application.
 func setOptions(app *App, AppMenu *menu.Menu) options.App {
+	icon, err := loadImageToBytes("build/appicon.png")
+
+	if err != nil {
+		println(err.Error())
+		icon = nil
+	}
+
 	return options.App{
 		Title:     "Image Manipulation Tool",
 		Height:    1000,
@@ -93,11 +100,11 @@ func setOptions(app *App, AppMenu *menu.Menu) options.App {
 			app,
 		},
 		Linux: &linux.Options{
-			Icon:                []byte{},
+			Icon:                icon,
 			WindowIsTranslucent: false,
 			Messages:            nil,
 			WebviewGpuPolicy:    linux.WebviewGpuPolicyOnDemand,
-			ProgramName:         "The Tool",
+			ProgramName:         "Image Manipulation Tool",
 		},
 	}
 }
