@@ -335,10 +335,3 @@ func setFeatureExtractionMenu(app *App, AppMenu *menu.Menu) {
 	// Feature extraction
 	AppMenu.AddSubmenu("Feature Extraction")
 }
-
-// Theme ---------------------------------------------------------------------------------------------------------------
-
-// Sends a message to the JavaScript listener informing the theme needs to be updated.
-func updateTheme(app *App) {
-	runtime.EventsEmit(app.ctx, "set-image", map[string]interface{}{})
-}
