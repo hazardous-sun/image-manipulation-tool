@@ -188,19 +188,19 @@ func createImage(originalPath string, origin bool) {
 	originalFile, err := os.Open(originalPath)
 
 	if err != nil {
-		println("Error during file opening:", err.Error())
+		println("error when file opening:", err.Error())
 	}
 	defer func(originalFile *os.File) {
 		err := originalFile.Close()
 		if err != nil {
-			println("error closing file '%s': %w", originalPath, err)
+			println("error when closing file '%s': %w", originalPath, err)
 		}
 	}(originalFile)
 
 	err = copyFile(newImagePath, originalFile)
 
 	if err != nil {
-		println("Error during image saving:", err.Error())
+		println("error when image saving:", err.Error())
 	}
 }
 
@@ -215,7 +215,7 @@ func loadImage(path string) (image.Image, error) {
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			println("error closing file '%s': %w", path, err)
+			println("error when closing file '%s': %w", path, err)
 		}
 	}(file)
 
@@ -237,26 +237,26 @@ func loadImageToBytes(path string) ([]byte, error) {
 	file, err := os.Open(path)
 
 	if err != nil {
-		return nil, fmt.Errorf("error opening file: %w", err)
+		return nil, fmt.Errorf("error when opening file: %w", err)
 	}
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			println("error closing file '%s': %w", path, err)
+			println("error when closing file '%s': %w", path, err)
 		}
 	}(file)
 
 	img, _, err := image.Decode(file)
 
 	if err != nil {
-		return nil, fmt.Errorf("error decoding file: %w", err)
+		return nil, fmt.Errorf("error when decoding file: %w", err)
 	}
 
 	buf := &bytes.Buffer{}
 	err = png.Encode(buf, img)
 
 	if err != nil {
-		return nil, fmt.Errorf("error encoding file to bytes: %w", err)
+		return nil, fmt.Errorf("error when encoding file to bytes: %w", err)
 	}
 
 	return buf.Bytes(), nil
@@ -272,7 +272,7 @@ func saveImage(path string, fileExt string, img image.Image) error {
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			println("error closing file '%s': %w", path, err)
+			println("error when closing file '%s': %w", path, err)
 		}
 	}(file)
 

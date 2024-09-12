@@ -43,7 +43,7 @@ func (a *App) Transform(path string, code int, x float64, y float64) {
 	img, err := loadImage(path)
 
 	if err != nil {
-		println("Error while loading image:", err.Error())
+		println("error while loading image:", err.Error())
 		return
 	}
 
@@ -52,7 +52,7 @@ func (a *App) Transform(path string, code int, x float64, y float64) {
 	fileCount, err := countFiles("frontend/src/assets/temp/prev/")
 
 	if err != nil {
-		println("Error counting files:", err.Error())
+		println("error counting files:", err.Error())
 		return
 	}
 
@@ -60,7 +60,7 @@ func (a *App) Transform(path string, code int, x float64, y float64) {
 	err = saveImage(path, fileExt, img)
 
 	if err != nil {
-		println("Error saving image:", err.Error())
+		println("error saving image:", err.Error())
 		return
 	}
 
@@ -78,7 +78,7 @@ func (a *App) GrayScale(path string) {
 	img, err := loadImage(path)
 
 	if err != nil {
-		println("Error loading image:", err.Error())
+		println("error loading image:", err.Error())
 		return
 	}
 
@@ -87,7 +87,7 @@ func (a *App) GrayScale(path string) {
 	fileCount, err := countFiles("frontend/src/assets/temp/prev/")
 
 	if err != nil {
-		println("Error counting files:", err.Error())
+		println("error counting files:", err.Error())
 		return
 	}
 
@@ -95,7 +95,7 @@ func (a *App) GrayScale(path string) {
 	err = saveImage(path, fileExt, img)
 
 	if err != nil {
-		println("Error saving image:", err.Error())
+		println("error saving image:", err.Error())
 		return
 	}
 
