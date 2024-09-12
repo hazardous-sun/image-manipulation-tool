@@ -71,7 +71,10 @@ func setApp() (*App, *menu.Menu) {
 
 // Returns the options used for building the application.
 func setOptions(app *App, AppMenu *menu.Menu) options.App {
-	icon, err := loadImageToBytes("build/appicon.png")
+	icon, err := loadImageToBytes(filepath.Join(
+		"build",
+		"appicon.png",
+	))
 
 	if err != nil {
 		println(err.Error())
@@ -114,19 +117,27 @@ func setOptions(app *App, AppMenu *menu.Menu) options.App {
 // Creates a directory under "frontend/src/assets/temp" that holds a copy of the original image, along with the preview
 // images.
 func initializeTemporaryDir() error {
-	dir := "frontend/src/assets/temp"
+	dir := filepath.Join(
+		"frontend",
+		"src",
+		"assets",
+		"temp",
+	)
 	err := os.Mkdir(dir, os.ModePerm)
 
 	if err != nil {
 		if os.IsExist(err) {
 			return nil
 		} else {
-			println("Error while creating the temp directory:", err.Error())
+			println("error while creating the temp directory:", err.Error())
 			return err
 		}
 	}
 
-	err = os.Mkdir(dir+"/origin", os.ModePerm)
+	err = os.Mkdir(filepath.Join(
+		dir,
+		"origin",
+	), os.ModePerm)
 
 	if err != nil {
 		if os.IsExist(err) {
@@ -137,7 +148,10 @@ func initializeTemporaryDir() error {
 		}
 	}
 
-	err = os.Mkdir(dir+"/prev", os.ModePerm)
+	err = os.Mkdir(filepath.Join(
+		dir,
+		"prev",
+	), os.ModePerm)
 
 	if err != nil {
 		if os.IsExist(err) {
@@ -153,7 +167,12 @@ func initializeTemporaryDir() error {
 
 // Removes the temporary directory that holds the copy of the original and preview images.
 func removeTemporaryDir() error {
-	dir := "frontend/src/assets/temp"
+	dir := filepath.Join(
+		"frontend",
+		"src",
+		"assets",
+		"temp",
+	)
 	err := os.RemoveAll(dir)
 	if err != nil {
 		return err
@@ -167,10 +186,6 @@ func removeTemporaryDir() error {
 func setMenu(app *App) *menu.Menu {
 	AppMenu := menu.NewMenu()
 	setFileMenu(app, AppMenu)
-	//setGeoTransformMenu(app, AppMenu)
-	//setFiltersMenu(app, AppMenu)
-	//setMathMorphologyMenu(app, AppMenu)
-	//setFeatureExtractionMenu(app, AppMenu)
 	return AppMenu
 }
 
@@ -186,7 +201,7 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 		cwd, err := os.Getwd()
 
 		if err != nil {
-			println("Error during CWD collection:", err.Error())
+			println("error during CWD collection:", err.Error())
 			if goRuntime.GOOS == "windows" {
 				cwd = "%USERPROFILE%"
 			} else {
@@ -214,7 +229,7 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 		)
 
 		if err != nil {
-			println("Error during dialog:", err.Error())
+			println("error during dialog:", err.Error())
 			return
 		}
 

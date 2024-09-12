@@ -24,7 +24,10 @@ func removeAllFiles(dirPath string) error {
 
 	// Iterate through each file and remove it
 	for _, file := range files {
-		filePath := filepath.Join(dirPath, file.Name())
+		filePath := filepath.Join(
+			dirPath,
+			file.Name(),
+		)
 		if err := os.Remove(filePath); err != nil {
 			return fmt.Errorf("error removing file: %w", err)
 		}
@@ -81,7 +84,13 @@ func notifyImagesChange(app *App, path string, both bool) {
 		})
 	} else {
 		// If only the preview image will change, it is required to check how many prev images already exist in the dir
-		fileCount, err := countFiles("frontend/src/assets/temp/prev/")
+		fileCount, err := countFiles(filepath.Join(
+			"frontend",
+			"src",
+			"assets",
+			"temp",
+			"prev",
+		))
 
 		if err != nil {
 			println(err.Error())
@@ -102,13 +111,25 @@ func notifyImagesChange(app *App, path string, both bool) {
 // Useful when the extension for the image changes and the file cannot simply be overwritten.
 func setOriginPrev(app *App, path string) {
 	// Clean origin and prev directories
-	err := removeAllFiles("frontend/src/assets/temp/origin")
+	err := removeAllFiles(filepath.Join(
+		"frontend",
+		"src",
+		"assets",
+		"temp",
+		"origin",
+	))
 
 	if err != nil {
 		println("error while trying to clean origin images directory: %w", err)
 	}
 
-	err = removeAllFiles("frontend/src/assets/temp/prev")
+	err = removeAllFiles(filepath.Join(
+		"frontend",
+		"src",
+		"assets",
+		"temp",
+		"prev",
+	))
 
 	if err != nil {
 		println("error while trying to clean preview images directory: %w", err)
@@ -128,9 +149,22 @@ func createImage(originalPath string, origin bool) {
 	var newImagePath string
 
 	if origin {
-		newImagePath = "frontend/src/assets/temp/origin/0" + filepath.Ext(originalPath)
+		newImagePath = filepath.Join(
+			"frontend",
+			"src",
+			"assets",
+			"temp",
+			"origin",
+			"0"+filepath.Ext(originalPath),
+		)
 	} else {
-		fileCount, err := countFiles("frontend/src/assets/temp/prev/")
+		fileCount, err := countFiles(filepath.Join(
+			"frontend",
+			"src",
+			"assets",
+			"temp",
+			"prev",
+		))
 
 		if err != nil {
 			println(err.Error())
@@ -141,7 +175,13 @@ func createImage(originalPath string, origin bool) {
 			fileCount = fileCount - 1
 		}
 
-		newImagePath = "frontend/src/assets/temp/prev/" + fmt.Sprintf("%d", fileCount) + filepath.Ext(originalPath)
+		newImagePath = filepath.Join(
+			"frontend",
+			"src",
+			"assets",
+			"temp",
+			"prev",
+			fmt.Sprintf("%d", fileCount)+filepath.Ext(originalPath))
 	}
 
 	// Load original file
@@ -252,5 +292,3 @@ func saveImage(path string, fileExt string, img image.Image) error {
 	}
 	return nil
 }
-
-// ---------------------------------------------------------------------------------------------------------------------
