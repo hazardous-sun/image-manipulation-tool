@@ -52,7 +52,13 @@ func copyFile(path string, content *os.File) error {
 	if err != nil {
 		return err
 	}
-	defer destFile.Close()
+
+	defer func(destFile *os.File) {
+		err := destFile.Close()
+		if err != nil {
+			println("error closing file '%s': %w", path, err)
+		}
+	}(destFile)
 
 	// Copy content to the created file
 	_, err = io.Copy(destFile, content)
@@ -69,7 +75,7 @@ func copyFile(path string, content *os.File) error {
 func notifyImagesChange(app *App, path string, both bool) {
 	// Check if both images will change
 	if both {
-		// If both will change, origin and prev directories will be cleared, so the file can be save as "0.{file ext}"
+		// If both will change, origin and prev directories will be cleared, so the file can be saved as "0.{file ext}"
 		runtime.EventsEmit(app.ctx, "set-origin-prev", map[string]interface{}{
 			"path": "0" + filepath.Ext(path),
 		})
@@ -96,8 +102,17 @@ func notifyImagesChange(app *App, path string, both bool) {
 // Useful when the extension for the image changes and the file cannot simply be overwritten.
 func setOriginPrev(app *App, path string) {
 	// Clean origin and prev directories
-	removeAllFiles("frontend/src/assets/temp/origin")
-	removeAllFiles("frontend/src/assets/temp/prev")
+	err := removeAllFiles("frontend/src/assets/temp/origin")
+
+	if err != nil {
+		println("error while trying to clean origin images directory: %w", err)
+	}
+
+	err = removeAllFiles("frontend/src/assets/temp/prev")
+
+	if err != nil {
+		println("error while trying to clean preview images directory: %w", err)
+	}
 
 	// Create images
 	createImage(path, true)
@@ -135,7 +150,12 @@ func createImage(originalPath string, origin bool) {
 	if err != nil {
 		println("Error during file opening:", err.Error())
 	}
-	defer originalFile.Close()
+	defer func(originalFile *os.File) {
+		err := originalFile.Close()
+		if err != nil {
+			println("error closing file '%s': %w", originalPath, err)
+		}
+	}(originalFile)
 
 	err = copyFile(newImagePath, originalFile)
 
@@ -152,7 +172,12 @@ func loadImage(path string) (image.Image, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			println("error closing file '%s': %w", path, err)
+		}
+	}(file)
 
 	// Check if the file is a supported image
 	fileExt := filepath.Ext(path)
@@ -174,7 +199,12 @@ func loadImageToBytes(path string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error opening file: %w", err)
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			println("error closing file '%s': %w", path, err)
+		}
+	}(file)
 
 	img, fileName, err := image.Decode(file)
 
@@ -207,7 +237,12 @@ func saveImage(path string, fileExt string, img image.Image) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			println("error closing file '%s': %w", path, err)
+		}
+	}(file)
 
 	switch fileExt {
 	case ".jpg", ".jpeg":
