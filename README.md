@@ -56,8 +56,3 @@ to this in your browser, and you can call your Go code from devtools.
 ## Building
 
 To build a redistributable, production mode package, use `wails build`.
-
-
-## Third-Party Credits
-
-- Icon: [gungyoga04](https://www.freepik.com/icon/photo-editing_11733564#fromView=search&page=1&position=2&uuid=e2847c72-38a2-4956-9f91-8eb5996069df)
