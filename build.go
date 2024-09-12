@@ -50,7 +50,7 @@ func Run(build Build) {
 	err := wails.Run(&build.AppOptions)
 
 	if err != nil {
-		println("error:", err.Error())
+		println(pError()+":", err.Error())
 	}
 }
 
@@ -96,7 +96,7 @@ func setOptions(app *App, AppMenu *menu.Menu) options.App {
 			err := removeTemporaryDir()
 
 			if err != nil {
-				println("error:", err.Error())
+				println(pError()+":", err.Error())
 			}
 		},
 		Bind: []interface{}{
@@ -129,7 +129,7 @@ func initializeTemporaryDir() error {
 		if os.IsExist(err) {
 			return nil
 		} else {
-			println("error while creating the temp directory:", err.Error())
+			println(pError()+" while creating the temp directory:", err.Error())
 			return err
 		}
 	}
@@ -143,7 +143,7 @@ func initializeTemporaryDir() error {
 		if os.IsExist(err) {
 			return nil
 		} else {
-			println("error while creating the temp origin directory:", err.Error())
+			println(pError()+" while creating the temp origin directory:", err.Error())
 			return err
 		}
 	}
@@ -157,7 +157,7 @@ func initializeTemporaryDir() error {
 		if os.IsExist(err) {
 			return nil
 		} else {
-			println("error while creating the temp prev directory:", err.Error())
+			println(pError()+" while creating the temp prev directory:", err.Error())
 			return err
 		}
 	}
@@ -201,7 +201,7 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 		cwd, err := os.Getwd()
 
 		if err != nil {
-			println("error when CWD collection:", err.Error())
+			println(pError()+" when CWD collection:", err.Error())
 			if goRuntime.GOOS == "windows" {
 				cwd = "%USERPROFILE%"
 			} else {
@@ -229,7 +229,7 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 		)
 
 		if err != nil {
-			println("error during dialog:", err.Error())
+			println(pError()+" during dialog:", err.Error())
 			return
 		}
 
@@ -241,7 +241,7 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 		cwd, err := os.Getwd()
 
 		if err != nil {
-			println("error during CWD collection:", err.Error())
+			println(pError()+" during CWD collection:", err.Error())
 			if goRuntime.GOOS == "windows" {
 				cwd = "%USERPROFILE%"
 			} else {
@@ -269,14 +269,14 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 			img, err := loadImage(path)
 
 			if err != nil {
-				println("error when loading image:", err.Error())
+				println(pError()+" when loading image:", err.Error())
 				return
 			}
 
 			err = saveImage(path, filepath.Ext(path), img)
 
 			if err != nil {
-				println("error when saving image:", err.Error())
+				println(pError()+" when saving image:", err.Error())
 				return
 			}
 		})
@@ -292,7 +292,7 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 		})
 
 		if err != nil {
-			println("error during dialog: %w", err)
+			println(pError()+" during dialog: %w", err)
 		}
 	})
 	FileMenu.AddSeparator()
