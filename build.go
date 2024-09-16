@@ -11,6 +11,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/linux"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"net/url"
 	"os"
 	"path/filepath"
 	goRuntime "runtime"
@@ -270,20 +271,26 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 		runtime.EventsEmit(app.ctx, "get-prev", nil)
 
 		runtime.EventsOn(app.ctx, "receive-prev", func(optionalData ...interface{}) {
-			println("path received from JS:", optionalData) // TODO fix this
-			img, err := loadImage(path)
+
+			urlString, err := url.Parse(optionalData[0].(string))
+			filename := filepath.Base(urlString.Path)
+			imageToSavePath := filepath.Join("frontend", "src", "assets", "temp", "prev", filename)
+
+			img, err := loadImage(imageToSavePath)
 
 			if err != nil {
 				println(pError()+" when loading image:", err.Error())
 				return
 			}
 
-			err = saveImage(path, filepath.Ext(path), img)
+			err = saveImage(path, filepath.Ext(imageToSavePath), img)
 
 			if err != nil {
 				println(pError()+" when saving image:", err.Error())
 				return
 			}
+
+			runtime.EventsOff(app.ctx, "receive-prev")
 		})
 	})
 	FileMenu.AddSeparator()

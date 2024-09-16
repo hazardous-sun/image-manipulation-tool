@@ -12,7 +12,7 @@ expected to contain a GUI where the user will be able to apply filters and manip
 - [ ] Theme customization
 - Tools:
   - [X] Open image
-  - [ ] Save image
+  - [X] Save image
   - [X] Geometric transformations
     - [X] Translate
     - [X] Rotate
