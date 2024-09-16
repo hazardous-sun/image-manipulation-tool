@@ -1,5 +1,7 @@
 package main
 
+var UnsavedProgress bool
+
 func main() {
 	build, err := Build{}.build()
 
@@ -7,6 +9,8 @@ func main() {
 		println(err.Error())
 		return
 	}
+
+	UnsavedProgress = false
 
 	Run(build)
 }

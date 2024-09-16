@@ -320,6 +320,29 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 	FileMenu.AddSeparator()
 	// -- Exit
 	FileMenu.AddText("Exit", keys.CmdOrCtrl("q"), func(_ *menu.CallbackData) {
+		if UnsavedProgress {
+			choice, err := runtime.MessageDialog(app.ctx, runtime.MessageDialogOptions{
+				Type:    runtime.WarningDialog,
+				Title:   "Warning",
+				Message: "Do you really wish to quit? All unsaved progress will be lost.",
+				Buttons: []string{"Cancel", "Quit"},
+			})
+
+			if err != nil {
+				println(pError()+" during dialog:", err)
+				return
+			}
+
+			switch choice {
+			case "Quit":
+				runtime.Quit(app.ctx)
+			case "Cancel":
+				return
+			default:
+				return
+			}
+		}
+
 		runtime.Quit(app.ctx)
 	})
 }
