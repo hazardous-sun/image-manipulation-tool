@@ -75,9 +75,9 @@ function setPrev(path) {
     previewImage.src = "src/assets/temp/prev/" + path;
 }
 
-EventsOn('get-prev', () => {
+EventsOn('save-image-request', () => {
     let previewImage = document.getElementById("previewImage").src.toString();
-    EventsEmit("receive-prev", previewImage)
+    EventsEmit("save-image-response", previewImage)
 })
 
 // Geometric transformations -------------------------------------------------------------------------------------------

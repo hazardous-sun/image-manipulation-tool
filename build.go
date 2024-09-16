@@ -244,9 +244,9 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 	FileMenu.AddSeparator()
 	// -- Save image
 	FileMenu.AddText("Save", keys.CmdOrCtrl("s"), func(_ *menu.CallbackData) {
-		runtime.EventsEmit(app.ctx, "get-prev", nil)
+		runtime.EventsEmit(app.ctx, "save-image-request", nil)
 
-		runtime.EventsOn(app.ctx, "receive-prev", func(optionalData ...interface{}) {
+		runtime.EventsOn(app.ctx, "save-image-response", func(optionalData ...interface{}) {
 			urlString, err := url.Parse(optionalData[0].(string))
 			filename := filepath.Base(urlString.Path)
 
