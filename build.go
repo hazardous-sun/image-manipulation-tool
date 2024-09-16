@@ -244,37 +244,47 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 	FileMenu.AddSeparator()
 	// -- Save image
 	FileMenu.AddText("Save", keys.CmdOrCtrl("s"), func(_ *menu.CallbackData) {
-		cwd, err := os.Getwd()
-
-		if err != nil {
-			println(pError()+" during CWD collection:", err.Error())
-			if goRuntime.GOOS == "windows" {
-				cwd = "%USERPROFILE%"
-			} else {
-				cwd = "~"
-			}
-		}
-
-		path, err := runtime.SaveFileDialog(
-			app.ctx,
-			runtime.SaveDialogOptions{
-				DefaultDirectory:           cwd,
-				DefaultFilename:            "",
-				Title:                      "Save image",
-				Filters:                    nil,
-				ShowHiddenFiles:            true,
-				CanCreateDirectories:       true,
-				TreatPackagesAsDirectories: false,
-			},
-		)
-
 		runtime.EventsEmit(app.ctx, "get-prev", nil)
 
 		runtime.EventsOn(app.ctx, "receive-prev", func(optionalData ...interface{}) {
-
 			urlString, err := url.Parse(optionalData[0].(string))
 			filename := filepath.Base(urlString.Path)
+
+			if filename == "." {
+				runtime.MessageDialog(app.ctx, runtime.MessageDialogOptions{
+					Type:          runtime.ErrorDialog,
+					Title:         "Error",
+					Message:       "You have no image open at the moment.",
+					DefaultButton: "Back",
+				})
+				return
+			}
+
 			imageToSavePath := filepath.Join("frontend", "src", "assets", "temp", "prev", filename)
+
+			cwd, err := os.Getwd()
+
+			if err != nil {
+				println(pError()+" during CWD collection:", err.Error())
+				if goRuntime.GOOS == "windows" {
+					cwd = "%USERPROFILE%"
+				} else {
+					cwd = "~"
+				}
+			}
+
+			newFilePath, err := runtime.SaveFileDialog(
+				app.ctx,
+				runtime.SaveDialogOptions{
+					DefaultDirectory:           cwd,
+					DefaultFilename:            filepath.Ext(filename),
+					Title:                      "Save image",
+					Filters:                    nil,
+					ShowHiddenFiles:            true,
+					CanCreateDirectories:       true,
+					TreatPackagesAsDirectories: false,
+				},
+			)
 
 			img, err := loadImage(imageToSavePath)
 
@@ -283,7 +293,7 @@ func setFileMenu(app *App, AppMenu *menu.Menu) {
 				return
 			}
 
-			err = saveImage(path, filepath.Ext(imageToSavePath), img)
+			err = saveImage(newFilePath, filepath.Ext(imageToSavePath), img)
 
 			if err != nil {
 				println(pError()+" when saving image:", err.Error())
