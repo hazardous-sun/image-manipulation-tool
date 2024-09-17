@@ -275,12 +275,17 @@ func menuSaveImage(app *App) {
 		filename := filepath.Base(urlString.Path)
 
 		if filename == "." {
-			runtime.MessageDialog(app.ctx, runtime.MessageDialogOptions{
+			_, err = runtime.MessageDialog(app.ctx, runtime.MessageDialogOptions{
 				Type:          runtime.ErrorDialog,
 				Title:         "Error",
 				Message:       "You have no image open at the moment.",
 				DefaultButton: "Back",
 			})
+
+			if err != nil {
+				println(pError()+" during dialog:", err.Error())
+			}
+
 			return
 		}
 
@@ -309,6 +314,11 @@ func menuSaveImage(app *App) {
 				TreatPackagesAsDirectories: false,
 			},
 		)
+
+		if err != nil {
+			println(pError()+" during dialog:", err.Error())
+			return
+		}
 
 		img, err := loadImage(imageToSavePath)
 
