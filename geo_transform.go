@@ -56,9 +56,9 @@ func getTranslationMatrix(x float64, y float64) [][]float64 {
 //
 // [
 //
-//	[x, 0, 0],
-//	[0, y, 0],
-//	[0, 0, z],
+//	[1/x,   0, 0],
+//	[  0, 1/y, 0],
+//	[  0,   0, z],
 //
 // ]
 //
@@ -75,8 +75,8 @@ func getResizeMatrix(x float64, y float64) [][]float64 {
 //
 // [
 //
-//	[0, 0, 0],
-//	[0, -1, 0],
+//	[-1, 0, 0],
+//	[0, 1, 0],
 //	[0, 0, 1],
 //
 // ]
@@ -92,7 +92,7 @@ func getMirrorHMatrix() [][]float64 {
 //
 // [
 //
-//	[0, 0, 0],
+//	[1, 0, 0],
 //	[0, -1, 0],
 //	[0, 0, 1],
 //
@@ -109,9 +109,9 @@ func getMirrorVMatrix() [][]float64 {
 //
 // [
 //
-//	[1,       0,      0],
-//	[cos(α), -sen(α), 0],
-//	[sen(α),  cos(α), 0],
+//	[ cos(α), sin(α), 0],
+//	[-sin(α), cos(α), 0],
+//	[      0,      0, 1],
 //
 // ]
 func getRotationMatrix(x float64) [][]float64 {
