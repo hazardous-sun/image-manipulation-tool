@@ -24,19 +24,21 @@ func (a *App) startup(ctx context.Context) {
 
 // Geometric transformations -------------------------------------------------------------------------------------------
 
-func (a *App) Transform(path string, code int, x float64, y float64) {
+func (a *App) Transform(path string, code string, x float64, y float64) {
 	var matrix [][]float64
 	switch code {
-	case 0:
+	case "translate":
 		matrix = getTranslationMatrix(x, y)
-	case 1:
+	case "resize":
 		matrix = getResizeMatrix(x, y)
-	case 2:
+	case "mirrorH":
 		matrix = getMirrorHMatrix()
-	case 3:
+	case "mirrorV":
 		matrix = getMirrorVMatrix()
-	case 4:
+	case "rotate":
 		matrix = getRotationMatrix(x)
+	default:
+		return
 	}
 
 	path = "frontend" + path[29:]
@@ -65,6 +67,8 @@ func (a *App) Transform(path string, code int, x float64, y float64) {
 	}
 
 	notifyImagesChange(a, path, false)
+
+	UnsavedProgress = true
 }
 
 // Filters -------------------------------------------------------------------------------------------------------------
@@ -100,4 +104,6 @@ func (a *App) GrayScale(path string) {
 	}
 
 	notifyImagesChange(a, path, false)
+
+	UnsavedProgress = true
 }

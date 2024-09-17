@@ -6,7 +6,7 @@ import {GrayScale, Transform} from "../wailsjs/go/main/App";
 
 // Theme ---------------------------------------------------------------------------------------------------------------
 
-EventsOn('set-theme', (data) => async function () {
+EventsOn("set-theme", (data) => async function () {
     for (let i = 0; i < 1000; i++) {
         console.log("JS theme triggered")
     }
@@ -15,7 +15,7 @@ EventsOn('set-theme', (data) => async function () {
 
 async function getThemeData() {
     try {
-        const response = await fetch('config.json');
+        const response = await fetch("config.json");
         const data = await response.json();
 
         const themePath = `src/assets/themes/${data.theme}`;
@@ -25,7 +25,7 @@ async function getThemeData() {
         // Use themeData to apply the theme to your application
         applyTheme(themeData);
     } catch (error) {
-        console.error('error when loading theme:', error);
+        console.error("error when loading theme:", error);
     }
 }
 
@@ -52,11 +52,11 @@ function applyTheme(themeData) {
 
 // Image handling ------------------------------------------------------------------------------------------------------
 
-EventsOn('set-origin-prev', (data) => {
+EventsOn("set-origin-prev", (data) => {
     setOriginPrev(data.path);
 });
 
-EventsOn('set-prev', (data) => {
+EventsOn("set-prev", (data) => {
     setPrev(data.path);
 });
 
@@ -75,7 +75,7 @@ function setPrev(path) {
     previewImage.src = "src/assets/temp/prev/" + path;
 }
 
-EventsOn('save-image-request', () => {
+EventsOn("save-image-request", () => {
     let previewImage = document.getElementById("previewImage").src.toString();
     EventsEmit("save-image-response", previewImage)
 })
@@ -84,7 +84,7 @@ EventsOn('save-image-request', () => {
 
 function geoTransform(code, x, y) {
 
-    let prevImageSrc = document.getElementById('previewImage').src
+    let prevImageSrc = document.getElementById("previewImage").src
 
     if (prevImageSrc === "") {
         return
@@ -94,7 +94,7 @@ function geoTransform(code, x, y) {
 }
 
 function getXY(baseValue) {
-    let x = document.getElementById('xAxis').value
+    let x = document.getElementById("xAxis").value
 
     if (x === "") {
         x = baseValue
@@ -102,7 +102,7 @@ function getXY(baseValue) {
         x = Number(x)
     }
 
-    let y = document.getElementById('yAxis').value
+    let y = document.getElementById("yAxis").value
 
     if (y === "") {
         y = baseValue
@@ -115,25 +115,25 @@ function getXY(baseValue) {
 
 window.imgTranslate = function () {
     let values = getXY(0)
-    geoTransform(0, values[0], values[1])
+    geoTransform("translate", values[0], values[1])
 }
 
 window.imgResize = function () {
     let values = getXY(1)
-    geoTransform(1, values[0], values[1])
+    geoTransform("resize", values[0], values[1])
 }
 
 window.mirrorH = function () {
-    geoTransform(2, 0, 0)
+    geoTransform("mirrorH", 0, 0)
 }
 
 window.mirrorV = function () {
-    geoTransform(3, 0, 0)
+    geoTransform("mirrorV", 0, 0)
 }
 
 window.imgRotate = function () {
     let values = getXY(0)
-    geoTransform(4, values[0], values[1])
+    geoTransform("rotate", values[0], values[1])
 }
 
 // Filter --------------------------------------------------------------------------------------------------------------
@@ -141,6 +141,6 @@ window.imgRotate = function () {
 // Grayscale
 window.filterGrayScale = function () {
     // send from [29::]
-    let prevImageSrc = document.getElementById('previewImage').src
+    let prevImageSrc = document.getElementById("previewImage").src
     GrayScale(prevImageSrc).then()
 }
