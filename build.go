@@ -263,6 +263,10 @@ func menuOpenImage(app *App) {
 		return
 	}
 
+	if path == "" {
+		return
+	}
+
 	setOriginPrev(app, path)
 
 }
