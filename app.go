@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"image-manipulation-tool/image-handling"
 	"path/filepath"
 )
 
@@ -28,15 +29,15 @@ func (a *App) Transform(path string, code string, x float64, y float64) {
 	var matrix [][]float64
 	switch code {
 	case "translate":
-		matrix = GetTranslationMatrix(x, y)
+		matrix = image_handling.GetTranslationMatrix(x, y)
 	case "resize":
-		matrix = GetResizeMatrix(x, y)
+		matrix = image_handling.GetResizeMatrix(x, y)
 	case "mirrorH":
-		matrix = GetMirrorHMatrix()
+		matrix = image_handling.GetMirrorHMatrix()
 	case "mirrorV":
-		matrix = GetMirrorVMatrix()
+		matrix = image_handling.GetMirrorVMatrix()
 	case "rotate":
-		matrix = GetRotationMatrix(x)
+		matrix = image_handling.GetRotationMatrix(x)
 	default:
 		return
 	}
@@ -49,7 +50,7 @@ func (a *App) Transform(path string, code string, x float64, y float64) {
 		return
 	}
 
-	img = transformImage(img, matrix)
+	img = image_handling.TransformImage(img, matrix)
 	fileExt := filepath.Ext(path)
 	fileCount, err := countFiles("frontend/src/assets/temp/prev/")
 
@@ -86,7 +87,7 @@ func (a *App) GrayScale(path string) {
 		return
 	}
 
-	img = filterGrayScale(img)
+	img = image_handling.FilterGrayScale(img)
 	fileExt := filepath.Ext(path)
 	fileCount, err := countFiles("frontend/src/assets/temp/prev/")
 

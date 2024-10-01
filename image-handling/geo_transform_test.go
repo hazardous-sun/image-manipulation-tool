@@ -1,7 +1,8 @@
-package main_test
+package image_handling_test
 
 import (
 	"image-manipulation-tool"
+	"image-manipulation-tool/image-handling"
 	"math"
 	"testing"
 )
@@ -9,7 +10,7 @@ import (
 func TestGetTranslationMatrix(t *testing.T) {
 	x := 3.0
 	y := 5.0
-	receivedMatrix := main.GetTranslationMatrix(x, y)
+	receivedMatrix := image_handling.GetTranslationMatrix(x, y)
 	expectedMatrix := [][]float64{
 		{1, 0, x},
 		{0, 1, y},
@@ -27,7 +28,7 @@ func TestGetTranslationMatrix(t *testing.T) {
 func TestGetResizeMatrix(t *testing.T) {
 	x := 3.0
 	y := 5.0
-	receivedMatrix := main.GetResizeMatrix(x, y)
+	receivedMatrix := image_handling.GetResizeMatrix(x, y)
 	expectedMatrix := [][]float64{
 		{1 / x, 0, 0},
 		{0, 1 / y, 0},
@@ -43,7 +44,7 @@ func TestGetResizeMatrix(t *testing.T) {
 }
 
 func TestGetMirrorHMatrix(t *testing.T) {
-	receivedMatrix := main.GetMirrorHMatrix()
+	receivedMatrix := image_handling.GetMirrorHMatrix()
 	expectedMatrix := [][]float64{
 		{-1, 0, 0},
 		{0, 1, 0},
@@ -59,7 +60,7 @@ func TestGetMirrorHMatrix(t *testing.T) {
 }
 
 func TestGetMirrorVMatrix(t *testing.T) {
-	receivedMatrix := main.GetMirrorVMatrix()
+	receivedMatrix := image_handling.GetMirrorVMatrix()
 	expectedMatrix := [][]float64{
 		{1, 0, 0},
 		{0, -1, 0},
@@ -76,7 +77,7 @@ func TestGetMirrorVMatrix(t *testing.T) {
 
 func TestGetRotationMatrix(t *testing.T) {
 	x := 3.0
-	receivedMatrix := main.GetRotationMatrix(x)
+	receivedMatrix := image_handling.GetRotationMatrix(x)
 	expectedMatrix := [][]float64{
 		{math.Cos(x), math.Sin(x), 0},
 		{-math.Sin(x), math.Cos(x), 0},

@@ -1,4 +1,4 @@
-package main
+package image_handling
 
 import (
 	"image"
@@ -7,7 +7,7 @@ import (
 
 // Geometric transformations -------------------------------------------------------------------------------------------
 
-func transformImage(img image.Image, matrix [][]float64) image.Image {
+func TransformImage(img image.Image, matrix [][]float64) image.Image {
 	transformedImage := image.NewRGBA(img.Bounds())
 	// ---------------------------------------- Travel through img
 	for x := 0; x < img.Bounds().Dx(); x++ { // -----------------+
