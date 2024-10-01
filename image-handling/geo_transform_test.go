@@ -1,7 +1,6 @@
 package image_handling_test
 
 import (
-	"image-manipulation-tool"
 	"image-manipulation-tool/image-handling"
 	"math"
 	"testing"
@@ -19,7 +18,7 @@ func TestGetTranslationMatrix(t *testing.T) {
 	for i := range receivedMatrix {
 		for j := range receivedMatrix[i] {
 			if receivedMatrix[i][j] != expectedMatrix[i][j] {
-				t.Errorf(main.RError()+" expected translation receivedMatrix element at [%d][%d] to be %f, but got %f", i, j, expectedMatrix[i][j], receivedMatrix[i][j])
+				t.Errorf(RError()+" expected translation receivedMatrix element at [%d][%d] to be %f, but got %f", i, j, expectedMatrix[i][j], receivedMatrix[i][j])
 			}
 		}
 	}
@@ -37,7 +36,7 @@ func TestGetResizeMatrix(t *testing.T) {
 	for i := range receivedMatrix {
 		for j := range receivedMatrix[i] {
 			if receivedMatrix[i][j] != expectedMatrix[i][j] {
-				t.Errorf(main.RError()+" expected translation receivedMatrix element at [%d][%d] to be %f, but got %f", i, j, expectedMatrix[i][j], receivedMatrix[i][j])
+				t.Errorf(RError()+" expected translation receivedMatrix element at [%d][%d] to be %f, but got %f", i, j, expectedMatrix[i][j], receivedMatrix[i][j])
 			}
 		}
 	}
@@ -53,7 +52,7 @@ func TestGetMirrorHMatrix(t *testing.T) {
 	for i := range receivedMatrix {
 		for j := range receivedMatrix[i] {
 			if receivedMatrix[i][j] != expectedMatrix[i][j] {
-				t.Errorf(main.RError()+" expected translation receivedMatrix element at [%d][%d] to be %f, but got %f", i, j, expectedMatrix[i][j], receivedMatrix[i][j])
+				t.Errorf(RError()+" expected translation receivedMatrix element at [%d][%d] to be %f, but got %f", i, j, expectedMatrix[i][j], receivedMatrix[i][j])
 			}
 		}
 	}
@@ -69,7 +68,7 @@ func TestGetMirrorVMatrix(t *testing.T) {
 	for i := range receivedMatrix {
 		for j := range receivedMatrix[i] {
 			if receivedMatrix[i][j] != expectedMatrix[i][j] {
-				t.Errorf(main.RError()+" expected translation receivedMatrix element at [%d][%d] to be %f, but got %f", i, j, expectedMatrix[i][j], receivedMatrix[i][j])
+				t.Errorf(RError()+" expected translation receivedMatrix element at [%d][%d] to be %f, but got %f", i, j, expectedMatrix[i][j], receivedMatrix[i][j])
 			}
 		}
 	}
@@ -86,8 +85,12 @@ func TestGetRotationMatrix(t *testing.T) {
 	for i := range receivedMatrix {
 		for j := range receivedMatrix[i] {
 			if receivedMatrix[i][j] != expectedMatrix[i][j] {
-				t.Errorf(main.RError()+" expected translation receivedMatrix element at [%d][%d] to be %f, but got %f", i, j, expectedMatrix[i][j], receivedMatrix[i][j])
+				t.Errorf(RError()+" expected translation receivedMatrix element at [%d][%d] to be %f, but got %f", i, j, expectedMatrix[i][j], receivedMatrix[i][j])
 			}
 		}
 	}
+}
+
+func RError() string {
+	return "\033[31merror:\033[0m"
 }
