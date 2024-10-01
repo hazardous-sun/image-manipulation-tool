@@ -25,3 +25,17 @@ func TestBuild(t *testing.T) {
 		t.Errorf(RError() + " expected Build.TempDirInitialized to be true, but got false")
 	}
 }
+
+func TestTempDirHandling(t *testing.T) {
+	err := initializeTemporaryDir()
+
+	if err != nil {
+		t.Errorf(RError()+" unable to initialize temporary dir : %s", err)
+	}
+
+	err = removeTemporaryDir()
+
+	if err != nil {
+		t.Errorf(RError()+" unable to remove temporary dir : %s", err)
+	}
+}
