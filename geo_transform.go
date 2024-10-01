@@ -35,7 +35,7 @@ func applyChange(img image.Image, transformedImage *image.RGBA, matrix [][]float
 
 // --------- Matrices
 
-// Returns the matrix used for translating images:
+// GetTranslationMatrix Returns the matrix used for translating images:
 // [
 //
 //	[1, 0, x],
@@ -44,7 +44,7 @@ func applyChange(img image.Image, transformedImage *image.RGBA, matrix [][]float
 //
 // ]
 // Since we are dealing with images that only have two axis, we can set 'z' to 1.
-func getTranslationMatrix(x float64, y float64) [][]float64 {
+func GetTranslationMatrix(x float64, y float64) [][]float64 {
 	return [][]float64{
 		{1, 0, x},
 		{0, 1, y},
@@ -63,7 +63,7 @@ func getTranslationMatrix(x float64, y float64) [][]float64 {
 // ]
 //
 // Since we are dealing with images that only have two axis, we can set 'z' to 1.
-func getResizeMatrix(x float64, y float64) [][]float64 {
+func GetResizeMatrix(x float64, y float64) [][]float64 {
 	return [][]float64{
 		{1 / x, 0, 0},
 		{0, 1 / y, 0},
@@ -80,7 +80,7 @@ func getResizeMatrix(x float64, y float64) [][]float64 {
 //	[0, 0, 1],
 //
 // ]
-func getMirrorHMatrix() [][]float64 {
+func GetMirrorHMatrix() [][]float64 {
 	return [][]float64{
 		{-1, 0, 0},
 		{0, 1, 0},
@@ -97,7 +97,7 @@ func getMirrorHMatrix() [][]float64 {
 //	[0, 0, 1],
 //
 // ]
-func getMirrorVMatrix() [][]float64 {
+func GetMirrorVMatrix() [][]float64 {
 	return [][]float64{
 		{1, 0, 0},
 		{0, -1, 0},
@@ -114,7 +114,7 @@ func getMirrorVMatrix() [][]float64 {
 //	[      0,      0, 1],
 //
 // ]
-func getRotationMatrix(x float64) [][]float64 {
+func GetRotationMatrix(x float64) [][]float64 {
 	return [][]float64{
 		{math.Cos(x), math.Sin(x), 0},
 		{-math.Sin(x), math.Cos(x), 0},
