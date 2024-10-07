@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 )
@@ -23,12 +22,10 @@ func filterGrayScale(img image.Image) image.Image {
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
 			r, g, b, _ := img.At(x, y).RGBA()
-			grayIntensity := (r + g + b) / 3
-			grayImage.Set(x, y, color.Gray{
-				Y: uint8(grayIntensity),
-			})
+			lum := 0.2125*float64(r) + 0.7154*float64(g) + 0.0721*float64(b)
+			pixel := color.Gray{Y: uint8(lum / 256)}
+			grayImage.Set(x, y, pixel)
 		}
 	}
-	fmt.Println(grayImage.GrayAt(10, 10))
 	return grayImage
 }
