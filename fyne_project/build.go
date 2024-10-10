@@ -96,47 +96,91 @@ func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 }
 
 func initializeSideBar() fyne.CanvasObject {
-	btnsArr := []*widget.Button{
-		widget.NewButton("Resize", func() {
-			fmt.Println("resize")
-		}),
-		widget.NewButton("Rotate", func() {
-			fmt.Println("rotate")
-		}),
-		widget.NewButton("Translate", func() {}),
-		widget.NewButton("Horizontal mirroring", func() {}),
-		widget.NewButton("Vertical mirroring", func() {}),
-	}
+	// geometric transformations
+	geoTransfBtns := getBtns(
+		[]*widget.Button{
+			widget.NewButton("Resize", func() {
+				fmt.Println("resize")
+			}),
+			widget.NewButton("Rotate", func() {
+				fmt.Println("rotate")
+			}),
+			widget.NewButton("Translate", func() {}),
+			widget.NewButton("Horizontal mirroring", func() {}),
+			widget.NewButton("Vertical mirroring", func() {}),
+		},
+	)
+	geoTransfList := getBtnsList(geoTransfBtns)
 
-	btnsData := binding.NewUntypedList()
-	for _, btn := range btnsArr {
-		_ = btnsData.Append(btn)
-	}
+	// filters
+	filtersBtns := getBtns(
+		[]*widget.Button{
+			widget.NewButton("Grayscale", func() {}),
+			widget.NewButton("High fade", func() {}),
+			widget.NewButton("Low fade", func() {}),
+			widget.NewButton("Threshold", func() {}),
+		},
+	)
+	filterList := getBtnsList(filtersBtns)
 
+	// mathematical morphology
+	mathMorphoBtns := getBtns(
+		[]*widget.Button{
+			widget.NewButton("Dilatation", func() {}),
+			widget.NewButton("Erosion", func() {}),
+			widget.NewButton("Opening", func() {}),
+			widget.NewButton("Closing", func() {}),
+		},
+	)
+	mathMorphoList := getBtnsList(mathMorphoBtns)
+
+	// pass the buttons list to the accordion
 	sideBar := widget.NewAccordion(
 		widget.NewAccordionItem(
 			"Geometric trasnformations",
-			widget.NewListWithData(
-				btnsData,
-				func() fyne.CanvasObject {
-					return widget.NewButton("", func() {})
-				},
-				func(di binding.DataItem, object fyne.CanvasObject) {
-					objBtn := object.(*widget.Button)
-					temp, _ := di.(binding.Untyped).Get()
-					diBtn := temp.(*widget.Button)
-					objBtn.SetText(diBtn.Text)
-					objBtn.OnTapped = diBtn.OnTapped
-				},
-			),
+			geoTransfList,
 		),
-		widget.NewAccordionItem("Filters", widget.NewLabel("Teste")),
-		widget.NewAccordionItem("Mathematical morphology", widget.NewLabel("Teste")),
-		widget.NewAccordionItem("Feature extraction", widget.NewLabel("Teste")),
+		widget.NewAccordionItem(
+			"Filters",
+			filterList,
+		),
+		widget.NewAccordionItem(
+			"Mathematical morphology",
+			mathMorphoList,
+		),
+		widget.NewAccordionItem(
+			"Feature extraction",
+			widget.NewLabel("Nothing here yet"),
+		),
 	)
 
 	return container.NewBorder(
 		nil, nil, nil,
 		sideBar,
+	)
+}
+
+func getBtns(btns []*widget.Button) binding.UntypedList {
+	btnsList := binding.NewUntypedList()
+	for _, btn := range btns {
+		_ = btnsList.Append(btn)
+	}
+
+	return btnsList
+}
+
+func getBtnsList(btns binding.UntypedList) *widget.List {
+	return widget.NewListWithData(
+		btns,
+		func() fyne.CanvasObject {
+			return widget.NewButton("", func() {})
+		},
+		func(di binding.DataItem, object fyne.CanvasObject) {
+			objBtn := object.(*widget.Button)
+			temp, _ := di.(binding.Untyped).Get()
+			diBtn := temp.(*widget.Button)
+			objBtn.SetText(diBtn.Text)
+			objBtn.OnTapped = diBtn.OnTapped
+		},
 	)
 }
