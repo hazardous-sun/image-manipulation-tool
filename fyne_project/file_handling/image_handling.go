@@ -70,3 +70,13 @@ func LoadImageToBytes(path string) ([]byte, error) {
 
 	return buf.Bytes(), nil
 }
+
+func LoadImageFromBytes(arr []byte) (image.Image, error) {
+	img, _, err := image.Decode(bytes.NewReader(arr))
+
+	if err != nil {
+		return nil, fmt.Errorf("error: when decoding file to bytes: %w", err)
+	}
+
+	return img, nil
+}
