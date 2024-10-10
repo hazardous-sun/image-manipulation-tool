@@ -2,7 +2,7 @@
 
 ## About
 
-This is project is being developed as tool to manipulate some aspects of an image. When finished, this project is 
+This is project is being developed as tool to manipulate some aspects of an image. When finished, this project is
 expected to contain a GUI where the user will be able to apply filters and manipulate images.
 
 ### TODO
@@ -11,27 +11,35 @@ expected to contain a GUI where the user will be able to apply filters and manip
 - [X] Separate the build process into its own file
 - [ ] Theme customization
 - Tools:
-  - [X] Open image
-  - [X] Save image
-  - [X] Geometric transformations
-    - [X] Translate
-    - [X] Rotate
-    - [X] Horizontal mirroring
-    - [X] Vertical Mirroring
-    - [X] Resize
-      - [X] Increase
-      - [X] Decrease
-  - [ ] Filters
-    - [ ] Grayscale
-    - [ ] Low fade
-    - [ ] High fade
-    - [ ] Threshold
-  - [ ] Mathematical Morphology
-    - [ ] Dilation
-    - [ ] Erosion
-    - [ ] Opening
-    - [ ] Closing
-  - [ ] Feature extraction
+    - [X] Open image
+    - [X] Save image
+    - [X] Geometric transformations
+        - [X] Translate
+        - [X] Rotate
+        - [X] Horizontal mirroring
+        - [X] Vertical Mirroring
+        - [X] Resize
+            - [X] Increase
+            - [X] Decrease
+    - [ ] Filters
+        - [ ] Grayscale
+        - [ ] Low fade
+        - [ ] High fade
+        - [ ] Threshold
+    - [ ] Mathematical Morphology
+        - [ ] Dilation
+        - [ ] Erosion
+        - [ ] Opening
+        - [ ] Closing
+    - [ ] Feature extraction
+
+### Known issues
+
+- I noticed there seems to be a problem with the function that opens and saves images when running the program o
+  Windows, but since I am currently developing the application in a Linux environment, it may take a bit of time for me
+  to address what exactly is causing the error
+- I found a behavior that does not allow images with the same file extension to be loaded, but I am still figuring out
+  what is the root cause of this
 
 ## Requirements
 
