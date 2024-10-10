@@ -3,7 +3,6 @@ package models
 import (
 	"fmt"
 	"image"
-	"image-manipulation-tool/fyne_project/file_handling"
 )
 
 type Project struct {
@@ -66,12 +65,7 @@ func (p *Project) UpdatePreviewImage(img image.Image) {
 // Constructor ---------------------------------------------------------------------------------------------------------
 
 func NewProject() *Project {
-	initialImg, err := file_handling.LoadImage("fyne_project/cat.jpeg")
-
-	if err != nil {
-		panic(err)
-	}
-
+	initialImg := image.NewRGBA(image.Rect(0, 0, 512, 512))
 	return &Project{
 		versions:       1,
 		currentVersion: 0,
