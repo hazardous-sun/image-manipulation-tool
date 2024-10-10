@@ -1,383 +1,312 @@
 package main
 
 import (
-	"context"
-	"embed"
-	"github.com/wailsapp/wails/v2"
-	"github.com/wailsapp/wails/v2/pkg/menu"
-	"github.com/wailsapp/wails/v2/pkg/menu/keys"
-	"github.com/wailsapp/wails/v2/pkg/options"
-	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
-	"github.com/wailsapp/wails/v2/pkg/options/linux"
-	"github.com/wailsapp/wails/v2/pkg/runtime"
-	"net/url"
-	"os"
-	"path/filepath"
-	goRuntime "runtime"
+	"fmt"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/widget"
+	"image"
+	"image-manipulation-tool/file_handling"
+	"image-manipulation-tool/image_editing"
+	"image-manipulation-tool/models"
+	"io"
+	"strconv"
 )
 
-//go:embed all:frontend/dist
-var assets embed.FS
+var originalImageCanvas *canvas.Image
+var previewImageCanvas *canvas.Image
 
-// Build : Holds the application instance, the menu and the options used for the display.
-type Build struct {
-	AppInstance        *App
-	AppOptions         options.App
-	TempDirInitialized bool
-}
+func Build(a fyne.App) {
+	// initialize the Project instance
+	project := models.NewProject()
 
-// Constructs the application instance, the menu and the options used for the display.
-func (b Build) build() (Build, error) {
-	appInstance, appMenu := setApp()
-	appOptions := setOptions(appInstance, appMenu)
-	err := initializeTemporaryDir()
+	// initialize the main window
+	w := a.NewWindow("Image Manipulation Tool")
+	w.Resize(fyne.NewSize(800, 600))
 
-	if err != nil {
-		return Build{}, err
-	}
+	// initialize GUI's elements
+	imgsCtr := initializeImgsCtr(project)
+	sideBar := initializeSideBar(a, project)
 
-	return Build{
-		AppInstance:        appInstance,
-		AppOptions:         appOptions,
-		TempDirInitialized: true,
-	}, nil
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-
-// Run : Initializes the application.
-func Run(build Build) {
-	// Initialize the application with the chosen appOptions
-	err := wails.Run(&build.AppOptions)
-
-	if err != nil {
-		println(RError()+":", err.Error())
-	}
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-
-// Passes the menu to the app instance.
-func setApp() (*App, *menu.Menu) {
-	// Create an instance of the app structure
-	app := NewApp()
-
-	// Set menu
-	AppMenu := setMenu(app)
-
-	return app, AppMenu
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-
-// Returns the options used for building the application.
-func setOptions(app *App, AppMenu *menu.Menu) options.App {
-	icon, err := loadImageToBytes(filepath.Join(
-		"build",
-		"appicon.png",
-	))
-
-	if err != nil {
-		println(err.Error())
-		icon = nil
-	}
-
-	return options.App{
-		Title:     "Image Manipulation Tool",
-		Height:    1000,
-		MinHeight: 500,
-		Width:     1200,
-		MinWidth:  500,
-		Menu:      AppMenu,
-		AssetServer: &assetserver.Options{
-			Assets: assets,
-		},
-		OnStartup: app.startup,
-		OnShutdown: func(ctx context.Context) {
-			gracefulShutdown()
-		},
-		OnDomReady: func(ctx context.Context) {
-			updateTheme(app)
-		},
-		Bind: []interface{}{
-			app,
-		},
-		Linux: &linux.Options{
-			Icon:                icon,
-			WindowIsTranslucent: false,
-			Messages:            nil,
-			WebviewGpuPolicy:    linux.WebviewGpuPolicyOnDemand,
-			ProgramName:         "Image Manipulation Tool",
-		},
-	}
-}
-
-// Application shutdown ------------------------------------------------------------------------------------------------
-
-func gracefulShutdown() {
-	err := removeTemporaryDir()
-
-	if err != nil {
-		println(RError()+":", err.Error())
-	}
-}
-
-// Temp dir ------------------------------------------------------------------------------------------------------------
-
-// Creates a directory under "frontend/src/assets/temp" that holds a copy of the original image, along with the preview
-// images.
-func initializeTemporaryDir() error {
-	dir := filepath.Join(
-		"frontend",
-		"src",
-		"assets",
-		"temp",
-	)
-	err := os.Mkdir(dir, os.ModePerm)
-
-	if err != nil {
-		if os.IsExist(err) {
-			return nil
-		} else {
-			println(RError()+" while creating the temp directory:", err.Error())
-			return err
-		}
-	}
-
-	err = os.Mkdir(filepath.Join(
-		dir,
-		"origin",
-	), os.ModePerm)
-
-	if err != nil {
-		if os.IsExist(err) {
-			return nil
-		} else {
-			println(RError()+" while creating the temp origin directory:", err.Error())
-			return err
-		}
-	}
-
-	err = os.Mkdir(filepath.Join(
-		dir,
-		"prev",
-	), os.ModePerm)
-
-	if err != nil {
-		if os.IsExist(err) {
-			return nil
-		} else {
-			println(RError()+" while creating the temp prev directory:", err.Error())
-			return err
-		}
-	}
-
-	return nil
-}
-
-// Removes the temporary directory that holds the copy of the original and preview images.
-func removeTemporaryDir() error {
-	dir := filepath.Join(
-		"frontend",
-		"src",
-		"assets",
-		"temp",
-	)
-	err := os.RemoveAll(dir)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// Menu ----------------------------------------------------------------------------------------------------------------
-
-// Creates the items in the menu bar at the top of the application.
-func setMenu(app *App) *menu.Menu {
-	AppMenu := menu.NewMenu()
-	setFileMenu(app, AppMenu)
-	return AppMenu
-}
-
-// ---------- Menu items
-
-// Sets the "File" menu at the top menu bar.
-func setFileMenu(app *App, AppMenu *menu.Menu) {
-	// File
-	FileMenu := AppMenu.AddSubmenu("File")
-
-	// -- Open image
-	FileMenu.AddText("Open", keys.CmdOrCtrl("o"), func(_ *menu.CallbackData) {
-		menuOpenImage(app)
-	})
-	FileMenu.AddSeparator()
-
-	// -- Save image
-	FileMenu.AddText("Save", keys.CmdOrCtrl("s"), func(_ *menu.CallbackData) {
-		menuSaveImage(app)
-	})
-	FileMenu.AddSeparator()
-
-	// -- About
-	FileMenu.AddText("About", keys.CmdOrCtrl("f1"), func(_ *menu.CallbackData) {
-		menuAbout(app)
-	})
-	FileMenu.AddSeparator()
-
-	// -- Exit
-	FileMenu.AddText("Exit", keys.CmdOrCtrl("q"), func(_ *menu.CallbackData) {
-		menuExit(app)
-	})
-}
-
-func menuOpenImage(app *App) {
-	// Try to collect current working directory
-	cwd, err := os.Getwd()
-
-	if err != nil {
-		println(RError()+" when CWD collection:", err.Error())
-		if goRuntime.GOOS == "windows" {
-			cwd = "%USERPROFILE%"
-		} else {
-			cwd = "~"
-		}
-	}
-
-	path, err := runtime.OpenFileDialog(
-		app.ctx,
-		runtime.OpenDialogOptions{
-			DefaultDirectory: cwd,
-			DefaultFilename:  "",
-			Title:            "Select image",
-			Filters: []runtime.FileFilter{
-				{
-					DisplayName: "Image Files (*.gif, *.jpeg, *.jpg, *.png)",
-					Pattern:     "*.gif;*.jpeg;*.jpg;*.png;",
-				},
-			},
-			ShowHiddenFiles:            false,
-			CanCreateDirectories:       false,
-			ResolvesAliases:            false,
-			TreatPackagesAsDirectories: false,
-		},
+	// pass the elements to a container
+	appCtr := container.NewBorder(
+		nil, nil, nil,
+		sideBar,
+		imgsCtr,
 	)
 
-	if err != nil {
-		println(RError()+" during dialog:", err.Error())
-		return
-	}
+	// -- initialize the main menu for the window
+	appMenu := initializeAppMenu(w, project)
+	w.SetMainMenu(appMenu)
 
-	if path == "" {
-		return
-	}
+	// set the container as the main window's content
+	w.SetContent(appCtr)
 
-	setOriginPrev(app, path)
+	// raise the main window and run the application
+	w.ShowAndRun()
 }
 
-func menuSaveImage(app *App) {
-	runtime.EventsEmit(app.ctx, "save-image-request", nil)
+func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
+	// initialize the original image canvas
+	originalImage := project.GetOriginal()
+	originalImageCanvas = canvas.NewImageFromImage(originalImage)
+	originalImageCanvas.FillMode = canvas.ImageFillContain
 
-	runtime.EventsOn(app.ctx, "save-image-response", func(optionalData ...interface{}) {
-		urlString, err := url.Parse(optionalData[0].(string))
-		filename := filepath.Base(urlString.Path)
+	// initialize original image label
+	originalImageLbl := widget.NewLabel("Original image")
+	originalImageLbl.Alignment = fyne.TextAlignCenter
+	originalImageLbl.TextStyle = fyne.TextStyle{Bold: true}
 
-		if filename == "." {
-			_, err = runtime.MessageDialog(app.ctx, runtime.MessageDialogOptions{
-				Type:          runtime.ErrorDialog,
-				Title:         "Error",
-				Message:       "You have no image open at the moment.",
-				DefaultButton: "Back",
-			})
+	// build a container for the original image
+	originalImageCtr := container.NewBorder(
+		originalImageLbl,
+		nil, nil, nil,
+		originalImageCanvas,
+	)
 
-			if err != nil {
-				println(RError()+" during dialog:", err.Error())
-			}
+	// initialize the preview image canvas
+	previewImage := project.GetPreview()
+	previewImageCanvas = canvas.NewImageFromImage(previewImage)
+	previewImageCanvas.FillMode = canvas.ImageFillContain
 
-			return
-		}
+	// initialize original image label
+	previewImageLbl := widget.NewLabel("Original image")
+	previewImageLbl.Alignment = fyne.TextAlignCenter
+	previewImageLbl.TextStyle = fyne.TextStyle{Bold: true}
 
-		imageToSavePath := filepath.Join("frontend", "src", "assets", "temp", "prev", filename)
+	// build a container for the preview image
+	previewImageCtr := container.NewBorder(
+		previewImageLbl,
+		nil, nil, nil,
+		previewImageCanvas,
+	)
 
-		cwd, err := os.Getwd()
-
-		if err != nil {
-			println(RError()+" during CWD collection:", err.Error())
-			if goRuntime.GOOS == "windows" {
-				cwd = "%USERPROFILE%"
-			} else {
-				cwd = "~"
-			}
-		}
-
-		newFilePath, err := runtime.SaveFileDialog(
-			app.ctx,
-			runtime.SaveDialogOptions{
-				DefaultDirectory:           cwd,
-				DefaultFilename:            filepath.Ext(filename),
-				Title:                      "Save image",
-				Filters:                    nil,
-				ShowHiddenFiles:            true,
-				CanCreateDirectories:       true,
-				TreatPackagesAsDirectories: false,
-			},
-		)
-
-		if err != nil {
-			println(RError()+" during dialog:", err.Error())
-			return
-		}
-
-		img, err := loadImage(imageToSavePath)
-
-		if err != nil {
-			println(RError()+" when loading image:", err.Error())
-			return
-		}
-
-		err = saveImage(newFilePath, filepath.Ext(imageToSavePath), img)
-
-		if err != nil {
-			println(RError()+" when saving image:", err.Error())
-			return
-		}
-
-		runtime.EventsOff(app.ctx, "receive-prev")
-	})
+	return container.NewGridWithColumns(
+		2,
+		originalImageCtr,
+		previewImageCtr,
+	)
 }
 
-func menuAbout(app *App) {
-	_, err := runtime.MessageDialog(app.ctx, runtime.MessageDialogOptions{
-		Type:          runtime.InfoDialog,
-		Title:         "About",
-		Message:       "This is an image manipulation tool written in Go using Wails framework to Run the frontend.",
-		DefaultButton: "Back",
-	})
+func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
+	// geometric transformations
+	geoTransfBtns := getBtns(
+		[]*widget.Button{
+			widget.NewButton("Resize", func() {
+				// initialize new window
+				w := a.NewWindow("Input values")
+				w.Resize(fyne.NewSize(200, 100))
+				w.SetFixedSize(true)
 
-	if err != nil {
-		println(RError()+" during dialog: %w", err)
-	}
+				// initialize X axis input
+				xEntry := widget.NewEntry()
+				xEntry.PlaceHolder = "1"
+				xCtr := container.NewBorder(
+					nil, nil,
+					widget.NewLabel("X:"),
+					nil,
+					xEntry,
+				)
+
+				// initialize Y axis input
+				yEntry := widget.NewEntry()
+				yEntry.PlaceHolder = "1"
+				yCtr := container.NewBorder(
+					nil, nil,
+					widget.NewLabel("Y:"),
+					nil,
+					yEntry,
+				)
+
+				// initialize the confirmation button
+				confirmBtn := widget.NewButton(
+					"Confirm",
+					func() {
+						// transform the inputted string in X into a float64
+						x, err := strconv.ParseFloat(xEntry.Text, 64)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						// transform the inputted string in Y into a float64
+						y, err := strconv.ParseFloat(yEntry.Text, 64)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						// collect the matrix
+						matrix := image_editing.GetResizeMatrix(x, y)
+
+						// run the transformation process
+						img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
+
+						// inform the system to update the preview image
+						updatePrevImage(img, project)
+						w.Close()
+					},
+				)
+				ctr := container.NewGridWithRows(3,
+					xCtr,
+					yCtr,
+					confirmBtn,
+				)
+				w.SetContent(ctr)
+				w.Show()
+			}),
+			widget.NewButton("Rotate", func() {
+				fmt.Println("rotate")
+			}),
+			widget.NewButton("Translate", func() {}),
+			widget.NewButton("Horizontal mirroring", func() {}),
+			widget.NewButton("Vertical mirroring", func() {}),
+		},
+	)
+	geoTransfList := getBtnsList(geoTransfBtns)
+
+	// filters
+	filtersBtns := getBtns(
+		[]*widget.Button{
+			widget.NewButton("Grayscale", func() {}),
+			widget.NewButton("High fade", func() {}),
+			widget.NewButton("Low fade", func() {}),
+			widget.NewButton("Threshold", func() {}),
+		},
+	)
+	filterList := getBtnsList(filtersBtns)
+
+	// mathematical morphology
+	mathMorphoBtns := getBtns(
+		[]*widget.Button{
+			widget.NewButton("Dilatation", func() {}),
+			widget.NewButton("Erosion", func() {}),
+			widget.NewButton("Opening", func() {}),
+			widget.NewButton("Closing", func() {}),
+		},
+	)
+	mathMorphoList := getBtnsList(mathMorphoBtns)
+
+	// pass the buttons list to the accordion
+	sideBar := widget.NewAccordion(
+		widget.NewAccordionItem(
+			"Geometric trasnformations",
+			geoTransfList,
+		),
+		widget.NewAccordionItem(
+			"Filters",
+			filterList,
+		),
+		widget.NewAccordionItem(
+			"Mathematical morphology",
+			mathMorphoList,
+		),
+		widget.NewAccordionItem(
+			"Feature extraction",
+			widget.NewLabel("Nothing here yet"),
+		),
+	)
+
+	return container.NewBorder(
+		nil, nil, nil,
+		sideBar,
+	)
 }
 
-func menuExit(app *App) {
-	if UnsavedProgress {
-		choice, err := runtime.MessageDialog(app.ctx, runtime.MessageDialogOptions{
-			Type:    runtime.WarningDialog,
-			Title:   "Unsaved progress detected",
-			Message: "You have unsaved changes, are you sure you want to quit? Any unsaved progress will be lost.",
-			Buttons: []string{"Save", "Quit"},
-		})
-
-		if err != nil {
-			println(RError()+" during dialog:", err.Error())
-		}
-
-		switch choice {
-		case "Quit":
-			break
-		default:
-			menuSaveImage(app)
-		}
+func getBtns(btns []*widget.Button) binding.UntypedList {
+	btnsList := binding.NewUntypedList()
+	for _, btn := range btns {
+		_ = btnsList.Append(btn)
 	}
 
-	runtime.Quit(app.ctx)
+	return btnsList
+}
+
+func getBtnsList(btns binding.UntypedList) *widget.List {
+	return widget.NewListWithData(
+		btns,
+		func() fyne.CanvasObject {
+			return widget.NewButton("", func() {})
+		},
+		func(di binding.DataItem, object fyne.CanvasObject) {
+			objBtn := object.(*widget.Button)
+			temp, _ := di.(binding.Untyped).Get()
+			diBtn := temp.(*widget.Button)
+			objBtn.SetText(diBtn.Text)
+			objBtn.OnTapped = diBtn.OnTapped
+		},
+	)
+}
+
+func initializeAppMenu(w fyne.Window, project *models.Project) *fyne.MainMenu {
+	return fyne.NewMainMenu(
+		fyne.NewMenu("File",
+			fyne.NewMenuItem("Open", func() {
+				dialog.ShowFileOpen(
+					func(r fyne.URIReadCloser, err error) {
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						if r == nil {
+							dialog.ShowError(fmt.Errorf("no file selected"), w)
+							return
+						} else {
+							content, err := io.ReadAll(r)
+
+							if err != nil {
+								dialog.ShowError(err, w)
+								return
+							}
+
+							img, err := file_handling.LoadImageFromBytes(content)
+
+							if err != nil {
+								dialog.ShowError(err, w)
+							}
+
+							updateAllImages(img, project)
+						}
+					},
+					w,
+				)
+			}),
+			fyne.NewMenuItem("Save", func() {}),
+		),
+		fyne.NewMenu("Help",
+			fyne.NewMenuItem("About", func() {
+				dialog.ShowInformation(
+					"About",
+					"This is an image manipulation tool written in Go that uses the Fyne framework for "+
+						"building the frontend.",
+					w,
+				)
+			}),
+			fyne.NewMenuItem("Preferences", func() {}),
+		),
+	)
+}
+
+func updateAllImages(img image.Image, project *models.Project) {
+	project.LoadNewImage(img)
+	originalImageCanvas.Image = img
+	previewImageCanvas.Image = img
+	refreshCanvas()
+}
+
+func updatePrevImage(img image.Image, project *models.Project) {
+	project.AddPreviewImage(img)
+	previewImageCanvas.Image = project.GetPreview()
+	refreshCanvas()
+}
+
+func refreshCanvas() {
+	originalImageCanvas.Refresh()
+	previewImageCanvas.Refresh()
 }

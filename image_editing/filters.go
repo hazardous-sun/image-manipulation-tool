@@ -1,4 +1,4 @@
-package image_handling
+package image_editing
 
 import (
 	"image"
@@ -7,12 +7,9 @@ import (
 
 // Filters -------------------------------------------------------------------------------------------------------------
 
-// -------- Grayscale
-
+// FilterGrayScale :
 // Removes the color channels of an image and returns an image with only shades of gray.
-
-// Removes the color channels of an image and returns an image with only shades of gray.
-func filterGrayScale(img image.Image) image.Image {
+func FilterGrayScale(img image.Image) image.Image {
 	grayImage := image.NewGray(img.Bounds())
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
