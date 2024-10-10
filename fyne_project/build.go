@@ -30,9 +30,9 @@ func Build(a fyne.App) {
 
 	// pass the elements to a container
 	appCtr := container.NewBorder(
-		nil, nil,
-		imgsCtr,
+		nil, nil, nil,
 		sideBar,
+		imgsCtr,
 	)
 
 	// -- initialize the main menu for the window
@@ -51,11 +51,14 @@ func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 	originalImage := project.GetOriginal()
 	originalImageCanvas = canvas.NewImageFromImage(originalImage)
 	originalImageCanvas.FillMode = canvas.ImageFillOriginal
-	originalImageCanvas.SetMinSize(fyne.NewSize(400, 400))
+
+	// initialize original image label
+	originalImageLbl := widget.NewLabel("Original image")
+	originalImageLbl.Alignment = fyne.TextAlignCenter
 
 	// build a container for the original image
 	originalImageCtr := container.NewBorder(
-		widget.NewLabel("Original image"),
+		originalImageLbl,
 		nil, nil, nil,
 		originalImageCanvas,
 	)
@@ -64,11 +67,14 @@ func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 	previewImage := project.GetPreview()
 	previewImageCanvas = canvas.NewImageFromImage(previewImage)
 	previewImageCanvas.FillMode = canvas.ImageFillOriginal
-	previewImageCanvas.SetMinSize(fyne.NewSize(400, 400))
+
+	// initialize original image label
+	previewImageLbl := widget.NewLabel("Original image")
+	previewImageLbl.Alignment = fyne.TextAlignCenter
 
 	// build a container for the preview image
 	previewImageCtr := container.NewBorder(
-		widget.NewLabel("Preview image"),
+		previewImageLbl,
 		nil, nil, nil,
 		previewImageCanvas,
 	)
