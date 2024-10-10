@@ -51,7 +51,7 @@ func Run(build Build) {
 	err := wails.Run(&build.AppOptions)
 
 	if err != nil {
-		println(pError()+":", err.Error())
+		println(RError()+":", err.Error())
 	}
 }
 
@@ -118,7 +118,7 @@ func gracefulShutdown() {
 	err := removeTemporaryDir()
 
 	if err != nil {
-		println(pError()+":", err.Error())
+		println(RError()+":", err.Error())
 	}
 }
 
@@ -139,7 +139,7 @@ func initializeTemporaryDir() error {
 		if os.IsExist(err) {
 			return nil
 		} else {
-			println(pError()+" while creating the temp directory:", err.Error())
+			println(RError()+" while creating the temp directory:", err.Error())
 			return err
 		}
 	}
@@ -153,7 +153,7 @@ func initializeTemporaryDir() error {
 		if os.IsExist(err) {
 			return nil
 		} else {
-			println(pError()+" while creating the temp origin directory:", err.Error())
+			println(RError()+" while creating the temp origin directory:", err.Error())
 			return err
 		}
 	}
@@ -167,7 +167,7 @@ func initializeTemporaryDir() error {
 		if os.IsExist(err) {
 			return nil
 		} else {
-			println(pError()+" while creating the temp prev directory:", err.Error())
+			println(RError()+" while creating the temp prev directory:", err.Error())
 			return err
 		}
 	}
@@ -235,7 +235,7 @@ func menuOpenImage(app *App) {
 	cwd, err := os.Getwd()
 
 	if err != nil {
-		println(pError()+" when CWD collection:", err.Error())
+		println(RError()+" when CWD collection:", err.Error())
 		if goRuntime.GOOS == "windows" {
 			cwd = "%USERPROFILE%"
 		} else {
@@ -263,7 +263,7 @@ func menuOpenImage(app *App) {
 	)
 
 	if err != nil {
-		println(pError()+" during dialog:", err.Error())
+		println(RError()+" during dialog:", err.Error())
 		return
 	}
 
@@ -290,7 +290,7 @@ func menuSaveImage(app *App) {
 			})
 
 			if err != nil {
-				println(pError()+" during dialog:", err.Error())
+				println(RError()+" during dialog:", err.Error())
 			}
 
 			return
@@ -301,7 +301,7 @@ func menuSaveImage(app *App) {
 		cwd, err := os.Getwd()
 
 		if err != nil {
-			println(pError()+" during CWD collection:", err.Error())
+			println(RError()+" during CWD collection:", err.Error())
 			if goRuntime.GOOS == "windows" {
 				cwd = "%USERPROFILE%"
 			} else {
@@ -323,21 +323,21 @@ func menuSaveImage(app *App) {
 		)
 
 		if err != nil {
-			println(pError()+" during dialog:", err.Error())
+			println(RError()+" during dialog:", err.Error())
 			return
 		}
 
 		img, err := loadImage(imageToSavePath)
 
 		if err != nil {
-			println(pError()+" when loading image:", err.Error())
+			println(RError()+" when loading image:", err.Error())
 			return
 		}
 
 		err = saveImage(newFilePath, filepath.Ext(imageToSavePath), img)
 
 		if err != nil {
-			println(pError()+" when saving image:", err.Error())
+			println(RError()+" when saving image:", err.Error())
 			return
 		}
 
@@ -354,7 +354,7 @@ func menuAbout(app *App) {
 	})
 
 	if err != nil {
-		println(pError()+" during dialog: %w", err)
+		println(RError()+" during dialog: %w", err)
 	}
 }
 
@@ -368,7 +368,7 @@ func menuExit(app *App) {
 		})
 
 		if err != nil {
-			println(pError()+" during dialog:", err.Error())
+			println(RError()+" during dialog:", err.Error())
 		}
 
 		switch choice {

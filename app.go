@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"image-manipulation-tool/image-handling"
 	"path/filepath"
 )
 
@@ -28,15 +29,15 @@ func (a *App) Transform(path string, code string, x float64, y float64) {
 	var matrix [][]float64
 	switch code {
 	case "translate":
-		matrix = getTranslationMatrix(x, y)
+		matrix = image_handling.GetTranslationMatrix(x, y)
 	case "resize":
-		matrix = getResizeMatrix(x, y)
+		matrix = image_handling.GetResizeMatrix(x, y)
 	case "mirrorH":
-		matrix = getMirrorHMatrix()
+		matrix = image_handling.GetMirrorHMatrix()
 	case "mirrorV":
-		matrix = getMirrorVMatrix()
+		matrix = image_handling.GetMirrorVMatrix()
 	case "rotate":
-		matrix = getRotationMatrix(x)
+		matrix = image_handling.GetRotationMatrix(x)
 	default:
 		return
 	}
@@ -45,16 +46,16 @@ func (a *App) Transform(path string, code string, x float64, y float64) {
 	img, err := loadImage(path)
 
 	if err != nil {
-		println(pError()+" while loading image:", err.Error())
+		println(RError()+" while loading image:", err.Error())
 		return
 	}
 
-	img = transformImage(img, matrix)
+	img = image_handling.TransformImage(img, matrix)
 	fileExt := filepath.Ext(path)
 	fileCount, err := countFiles("frontend/src/assets/temp/prev/")
 
 	if err != nil {
-		println(pError()+" counting files:", err.Error())
+		println(RError()+" counting files:", err.Error())
 		return
 	}
 
@@ -62,7 +63,7 @@ func (a *App) Transform(path string, code string, x float64, y float64) {
 	err = saveImage(path, fileExt, img)
 
 	if err != nil {
-		println(pError()+" saving image:", err.Error())
+		println(RError()+" saving image:", err.Error())
 		return
 	}
 
@@ -82,16 +83,16 @@ func (a *App) GrayScale(path string) {
 	img, err := loadImage(path)
 
 	if err != nil {
-		println(pError()+" loading image:", err.Error())
+		println(RError()+" loading image:", err.Error())
 		return
 	}
 
-	img = filterGrayScale(img)
+	img = image_handling.FilterGrayScale(img)
 	fileExt := filepath.Ext(path)
 	fileCount, err := countFiles("frontend/src/assets/temp/prev/")
 
 	if err != nil {
-		println(pError()+" counting files:", err.Error())
+		println(RError()+" counting files:", err.Error())
 		return
 	}
 
@@ -99,7 +100,7 @@ func (a *App) GrayScale(path string) {
 	err = saveImage(path, fileExt, img)
 
 	if err != nil {
-		println(pError()+" saving image:", err.Error())
+		println(RError()+" saving image:", err.Error())
 		return
 	}
 

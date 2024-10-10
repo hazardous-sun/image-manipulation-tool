@@ -1,4 +1,4 @@
-package main
+package image_handling
 
 import (
 	"image"
@@ -10,11 +10,6 @@ import (
 // -------- Grayscale
 
 // Removes the color channels of an image and returns an image with only shades of gray.
-//func invalidFilterGrayScale(img image.Image) image.Image {
-//	grayImage := image.NewGray(img.Bounds())
-//	draw.Draw(grayImage, grayImage.Bounds(), img, image.Point{}, draw.Src)
-//	return grayImage
-//}
 
 // Removes the color channels of an image and returns an image with only shades of gray.
 func filterGrayScale(img image.Image) image.Image {

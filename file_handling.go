@@ -19,7 +19,7 @@ func removeAllFiles(dirPath string) error {
 	// Get a list of all files in the directory
 	files, err := os.ReadDir(dirPath)
 	if err != nil {
-		return fmt.Errorf(pError()+" reading directory: %w", err)
+		return fmt.Errorf(RError()+" reading directory: %w", err)
 	}
 
 	// Iterate through each file and remove it
@@ -29,7 +29,7 @@ func removeAllFiles(dirPath string) error {
 			file.Name(),
 		)
 		if err := os.Remove(filePath); err != nil {
-			return fmt.Errorf(pError()+" removing file: %w", err)
+			return fmt.Errorf(RError()+" removing file: %w", err)
 		}
 	}
 
@@ -59,7 +59,7 @@ func copyFile(path string, content *os.File) error {
 	defer func(destFile *os.File) {
 		err := destFile.Close()
 		if err != nil {
-			println(pError()+" closing file '%s': %w", path, err)
+			println(RError()+" closing file '%s': %w", path, err)
 		}
 	}(destFile)
 
@@ -120,7 +120,7 @@ func setOriginPrev(app *App, path string) {
 	))
 
 	if err != nil {
-		println(pError()+" while trying to clean origin images directory: %w", err)
+		println(RError()+" while trying to clean origin images directory: %w", err)
 	}
 
 	err = removeAllFiles(filepath.Join(
@@ -132,7 +132,7 @@ func setOriginPrev(app *App, path string) {
 	))
 
 	if err != nil {
-		println(pError()+" while trying to clean preview images directory: %w", err)
+		println(RError()+" while trying to clean preview images directory: %w", err)
 	}
 
 	// Create images
@@ -188,19 +188,19 @@ func createImage(originalPath string, origin bool) {
 	originalFile, err := os.Open(originalPath)
 
 	if err != nil {
-		println(pError()+" when file opening:", err.Error())
+		println(RError()+" when file opening:", err.Error())
 	}
 	defer func(originalFile *os.File) {
 		err := originalFile.Close()
 		if err != nil {
-			println(pError()+" when closing file '%s': %w", originalPath, err)
+			println(RError()+" when closing file '%s': %w", originalPath, err)
 		}
 	}(originalFile)
 
 	err = copyFile(newImagePath, originalFile)
 
 	if err != nil {
-		println(pError()+" when image saving:", err.Error())
+		println(RError()+" when image saving:", err.Error())
 	}
 }
 
@@ -215,7 +215,7 @@ func loadImage(path string) (image.Image, error) {
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			println(pError()+" when closing file '%s': %w", path, err)
+			println(RError()+" when closing file '%s': %w", path, err)
 		}
 	}(file)
 
@@ -237,26 +237,26 @@ func loadImageToBytes(path string) ([]byte, error) {
 	file, err := os.Open(path)
 
 	if err != nil {
-		return nil, fmt.Errorf(pError()+" when opening file: %w", err)
+		return nil, fmt.Errorf(RError()+" when opening file: %w", err)
 	}
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			println(pError()+" when closing file '%s': %w", path, err)
+			println(RError()+" when closing file '%s': %w", path, err)
 		}
 	}(file)
 
 	img, _, err := image.Decode(file)
 
 	if err != nil {
-		return nil, fmt.Errorf(pError()+" when decoding file: %w", err)
+		return nil, fmt.Errorf(RError()+" when decoding file: %w", err)
 	}
 
 	buf := &bytes.Buffer{}
 	err = png.Encode(buf, img)
 
 	if err != nil {
-		return nil, fmt.Errorf(pError()+" when encoding file to bytes: %w", err)
+		return nil, fmt.Errorf(RError()+" when encoding file to bytes: %w", err)
 	}
 
 	return buf.Bytes(), nil
@@ -272,7 +272,7 @@ func saveImage(path string, fileExt string, img image.Image) error {
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			println(pError()+" when closing file '%s': %w", path, err)
+			println(RError()+" when closing file '%s': %w", path, err)
 		}
 	}(file)
 
@@ -294,6 +294,6 @@ func saveImage(path string, fileExt string, img image.Image) error {
 }
 
 // Prints a red error message
-func pError() string {
+func RError() string {
 	return "\033[31merror:\033[0m"
 }
