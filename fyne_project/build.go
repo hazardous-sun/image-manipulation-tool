@@ -8,9 +8,12 @@ import (
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	"image"
 	"image-manipulation-tool/fyne_project/file_handling"
+	"image-manipulation-tool/fyne_project/image_editing"
 	"image-manipulation-tool/fyne_project/models"
 	"io"
+	"strconv"
 )
 
 var originalImageCanvas *canvas.Image
@@ -26,7 +29,7 @@ func Build(a fyne.App) {
 
 	// initialize GUI's elements
 	imgsCtr := initializeImgsCtr(project)
-	sideBar := initializeSideBar()
+	sideBar := initializeSideBar(a, project)
 
 	// pass the elements to a container
 	appCtr := container.NewBorder(
@@ -50,11 +53,12 @@ func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 	// initialize the original image canvas
 	originalImage := project.GetOriginal()
 	originalImageCanvas = canvas.NewImageFromImage(originalImage)
-	originalImageCanvas.FillMode = canvas.ImageFillOriginal
+	originalImageCanvas.FillMode = canvas.ImageFillContain
 
 	// initialize original image label
 	originalImageLbl := widget.NewLabel("Original image")
 	originalImageLbl.Alignment = fyne.TextAlignCenter
+	originalImageLbl.TextStyle = fyne.TextStyle{Bold: true}
 
 	// build a container for the original image
 	originalImageCtr := container.NewBorder(
@@ -66,11 +70,12 @@ func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 	// initialize the preview image canvas
 	previewImage := project.GetPreview()
 	previewImageCanvas = canvas.NewImageFromImage(previewImage)
-	previewImageCanvas.FillMode = canvas.ImageFillOriginal
+	previewImageCanvas.FillMode = canvas.ImageFillContain
 
 	// initialize original image label
 	previewImageLbl := widget.NewLabel("Original image")
 	previewImageLbl.Alignment = fyne.TextAlignCenter
+	previewImageLbl.TextStyle = fyne.TextStyle{Bold: true}
 
 	// build a container for the preview image
 	previewImageCtr := container.NewBorder(
@@ -79,19 +84,81 @@ func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 		previewImageCanvas,
 	)
 
-	return container.NewBorder(
-		nil, nil,
+	return container.NewGridWithColumns(
+		2,
 		originalImageCtr,
 		previewImageCtr,
 	)
 }
 
-func initializeSideBar() fyne.CanvasObject {
+func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 	// geometric transformations
 	geoTransfBtns := getBtns(
 		[]*widget.Button{
 			widget.NewButton("Resize", func() {
-				fmt.Println("resize")
+				// initialize new window
+				w := a.NewWindow("Input values")
+				w.Resize(fyne.NewSize(200, 100))
+				w.SetFixedSize(true)
+
+				// initialize X axis input
+				xEntry := widget.NewEntry()
+				xEntry.PlaceHolder = "1"
+				xCtr := container.NewBorder(
+					nil, nil,
+					widget.NewLabel("X:"),
+					nil,
+					xEntry,
+				)
+
+				// initialize Y axis input
+				yEntry := widget.NewEntry()
+				yEntry.PlaceHolder = "1"
+				yCtr := container.NewBorder(
+					nil, nil,
+					widget.NewLabel("Y:"),
+					nil,
+					yEntry,
+				)
+
+				// initialize the confirmation button
+				confirmBtn := widget.NewButton(
+					"Confirm",
+					func() {
+						// transform the inputted string in X into a float64
+						x, err := strconv.ParseFloat(xEntry.Text, 64)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						// transform the inputted string in Y into a float64
+						y, err := strconv.ParseFloat(yEntry.Text, 64)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						// collect the matrix
+						matrix := image_editing.GetResizeMatrix(x, y)
+
+						// run the transformation process
+						img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
+
+						// inform the system to update the preview image
+						updatePrevImage(img, project)
+						w.Close()
+					},
+				)
+				ctr := container.NewGridWithRows(3,
+					xCtr,
+					yCtr,
+					confirmBtn,
+				)
+				w.SetContent(ctr)
+				w.Show()
 			}),
 			widget.NewButton("Rotate", func() {
 				fmt.Println("rotate")
@@ -204,9 +271,7 @@ func initializeAppMenu(w fyne.Window, project *models.Project) *fyne.MainMenu {
 								dialog.ShowError(err, w)
 							}
 
-							project.LoadNewImage(img)
-							originalImageCanvas.Image = img
-							previewImageCanvas.Image = img
+							updateAllImages(img, project)
 						}
 					},
 					w,
@@ -226,4 +291,22 @@ func initializeAppMenu(w fyne.Window, project *models.Project) *fyne.MainMenu {
 			fyne.NewMenuItem("Preferences", func() {}),
 		),
 	)
+}
+
+func updateAllImages(img image.Image, project *models.Project) {
+	project.LoadNewImage(img)
+	originalImageCanvas.Image = img
+	previewImageCanvas.Image = img
+	refreshCanvas()
+}
+
+func updatePrevImage(img image.Image, project *models.Project) {
+	project.AddPreviewImage(img)
+	previewImageCanvas.Image = project.GetPreview()
+	refreshCanvas()
+}
+
+func refreshCanvas() {
+	originalImageCanvas.Refresh()
+	previewImageCanvas.Refresh()
 }
