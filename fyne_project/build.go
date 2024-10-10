@@ -8,8 +8,13 @@ import (
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	"image-manipulation-tool/fyne_project/file_handling"
 	"image-manipulation-tool/fyne_project/models"
+	"io"
 )
+
+var originalImageCanvas *canvas.Image
+var previewImageCanvas *canvas.Image
 
 func Build(a fyne.App) {
 	// initialize the Project instance
@@ -18,10 +23,6 @@ func Build(a fyne.App) {
 	// initialize the main window
 	w := a.NewWindow("Image Manipulation Tool")
 	w.Resize(fyne.NewSize(800, 600))
-
-	// -- initialize the main menu for the window
-	appMenu := initializeAppMenu(w)
-	w.SetMainMenu(appMenu)
 
 	// initialize GUI's elements
 	imgsCtr := initializeImgsCtr(project)
@@ -34,6 +35,10 @@ func Build(a fyne.App) {
 		sideBar,
 	)
 
+	// -- initialize the main menu for the window
+	appMenu := initializeAppMenu(w, project)
+	w.SetMainMenu(appMenu)
+
 	// set the container as the main window's content
 	w.SetContent(appCtr)
 
@@ -41,30 +46,10 @@ func Build(a fyne.App) {
 	w.ShowAndRun()
 }
 
-func initializeAppMenu(w fyne.Window) *fyne.MainMenu {
-	return fyne.NewMainMenu(
-		fyne.NewMenu("File",
-			fyne.NewMenuItem("Open", func() {}),
-			fyne.NewMenuItem("Save", func() {}),
-		),
-		fyne.NewMenu("Help",
-			fyne.NewMenuItem("About", func() {
-				dialog.ShowInformation(
-					"About",
-					"This is an image manipulation tool written in Go that uses the Fyne framework for "+
-						"building the frontend.",
-					w,
-				)
-			}),
-			fyne.NewMenuItem("Preferences", func() {}),
-		),
-	)
-}
-
 func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 	// initialize the original image canvas
 	originalImage := project.GetOriginal()
-	originalImageCanvas := canvas.NewImageFromImage(originalImage)
+	originalImageCanvas = canvas.NewImageFromImage(originalImage)
 	originalImageCanvas.FillMode = canvas.ImageFillOriginal
 	originalImageCanvas.SetMinSize(fyne.NewSize(400, 400))
 
@@ -77,7 +62,7 @@ func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 
 	// initialize the preview image canvas
 	previewImage := project.GetPreview()
-	previewImageCanvas := canvas.NewImageFromImage(previewImage)
+	previewImageCanvas = canvas.NewImageFromImage(previewImage)
 	previewImageCanvas.FillMode = canvas.ImageFillOriginal
 	previewImageCanvas.SetMinSize(fyne.NewSize(400, 400))
 
@@ -182,5 +167,57 @@ func getBtnsList(btns binding.UntypedList) *widget.List {
 			objBtn.SetText(diBtn.Text)
 			objBtn.OnTapped = diBtn.OnTapped
 		},
+	)
+}
+
+func initializeAppMenu(w fyne.Window, project *models.Project) *fyne.MainMenu {
+	return fyne.NewMainMenu(
+		fyne.NewMenu("File",
+			fyne.NewMenuItem("Open", func() {
+				dialog.ShowFileOpen(
+					func(r fyne.URIReadCloser, err error) {
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						if r == nil {
+							dialog.ShowError(fmt.Errorf("no file selected"), w)
+							return
+						} else {
+							content, err := io.ReadAll(r)
+
+							if err != nil {
+								dialog.ShowError(err, w)
+								return
+							}
+
+							img, err := file_handling.LoadImageFromBytes(content)
+
+							if err != nil {
+								dialog.ShowError(err, w)
+							}
+
+							project.LoadNewImage(img)
+							originalImageCanvas.Image = img
+							previewImageCanvas.Image = img
+						}
+					},
+					w,
+				)
+			}),
+			fyne.NewMenuItem("Save", func() {}),
+		),
+		fyne.NewMenu("Help",
+			fyne.NewMenuItem("About", func() {
+				dialog.ShowInformation(
+					"About",
+					"This is an image manipulation tool written in Go that uses the Fyne framework for "+
+						"building the frontend.",
+					w,
+				)
+			}),
+			fyne.NewMenuItem("Preferences", func() {}),
+		),
 	)
 }
