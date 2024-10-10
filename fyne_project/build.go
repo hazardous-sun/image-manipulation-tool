@@ -13,17 +13,7 @@ func Build(a fyne.App) {
 	w := a.NewWindow("Image Manipulation Tool")
 	w.Resize(fyne.NewSize(800, 600))
 
-	w.SetMainMenu(
-		fyne.NewMainMenu(
-			fyne.NewMenu("File",
-				fyne.NewMenuItem("New", func() {}),
-				fyne.NewMenuItem("Close", func() {}),
-			),
-			fyne.NewMenu("Help",
-				fyne.NewMenuItem("About", func() {}),
-			),
-		),
-	)
+	w.SetMainMenu(initializeMainMenu())
 
 	imgsCtr := initializeImgsCtr()
 	sideBar := initializeSideBar()
@@ -36,6 +26,18 @@ func Build(a fyne.App) {
 
 	w.SetContent(appCtr)
 	w.ShowAndRun()
+}
+
+func initializeMainMenu() *fyne.MainMenu {
+	return fyne.NewMainMenu(
+		fyne.NewMenu("File",
+			fyne.NewMenuItem("New", func() {}),
+			fyne.NewMenuItem("Close", func() {}),
+		),
+		fyne.NewMenu("Help",
+			fyne.NewMenuItem("About", func() {}),
+		),
+	)
 }
 
 func initializeImgsCtr() fyne.CanvasObject {
