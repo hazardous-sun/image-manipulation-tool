@@ -6,49 +6,67 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"image-manipulation-tool/fyne_project/models"
 )
 
 func Build(a fyne.App) {
+	// initialize the Project instance
+	project := models.NewProject()
+
+	// initialize the main window
 	w := a.NewWindow("Image Manipulation Tool")
 	w.Resize(fyne.NewSize(800, 600))
 
-	w.SetMainMenu(initializeMainMenu())
+	// -- initialize the main menu for the window
+	appMenu := initializeAppMenu(w)
+	w.SetMainMenu(appMenu)
 
-	imgsCtr := initializeImgsCtr()
+	// initialize GUI's elements
+	imgsCtr := initializeImgsCtr(project)
 	sideBar := initializeSideBar()
 
+	// pass the elements to a container
 	appCtr := container.NewBorder(
 		nil, nil,
 		imgsCtr,
 		sideBar,
 	)
 
+	// set the container as the main window's content
 	w.SetContent(appCtr)
+
+	// raise the main window and run the application
 	w.ShowAndRun()
 }
 
-func initializeMainMenu() *fyne.MainMenu {
+func initializeAppMenu(w fyne.Window) *fyne.MainMenu {
 	return fyne.NewMainMenu(
 		fyne.NewMenu("File",
-			fyne.NewMenuItem("New", func() {}),
-			fyne.NewMenuItem("Close", func() {}),
+			fyne.NewMenuItem("Open", func() {}),
+			fyne.NewMenuItem("Save", func() {}),
 		),
 		fyne.NewMenu("Help",
-			fyne.NewMenuItem("About", func() {}),
+			fyne.NewMenuItem("About", func() {
+				dialog.ShowInformation(
+					"About",
+					"This is an image manipulation tool written in Go that uses the Fyne framework for "+
+						"building the frontend.",
+					w,
+				)
+			}),
+			fyne.NewMenuItem("Preferences", func() {}),
 		),
 	)
 }
 
-func initializeImgsCtr() fyne.CanvasObject {
-	// initialize the Project instance
-	project := models.NewProject()
-
+func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 	// initialize the original image canvas
 	originalImage := project.GetOriginal()
 	originalImageCanvas := canvas.NewImageFromImage(originalImage)
 	originalImageCanvas.FillMode = canvas.ImageFillOriginal
+	originalImageCanvas.SetMinSize(fyne.NewSize(400, 400))
 
 	// build a container for the original image
 	originalImageCtr := container.NewBorder(
@@ -61,6 +79,7 @@ func initializeImgsCtr() fyne.CanvasObject {
 	previewImage := project.GetPreview()
 	previewImageCanvas := canvas.NewImageFromImage(previewImage)
 	previewImageCanvas.FillMode = canvas.ImageFillOriginal
+	previewImageCanvas.SetMinSize(fyne.NewSize(400, 400))
 
 	// build a container for the preview image
 	previewImageCtr := container.NewBorder(
