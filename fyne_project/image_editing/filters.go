@@ -1,4 +1,4 @@
-package image_handling
+package image_editing
 
 import (
 	"image"

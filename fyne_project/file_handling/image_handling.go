@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"image"
-	"image-manipulation-tool/fyne_project"
 	"image/jpeg"
 	"image/png"
 	"os"
@@ -23,7 +22,7 @@ func LoadImage(path string) (image.Image, error) {
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			println(fyne_project.RError()+" when closing file '%s': %w", path, err)
+			println("error: when closing file '%s': %w", path, err)
 		}
 	}(file)
 
@@ -47,26 +46,26 @@ func LoadImageToBytes(path string) ([]byte, error) {
 	file, err := os.Open(path)
 
 	if err != nil {
-		return nil, fmt.Errorf(fyne_project.RError()+" when opening file: %w", err)
+		return nil, fmt.Errorf("error: when opening file: %w", err)
 	}
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			println(fyne_project.RError()+" when closing file '%s': %w", path, err)
+			println("error: when closing file '%s': %w", path, err)
 		}
 	}(file)
 
 	img, _, err := image.Decode(file)
 
 	if err != nil {
-		return nil, fmt.Errorf(fyne_project.RError()+" when decoding file: %w", err)
+		return nil, fmt.Errorf("error: when decoding file: %w", err)
 	}
 
 	buf := &bytes.Buffer{}
 	err = png.Encode(buf, img)
 
 	if err != nil {
-		return nil, fmt.Errorf(fyne_project.RError()+" when encoding file to bytes: %w", err)
+		return nil, fmt.Errorf("error: when encoding file to bytes: %w", err)
 	}
 
 	return buf.Bytes(), nil

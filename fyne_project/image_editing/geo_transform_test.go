@@ -1,4 +1,4 @@
-package image_handling_test
+package image_editing_test
 
 import (
 	"image-manipulation-tool/image-handling"
