@@ -62,6 +62,13 @@ func (p *Project) UpdatePreviewImage(img image.Image) {
 	p.previewImage = append(p.previewImage[:p.currentVersion], img)
 }
 
+func (p *Project) LoadNewImage(img image.Image) {
+	p.versions = 1
+	p.currentVersion = 0
+	p.originalImage = img
+	p.previewImage = []image.Image{img}
+}
+
 // Constructor ---------------------------------------------------------------------------------------------------------
 
 func NewProject() *Project {
