@@ -47,11 +47,11 @@ func (p *Project) UpdatePreviewImage(img image.Image) {
 
 // Constructor ---------------------------------------------------------------------------------------------------------
 
-func NewProject(img image.Image) *Project {
+func NewProject() *Project {
 	return &Project{
 		versions:       0,
 		currentVersion: 0,
-		originalImage:  img,
-		previewImage:   []image.Image{img},
+		originalImage:  nil,
+		previewImage:   []image.Image{},
 	}
 }
