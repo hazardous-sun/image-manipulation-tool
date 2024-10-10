@@ -1,6 +1,9 @@
 package models
 
-import "image"
+import (
+	"image"
+	"image-manipulation-tool/fyne_project/file_handling"
+)
 
 type Project struct {
 	versions       int
@@ -11,7 +14,14 @@ type Project struct {
 
 // Collecting Values ---------------------------------------------------------------------------------------------------
 
+func (p *Project) GetOriginal() image.Image {
+	return p.originalImage
+}
+
 func (p *Project) GetPreview() image.Image {
+	if len(p.previewImage) == 0 {
+		return nil
+	}
 	return p.previewImage[p.currentVersion]
 }
 
@@ -48,10 +58,16 @@ func (p *Project) UpdatePreviewImage(img image.Image) {
 // Constructor ---------------------------------------------------------------------------------------------------------
 
 func NewProject() *Project {
+	initialImg, err := file_handling.LoadImage("fyne_project/cat.jpeg")
+
+	if err != nil {
+		panic(err)
+	}
+
 	return &Project{
 		versions:       0,
 		currentVersion: 0,
-		originalImage:  nil,
-		previewImage:   []image.Image{},
+		originalImage:  initialImg,
+		previewImage:   []image.Image{initialImg},
 	}
 }
