@@ -6,7 +6,7 @@ toolchain go1.23.0
 
 require (
 	fyne.io/fyne/v2 v2.5.1
-	github.com/wailsapp/wails/v2 v2.9.2
+	github.com/wailsapp/wails/v2 v2.9.1
 )
 
 require (
