@@ -1,6 +1,7 @@
 package fyne_project
 
 import (
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -76,12 +77,16 @@ func initializeImgsCtr() fyne.CanvasObject {
 }
 
 func initializeSideBar() fyne.CanvasObject {
-	btnsArr := []models.EditButton{
-		models.NewEditButton("Resize", func() {}),
-		models.NewEditButton("Rotate", func() {}),
-		models.NewEditButton("Translate", func() {}),
-		models.NewEditButton("Horizontal mirroring", func() {}),
-		models.NewEditButton("Vertical mirroring", func() {}),
+	btnsArr := []*widget.Button{
+		widget.NewButton("Resize", func() {
+			fmt.Println("resize")
+		}),
+		widget.NewButton("Rotate", func() {
+			fmt.Println("rotate")
+		}),
+		widget.NewButton("Translate", func() {}),
+		widget.NewButton("Horizontal mirroring", func() {}),
+		widget.NewButton("Vertical mirroring", func() {}),
 	}
 
 	btnsData := binding.NewUntypedList()
@@ -100,9 +105,9 @@ func initializeSideBar() fyne.CanvasObject {
 				func(di binding.DataItem, object fyne.CanvasObject) {
 					objBtn := object.(*widget.Button)
 					temp, _ := di.(binding.Untyped).Get()
-					diBtn := temp.(models.EditButton)
+					diBtn := temp.(*widget.Button)
 					objBtn.SetText(diBtn.Text)
-					objBtn.OnTapped = diBtn.Behavior
+					objBtn.OnTapped = diBtn.OnTapped
 				},
 			),
 		),
