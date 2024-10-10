@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"image"
 	"image-manipulation-tool/fyne_project/file_handling"
 )
@@ -10,6 +11,13 @@ type Project struct {
 	currentVersion int
 	originalImage  image.Image
 	previewImage   []image.Image
+}
+
+func (p *Project) String() string {
+	return fmt.Sprintf(
+		"Project{versions: %d, currentVersion: %d, originalImage: %v, previewImage: %v}",
+		p.versions, p.currentVersion, p.originalImage, p.previewImage,
+	)
 }
 
 // Collecting Values ---------------------------------------------------------------------------------------------------
@@ -65,7 +73,7 @@ func NewProject() *Project {
 	}
 
 	return &Project{
-		versions:       0,
+		versions:       1,
 		currentVersion: 0,
 		originalImage:  initialImg,
 		previewImage:   []image.Image{initialImg},
