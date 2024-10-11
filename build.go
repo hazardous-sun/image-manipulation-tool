@@ -18,7 +18,8 @@ import (
 
 var originalImageCanvas *canvas.Image
 var previewImageCanvas *canvas.Image
-var Versions int
+var currentVersion int
+var lblCount *widget.Label
 
 func Build(a fyne.App) {
 	// initialize the Project instance
@@ -159,7 +160,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 
 						// inform the system to update the preview image
 						project.AddPreviewImage(img)
-						updatePrevImage(img, project)
+						updateAllImages(img, project)
+						updateLblCount(1)
 						w.Close()
 					},
 				)
@@ -199,7 +201,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 
 						// inform the system to update the preview image
 						project.AddPreviewImage(img)
-						updatePrevImage(img, project)
+						updateAllImages(img, project)
+						updateLblCount(1)
 						w.Close()
 					},
 				)
@@ -246,7 +249,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 
 						// inform the system to update the preview image
 						project.AddPreviewImage(img)
-						updatePrevImage(img, project)
+						updateAllImages(img, project)
+						updateLblCount(1)
 						w.Close()
 					},
 				)
@@ -267,7 +271,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				matrix := image_editing.GetMirrorHMatrix()
 				img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
 				project.AddPreviewImage(img)
-				updatePrevImage(img, project)
+				updateAllImages(img, project)
+				updateLblCount(1)
 				w.Close()
 			}),
 			widget.NewButton("Vertical mirroring", func() {
@@ -277,7 +282,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				matrix := image_editing.GetMirrorVMatrix()
 				img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
 				project.AddPreviewImage(img)
-				updatePrevImage(img, project)
+				updateAllImages(img, project)
+				updateLblCount(1)
 				w.Close()
 			}),
 		},
@@ -290,7 +296,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 			widget.NewButton("Grayscale", func() {
 				img := image_editing.FilterGrayScale(previewImageCanvas.Image)
 				project.AddPreviewImage(img)
-				updatePrevImage(img, project)
+				updateAllImages(img, project)
+				updateLblCount(1)
 			}),
 			widget.NewButton("High fade", func() {}),
 			widget.NewButton("Low fade", func() {}),
@@ -337,6 +344,11 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 }
 
 func initializeVersionsCtr(w fyne.Window, project *models.Project) fyne.CanvasObject {
+	// label
+	versionsCount := strconv.Itoa(currentVersion)
+	lblCount = widget.NewLabel(fmt.Sprintf("Version: " + versionsCount))
+	lblCount.Alignment = fyne.TextAlignCenter
+
 	// buttons
 	undoBtn := widget.NewButton(
 		"Previous",
@@ -348,6 +360,7 @@ func initializeVersionsCtr(w fyne.Window, project *models.Project) fyne.CanvasOb
 				return
 			}
 
+			updateLblCount(-1)
 			updateAllImages(img, project)
 		},
 	)
@@ -362,13 +375,9 @@ func initializeVersionsCtr(w fyne.Window, project *models.Project) fyne.CanvasOb
 			}
 
 			updateAllImages(img, project)
+			updateLblCount(1)
 		},
 	)
-
-	// label
-	versionsCount := strconv.Itoa(Versions)
-	lblCount := widget.NewLabel(fmt.Sprintf("Version: " + versionsCount))
-	lblCount.Alignment = fyne.TextAlignCenter
 
 	// container
 	toolBar := container.NewGridWithColumns(
@@ -476,4 +485,10 @@ func updatePrevImage(img image.Image, project *models.Project) {
 func refreshCanvas() {
 	originalImageCanvas.Refresh()
 	previewImageCanvas.Refresh()
+}
+
+func updateLblCount(val int) {
+	currentVersion += val
+	versionsCount := strconv.Itoa(currentVersion)
+	lblCount.SetText(fmt.Sprintf("Version: " + versionsCount))
 }
