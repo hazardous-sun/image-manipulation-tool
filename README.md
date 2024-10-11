@@ -40,6 +40,11 @@ expected to contain a GUI where the user will be able to apply filters and manip
 * JPEG\JPG
 * PNG
 
+## Supported image file types
+
+* JPEG\JPG
+* PNG
+
 ## Running the project
 
 To run the project, first clone the repository, then follow these steps:
