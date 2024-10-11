@@ -7,15 +7,16 @@ import (
 
 type Project struct {
 	versions       int
-	currentVersion int
 	originalImage  image.Image
-	previewImage   []image.Image
+	previewImage   image.Image
+	previousStates ChangesStack
+	nextStates     ChangesStack
 }
 
 func (p *Project) String() string {
 	return fmt.Sprintf(
-		"Project{versions: %d, currentVersion: %d, originalImage: %v, previewImage: %v}",
-		p.versions, p.currentVersion, p.originalImage, p.previewImage,
+		"Project{versions: %d, originalImage: %v, previewImage: %v}",
+		p.versions, p.originalImage, p.previewImage,
 	)
 }
 
