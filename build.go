@@ -465,6 +465,7 @@ func initializeAppMenu(w fyne.Window, project *models.Project) *fyne.MainMenu {
 }
 
 func updateAllImagesNewProject(img image.Image, project *models.Project) {
+	updateLblCount(-currentVersion)
 	project.LoadNewImage(img)
 	originalImageCanvas.Image = project.GetOriginal()
 	previewImageCanvas.Image = project.GetPreview()
