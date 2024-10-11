@@ -36,34 +36,35 @@ func (p *Project) PreviousPreviewImage() image.Image {
 	if p.currentVersion == 0 {
 		return p.previewImage[0]
 	}
-	p.currentVersion--
-	if p.currentVersion > 0 {
-		p.originalImage = p.previewImage[p.currentVersion-1]
+
+	index := p.currentVersion - 1
+
+	if index > 0 {
+		p.originalImage = p.previewImage[index-1]
 	} else {
-		p.originalImage = p.previewImage[0]
+		p.originalImage = p.previewImage[index]
 	}
-	return p.previewImage[p.currentVersion]
+
+	return p.previewImage[index]
 }
 
 // Updating Values -----------------------------------------------------------------------------------------------------
 
 func (p *Project) AddPreviewImage(img image.Image) {
 	if p.currentVersion < p.versions {
-		p.UpdatePreviewImage(img)
-		p.versions = p.currentVersion + 1
+		p.previewImage = append(p.previewImage[:p.currentVersion], img)
+		p.currentVersion++
+		p.versions = p.currentVersion
 	} else {
 		p.previewImage = append(p.previewImage, img)
+		p.currentVersion++
 		p.versions++
 	}
 	p.originalImage = p.PreviousPreviewImage()
 }
 
-func (p *Project) UpdatePreviewImage(img image.Image) {
-	p.previewImage = append(p.previewImage[:p.currentVersion], img)
-}
-
 func (p *Project) LoadNewImage(img image.Image) {
-	p.versions = 1
+	p.versions = 0
 	p.currentVersion = 0
 	p.originalImage = img
 	p.previewImage = []image.Image{img}
