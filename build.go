@@ -92,6 +92,26 @@ func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 }
 
 func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
+	// initialize X axis input
+	xEntry := widget.NewEntry()
+	xEntry.PlaceHolder = "1"
+	xCtr := container.NewBorder(
+		nil, nil,
+		widget.NewLabel("X:"),
+		nil,
+		xEntry,
+	)
+
+	// initialize Y axis input
+	yEntry := widget.NewEntry()
+	yEntry.PlaceHolder = "1"
+	yCtr := container.NewBorder(
+		nil, nil,
+		widget.NewLabel("Y:"),
+		nil,
+		yEntry,
+	)
+
 	// geometric transformations
 	geoTransfBtns := getBtns(
 		[]*widget.Button{
@@ -100,26 +120,6 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				w := a.NewWindow("Input values")
 				w.Resize(fyne.NewSize(200, 100))
 				w.SetFixedSize(true)
-
-				// initialize X axis input
-				xEntry := widget.NewEntry()
-				xEntry.PlaceHolder = "1"
-				xCtr := container.NewBorder(
-					nil, nil,
-					widget.NewLabel("X:"),
-					nil,
-					xEntry,
-				)
-
-				// initialize Y axis input
-				yEntry := widget.NewEntry()
-				yEntry.PlaceHolder = "1"
-				yCtr := container.NewBorder(
-					nil, nil,
-					widget.NewLabel("Y:"),
-					nil,
-					yEntry,
-				)
 
 				// initialize the confirmation button
 				confirmBtn := widget.NewButton(
@@ -152,6 +152,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 						w.Close()
 					},
 				)
+
+				// pass the values to the container
 				ctr := container.NewGridWithRows(3,
 					xCtr,
 					yCtr,
@@ -161,11 +163,108 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				w.Show()
 			}),
 			widget.NewButton("Rotate", func() {
-				fmt.Println("rotate")
+				// initialize new window
+				w := a.NewWindow("Input values")
+				w.Resize(fyne.NewSize(200, 100))
+				w.SetFixedSize(true)
+
+				// initialize the confirmation button
+				confirmBtn := widget.NewButton(
+					"Confirm",
+					func() {
+						// transform the inputted string in X into a float64
+						x, err := strconv.ParseFloat(xEntry.Text, 64)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						// collect the matrix
+						matrix := image_editing.GetRotationMatrix(x)
+
+						// run the transformation process
+						img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
+
+						// inform the system to update the preview image
+						updatePrevImage(img, project)
+						w.Close()
+					},
+				)
+
+				// pass the values to the container
+				ctr := container.NewGridWithRows(2,
+					xCtr,
+					confirmBtn,
+				)
+				w.SetContent(ctr)
+				w.Show()
 			}),
-			widget.NewButton("Translate", func() {}),
-			widget.NewButton("Horizontal mirroring", func() {}),
-			widget.NewButton("Vertical mirroring", func() {}),
+			widget.NewButton("Translate", func() {
+				// initialize new window
+				w := a.NewWindow("Input values")
+				w.Resize(fyne.NewSize(200, 100))
+				w.SetFixedSize(true)
+
+				// initialize the confirmation button
+				confirmBtn := widget.NewButton(
+					"Confirm",
+					func() {
+						// transform the inputted string in X into a float64
+						x, err := strconv.ParseFloat(xEntry.Text, 64)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						// transform the inputted string in Y into a float64
+						y, err := strconv.ParseFloat(yEntry.Text, 64)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						// collect the matrix
+						matrix := image_editing.GetTranslationMatrix(x, y)
+
+						// run the transformation process
+						img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
+
+						// inform the system to update the preview image
+						updatePrevImage(img, project)
+						w.Close()
+					},
+				)
+
+				// pass the values to the container
+				ctr := container.NewGridWithRows(3,
+					xCtr,
+					yCtr,
+					confirmBtn,
+				)
+				w.SetContent(ctr)
+				w.Show()
+			}),
+			widget.NewButton("Horizontal mirroring", func() {
+				w := a.NewWindow("Input values")
+				w.Resize(fyne.NewSize(200, 100))
+				w.SetFixedSize(true)
+				matrix := image_editing.GetMirrorHMatrix()
+				img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
+				updatePrevImage(img, project)
+				w.Close()
+			}),
+			widget.NewButton("Vertical mirroring", func() {
+				w := a.NewWindow("Input values")
+				w.Resize(fyne.NewSize(200, 100))
+				w.SetFixedSize(true)
+				matrix := image_editing.GetMirrorVMatrix()
+				img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
+				updatePrevImage(img, project)
+				w.Close()
+			}),
 		},
 	)
 	geoTransfList := getBtnsList(geoTransfBtns)
