@@ -18,6 +18,10 @@ func (s *ChangesStack) Length() int {
 	return len(*s)
 }
 
+func (s *ChangesStack) Empty() bool {
+	return s.Length() == 0
+}
+
 func NewStack() *ChangesStack {
 	return &ChangesStack{}
 }
