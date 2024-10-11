@@ -173,7 +173,10 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 	// filters
 	filtersBtns := getBtns(
 		[]*widget.Button{
-			widget.NewButton("Grayscale", func() {}),
+			widget.NewButton("Grayscale", func() {
+				img := image_editing.FilterGrayScale(previewImageCanvas.Image)
+				updatePrevImage(img, project)
+			}),
 			widget.NewButton("High fade", func() {}),
 			widget.NewButton("Low fade", func() {}),
 			widget.NewButton("Threshold", func() {}),
