@@ -45,10 +45,10 @@ func applyChange(img image.Image, transformedImage *image.RGBA, matrix [][]float
 //
 // ]
 // Since we are dealing with images that only have two axis, we can set 'z' to 1.
-func GetTranslationMatrix(x float64, y ...float64) [][]float64 {
+func GetTranslationMatrix(x float64, y float64) [][]float64 {
 	return [][]float64{
 		{1, 0, x},
-		{0, 1, y[0]},
+		{0, 1, y},
 		{0, 0, 1},
 	}
 }
@@ -65,10 +65,10 @@ func GetTranslationMatrix(x float64, y ...float64) [][]float64 {
 // ]
 //
 // Since we are dealing with images that only have two axis, we can set 'z' to 1.
-func GetResizeMatrix(x float64, y ...float64) [][]float64 {
+func GetResizeMatrix(x float64, y float64) [][]float64 {
 	return [][]float64{
 		{1 / x, 0, 0},
-		{0, 1 / y[0], 0},
+		{0, 1 / y, 0},
 		{0, 0, 1},
 	}
 }
@@ -83,7 +83,7 @@ func GetResizeMatrix(x float64, y ...float64) [][]float64 {
 //	[0, 0, 1],
 //
 // ]
-func GetMirrorHMatrix(_ float64, _ ...float64) [][]float64 {
+func GetMirrorHMatrix() [][]float64 {
 	return [][]float64{
 		{-1, 0, 0},
 		{0, 1, 0},
