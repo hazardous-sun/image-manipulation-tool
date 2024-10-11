@@ -32,6 +32,16 @@ func (p *Project) GetPreview() image.Image {
 	return p.previewImage[p.currentVersion]
 }
 
+func (p *Project) NextPreviewImage() (image.Image, error) {
+	if p.currentVersion >= p.versions {
+		return nil, fmt.Errorf("no preview images available")
+	}
+
+	p.originalImage = p.previewImage[p.currentVersion]
+	p.currentVersion++
+	return p.GetPreview(), nil
+}
+
 func (p *Project) PreviousPreviewImage() image.Image {
 	if p.currentVersion == 0 {
 		return p.previewImage[0]
