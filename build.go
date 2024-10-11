@@ -12,7 +12,11 @@ import (
 	"image-manipulation-tool/file_handling"
 	"image-manipulation-tool/image_editing"
 	"image-manipulation-tool/models"
+	"image/jpeg"
+	"image/png"
 	"io"
+	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -448,7 +452,36 @@ func initializeAppMenu(w fyne.Window, project *models.Project) *fyne.MainMenu {
 					w,
 				)
 			}),
-			fyne.NewMenuItem("Save", func() {}),
+			fyne.NewMenuItem("Save", func() {
+				dialog.ShowFileSave(
+					func(closer fyne.URIWriteCloser, err error) {
+						path := closer.URI().Path()
+						file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, os.ModePerm)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						previewImage := project.GetPreview()
+						switch filepath.Ext(path) {
+						case ".png":
+							err = png.Encode(file, previewImage)
+							if err != nil {
+								dialog.ShowError(err, w)
+							}
+						case ".jpg", ".jpeg":
+							err = jpeg.Encode(file, previewImage, &jpeg.Options{Quality: 100})
+							if err != nil {
+								dialog.ShowError(err, w)
+							}
+						default:
+							dialog.ShowError(fmt.Errorf("unsupported file type"), w)
+						}
+					},
+					w,
+				)
+			}),
 		),
 		fyne.NewMenu("Help",
 			fyne.NewMenuItem("About", func() {
