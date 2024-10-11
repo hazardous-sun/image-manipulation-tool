@@ -22,6 +22,10 @@ func (s *ChangesStack) Empty() bool {
 	return s.Length() == 0
 }
 
+func (s *ChangesStack) Clear() {
+	*s = (*s)[:0]
+}
+
 func NewStack() *ChangesStack {
 	return &ChangesStack{}
 }
