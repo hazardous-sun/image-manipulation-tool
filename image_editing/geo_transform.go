@@ -1,4 +1,4 @@
-package image_handling
+package image_editing
 
 import (
 	"image"
@@ -35,7 +35,8 @@ func applyChange(img image.Image, transformedImage *image.RGBA, matrix [][]float
 
 // --------- Matrices
 
-// GetTranslationMatrix Returns the matrix used for translating images:
+// GetTranslationMatrix :
+// Returns the matrix used for translating images:
 // [
 //
 //	[1, 0, x],
@@ -44,14 +45,15 @@ func applyChange(img image.Image, transformedImage *image.RGBA, matrix [][]float
 //
 // ]
 // Since we are dealing with images that only have two axis, we can set 'z' to 1.
-func GetTranslationMatrix(x float64, y float64) [][]float64 {
+func GetTranslationMatrix(x float64, y ...float64) [][]float64 {
 	return [][]float64{
 		{1, 0, x},
-		{0, 1, y},
+		{0, 1, y[0]},
 		{0, 0, 1},
 	}
 }
 
+// GetResizeMatrix :
 // Returns the matrix used for scaling images:
 //
 // [
@@ -63,14 +65,15 @@ func GetTranslationMatrix(x float64, y float64) [][]float64 {
 // ]
 //
 // Since we are dealing with images that only have two axis, we can set 'z' to 1.
-func GetResizeMatrix(x float64, y float64) [][]float64 {
+func GetResizeMatrix(x float64, y ...float64) [][]float64 {
 	return [][]float64{
 		{1 / x, 0, 0},
-		{0, 1 / y, 0},
+		{0, 1 / y[0], 0},
 		{0, 0, 1},
 	}
 }
 
+// GetMirrorHMatrix :
 // Returns the matrix used to mirror images in the X axis:
 //
 // [
@@ -80,7 +83,7 @@ func GetResizeMatrix(x float64, y float64) [][]float64 {
 //	[0, 0, 1],
 //
 // ]
-func GetMirrorHMatrix() [][]float64 {
+func GetMirrorHMatrix(_ float64, _ ...float64) [][]float64 {
 	return [][]float64{
 		{-1, 0, 0},
 		{0, 1, 0},
@@ -88,6 +91,7 @@ func GetMirrorHMatrix() [][]float64 {
 	}
 }
 
+// GetMirrorVMatrix :
 // Returns the matrix used to mirror images in the Y axis:
 //
 // [
@@ -105,6 +109,7 @@ func GetMirrorVMatrix() [][]float64 {
 	}
 }
 
+// GetRotationMatrix :
 // Returns the matrix used for rotating images in the X axis:
 //
 // [

@@ -1,16 +1,9 @@
 package main
 
-var UnsavedProgress bool
+import (
+	"fyne.io/fyne/v2/app"
+)
 
 func main() {
-	build, err := Build{}.build()
-
-	if err != nil {
-		println(err.Error())
-		return
-	}
-
-	UnsavedProgress = false
-
-	Run(build)
+	Build(app.New())
 }
