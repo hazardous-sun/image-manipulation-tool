@@ -33,7 +33,12 @@ expected to contain a GUI where the user will be able to apply filters and manip
 ## Requirements
 
 - [go](https://go.dev/dl/) : `1.23.0+`
-- [fyne](https://fyne.io/) : `: 2.5.1+`
+- [fyne](https://fyne.io/) : `2.5.1+`
+
+## Supported image file types
+
+* JPEG\JPG
+* PNG
 
 ## Running the project
 
