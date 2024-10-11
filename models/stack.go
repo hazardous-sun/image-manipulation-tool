@@ -10,6 +10,9 @@ func (s *ChangesStack) Pop() interface{} {
 	h := *s
 	var el interface{}
 	l := len(h)
+	if l == 0 {
+		return el
+	}
 	el, *s = h[l-1], h[0:l-1]
 	return el
 }
