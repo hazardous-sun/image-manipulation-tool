@@ -32,8 +32,8 @@ expected to contain a GUI where the user will be able to apply filters and manip
 
 ## Requirements
 
-- `go` : `1.23.0+`
-- `fyne` : `: 2.5.1+`
+- [go](https://go.dev/dl/) : `1.23.0+`
+- [fyne](https://fyne.io/) : `: 2.5.1+`
 
 ## Running the project
 
