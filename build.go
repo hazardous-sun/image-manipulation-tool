@@ -18,6 +18,7 @@ import (
 
 var originalImageCanvas *canvas.Image
 var previewImageCanvas *canvas.Image
+var Versions int
 
 func Build(a fyne.App) {
 	// initialize the Project instance
@@ -30,12 +31,21 @@ func Build(a fyne.App) {
 	// initialize GUI's elements
 	imgsCtr := initializeImgsCtr(project)
 	sideBar := initializeSideBar(a, project)
+	versionsCtr := initializeVersionsCtr(w, project)
+
+	// creating a container for the images and versionsCtr
+	displayCtr := container.NewBorder(
+		nil,
+		versionsCtr,
+		nil, nil,
+		imgsCtr,
+	)
 
 	// pass the elements to a container
 	appCtr := container.NewBorder(
 		nil, nil, nil,
 		sideBar,
-		imgsCtr,
+		displayCtr,
 	)
 
 	// -- initialize the main menu for the window
@@ -148,6 +158,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 						img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
 
 						// inform the system to update the preview image
+						project.AddPreviewImage(img)
 						updatePrevImage(img, project)
 						w.Close()
 					},
@@ -187,6 +198,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 						img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
 
 						// inform the system to update the preview image
+						project.AddPreviewImage(img)
 						updatePrevImage(img, project)
 						w.Close()
 					},
@@ -233,6 +245,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 						img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
 
 						// inform the system to update the preview image
+						project.AddPreviewImage(img)
 						updatePrevImage(img, project)
 						w.Close()
 					},
@@ -253,6 +266,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				w.SetFixedSize(true)
 				matrix := image_editing.GetMirrorHMatrix()
 				img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
+				project.AddPreviewImage(img)
 				updatePrevImage(img, project)
 				w.Close()
 			}),
@@ -262,6 +276,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				w.SetFixedSize(true)
 				matrix := image_editing.GetMirrorVMatrix()
 				img := image_editing.TransformImage(previewImageCanvas.Image, matrix)
+				project.AddPreviewImage(img)
 				updatePrevImage(img, project)
 				w.Close()
 			}),
@@ -274,6 +289,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 		[]*widget.Button{
 			widget.NewButton("Grayscale", func() {
 				img := image_editing.FilterGrayScale(previewImageCanvas.Image)
+				project.AddPreviewImage(img)
 				updatePrevImage(img, project)
 			}),
 			widget.NewButton("High fade", func() {}),
@@ -318,6 +334,50 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 		nil, nil, nil,
 		sideBar,
 	)
+}
+
+func initializeVersionsCtr(w fyne.Window, project *models.Project) fyne.CanvasObject {
+	// buttons
+	undoBtn := widget.NewButton(
+		"Previous",
+		func() {
+			img, err := project.PreviousPreviewImage()
+
+			if err != nil {
+				dialog.ShowError(err, w)
+				return
+			}
+
+			updateAllImages(img, project)
+		},
+	)
+	redoBtn := widget.NewButton(
+		"Next",
+		func() {
+			img, err := project.NextPreviewImage()
+
+			if err != nil {
+				dialog.ShowError(err, w)
+				return
+			}
+
+			updateAllImages(img, project)
+		},
+	)
+
+	// label
+	versionsCount := strconv.Itoa(Versions)
+	lblCount := widget.NewLabel(fmt.Sprintf("Version: " + versionsCount))
+	lblCount.Alignment = fyne.TextAlignCenter
+
+	// container
+	toolBar := container.NewGridWithColumns(
+		3,
+		undoBtn,
+		lblCount,
+		redoBtn,
+	)
+	return toolBar
 }
 
 func getBtns(btns []*widget.Button) binding.UntypedList {
@@ -373,7 +433,7 @@ func initializeAppMenu(w fyne.Window, project *models.Project) *fyne.MainMenu {
 								dialog.ShowError(err, w)
 							}
 
-							updateAllImages(img, project)
+							updateAllImagesNewProject(img, project)
 						}
 					},
 					w,
@@ -395,15 +455,20 @@ func initializeAppMenu(w fyne.Window, project *models.Project) *fyne.MainMenu {
 	)
 }
 
-func updateAllImages(img image.Image, project *models.Project) {
+func updateAllImagesNewProject(img image.Image, project *models.Project) {
 	project.LoadNewImage(img)
-	originalImageCanvas.Image = img
-	previewImageCanvas.Image = img
+	originalImageCanvas.Image = project.GetOriginal()
+	previewImageCanvas.Image = project.GetPreview()
+	refreshCanvas()
+}
+
+func updateAllImages(img image.Image, project *models.Project) {
+	originalImageCanvas.Image = project.GetOriginal()
+	previewImageCanvas.Image = project.GetPreview()
 	refreshCanvas()
 }
 
 func updatePrevImage(img image.Image, project *models.Project) {
-	project.AddPreviewImage(img)
 	previewImageCanvas.Image = project.GetPreview()
 	refreshCanvas()
 }

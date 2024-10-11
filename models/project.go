@@ -66,6 +66,7 @@ func (p *Project) NextPreviewImage() (image.Image, error) {
 		return p.previewImage, fmt.Errorf("no next state")
 	}
 
+	p.originalImage = p.previewImage
 	p.previousStates.Push(p.previewImage)
 	p.previewImage = nextPreview.(image.Image)
 	return p.previewImage, nil
