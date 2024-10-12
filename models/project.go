@@ -5,6 +5,9 @@ import (
 	"image"
 )
 
+// Project :
+// An abstraction of a project structure. It contains the current preview image that will receive updates and an image
+// of how the preview was before applying the changes.
 type Project struct {
 	versions       int
 	originalImage  image.Image
@@ -34,6 +37,8 @@ func (p *Project) GetPreview() image.Image {
 	return p.previewImage
 }
 
+// PreviousPreviewImage :
+// Cycles back into the project, returning the previous version of p.previewImage, if it exists.
 func (p *Project) PreviousPreviewImage() (image.Image, error) {
 	// get the previous preview image
 	previousPreview := p.previousStates.Pop()
@@ -78,6 +83,11 @@ func (p *Project) NextPreviewImage() (image.Image, error) {
 
 // Updating Values -----------------------------------------------------------------------------------------------------
 
+// AddPreviewImage :
+// Adds a new preview image to the project and sets it as the current preview image. The Project attribute originalImage
+// receives the previous preview image value, and then the previous image is pushed into p.previousStates.
+//
+// WARNING: p.nextStates will be cleared if it is not empty.
 func (p *Project) AddPreviewImage(img image.Image) {
 	// if p.nextStates is empty, it means that there is no work to reset
 	if p.nextStates.Empty() {
