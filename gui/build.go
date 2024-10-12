@@ -12,6 +12,7 @@ import (
 	"image-manipulation-tool/file_handling"
 	"image-manipulation-tool/image_editing"
 	"image-manipulation-tool/models"
+	"image-manipulation-tool/themes"
 	"image/jpeg"
 	"image/png"
 	"io"
@@ -26,8 +27,11 @@ var currentVersion int
 var lblCount *widget.Label
 
 func Build(a fyne.App) {
-	// initialize the Project instance
+	// initialize Project
 	project := models.NewProject()
+
+	// initialize ThemeSettings
+	settings := models.NewThemeSettings()
 
 	// initialize the main window
 	w := a.NewWindow("Image Manipulation Tool")
@@ -54,7 +58,7 @@ func Build(a fyne.App) {
 	)
 
 	// -- initialize the main menu for the window
-	appMenu := initializeAppMenu(w, project)
+	appMenu := initializeAppMenu(a, w, project, settings)
 	w.SetMainMenu(appMenu)
 
 	// set the container as the main window's content
@@ -418,7 +422,7 @@ func getBtnsList(btns binding.UntypedList) *widget.List {
 	)
 }
 
-func initializeAppMenu(w fyne.Window, project *models.Project) *fyne.MainMenu {
+func initializeAppMenu(a fyne.App, w fyne.Window, project *models.Project, settings *models.ThemeSettings) *fyne.MainMenu {
 	return fyne.NewMainMenu(
 		fyne.NewMenu("File",
 			fyne.NewMenuItem("Open", func() {
@@ -492,7 +496,9 @@ func initializeAppMenu(w fyne.Window, project *models.Project) *fyne.MainMenu {
 					w,
 				)
 			}),
-			fyne.NewMenuItem("Preferences", func() {}),
+			fyne.NewMenuItem("Preferences", func() {
+				themes.ThemeSelectionWindow(a, settings)
+			}),
 		),
 	)
 }
