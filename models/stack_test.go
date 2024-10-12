@@ -17,3 +17,20 @@ func TestNewStack(t *testing.T) {
 		t.Errorf(fmt.Sprintf("expected length %d, got %d", expected.Length(), received.Length()))
 	}
 }
+
+func TestChangesStack_Length(t *testing.T) {
+	expected := 0
+	received := NewStack()
+
+	if expected != received.Length() {
+		t.Errorf(fmt.Sprintf("expected length %d, got %d", expected, received.Length()))
+	}
+
+	expected = 2
+	received.Push(1000)
+	received.Push(80)
+
+	if expected != received.Length() {
+		t.Errorf(fmt.Sprintf("expected length %d, got %d", expected, received.Length()))
+	}
+}
