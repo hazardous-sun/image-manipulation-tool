@@ -62,3 +62,19 @@ func TestChangesStack_Pop(t *testing.T) {
 		t.Errorf(fmt.Sprintf("expected pop %v, got %v", expectedStruct, receivedStruct.Pop()))
 	}
 }
+
+func TestChangesStack_Clear(t *testing.T) {
+	numberOfElements := 100
+	expected := 0
+	received := NewStack()
+
+	for i := 0; i < numberOfElements; i++ {
+		received.Push(i)
+	}
+
+	received.Clear()
+
+	if expected != received.Length() {
+		t.Errorf(fmt.Sprintf("expected length %d, got %d", expected, received.Length()))
+	}
+}
