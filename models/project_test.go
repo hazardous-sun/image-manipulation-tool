@@ -88,3 +88,13 @@ func TestProject_LoadNewImage(t *testing.T) {
 		panic(fmt.Sprintf("expected preview color model %v, got %v", expected.GetPreview().ColorModel(), received.GetPreview().ColorModel()))
 	}
 }
+
+func TestProject_AddPreviewImage(t *testing.T) {
+	expectedLen := 2
+	received := NewProject()
+	received.AddPreviewImage(image.NewRGBA(image.Rect(0, 0, 256, 256)))
+
+	if received.previousStates.Length() != expectedLen {
+		panic(fmt.Sprintf("expected length %d, got %d", expectedLen, received.previousStates.Length()))
+	}
+}
