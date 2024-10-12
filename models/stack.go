@@ -17,6 +17,8 @@ func (s *ChangesStack) Pop() interface{} {
 	return el
 }
 
+// Length :
+// Returns the amount of group of elements in the stack.
 func (s *ChangesStack) Length() int {
 	return len(*s)
 }
@@ -29,6 +31,10 @@ func (s *ChangesStack) Clear() {
 	*s = (*s)[:0]
 }
 
+// Constructor ---------------------------------------------------------------------------------------------------------
+
+// NewStack :
+// Returns a reference to an empty stack.
 func NewStack() *ChangesStack {
 	return &ChangesStack{}
 }
