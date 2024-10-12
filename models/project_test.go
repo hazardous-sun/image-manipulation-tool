@@ -40,3 +40,16 @@ func TestProject_GetOriginal(t *testing.T) {
 		panic(fmt.Sprintf("expected original color model %v, got %v", expected.ColorModel(), received.GetOriginal().ColorModel()))
 	}
 }
+
+func TestProject_GetPreview(t *testing.T) {
+	expected := image.NewRGBA(image.Rect(0, 0, 512, 512))
+	received := NewProject()
+
+	if received.GetPreview().Bounds() != expected.Bounds() {
+		panic(fmt.Sprintf("expected preview image bounds %v, got %v", expected.Bounds(), received.GetPreview()))
+	}
+
+	if received.GetPreview().ColorModel() != expected.ColorModel() {
+		panic(fmt.Sprintf("expected preview color model %v, got %v", expected.ColorModel(), received.GetOriginal().ColorModel()))
+	}
+}
