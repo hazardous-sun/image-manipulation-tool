@@ -2,10 +2,14 @@ package models
 
 type ChangesStack []interface{}
 
+// Push :
+// Inserts a new value at the top of the stack structure.
 func (s *ChangesStack) Push(x interface{}) {
 	*s = append(*s, x)
 }
 
+// Pop :
+// Removes the value at the top of the stack and returns it.
 func (s *ChangesStack) Pop() interface{} {
 	h := *s
 	var el interface{}
