@@ -5,6 +5,9 @@ import (
 	"image"
 )
 
+// Project :
+// An abstraction of a project structure. It contains the current preview image that will receive updates and an image
+// of how the preview was before applying the changes.
 type Project struct {
 	versions       int
 	originalImage  image.Image
@@ -22,14 +25,20 @@ func (p *Project) String() string {
 
 // Collecting Values ---------------------------------------------------------------------------------------------------
 
+// GetOriginal :
+// Returns the current original image.
 func (p *Project) GetOriginal() image.Image {
 	return p.originalImage
 }
 
+// GetPreview :
+// Returns the current preview image.
 func (p *Project) GetPreview() image.Image {
 	return p.previewImage
 }
 
+// PreviousPreviewImage :
+// Cycles back into the project, returning the previous version of p.previewImage, if it exists.
 func (p *Project) PreviousPreviewImage() (image.Image, error) {
 	// get the previous preview image
 	previousPreview := p.previousStates.Pop()
@@ -74,6 +83,11 @@ func (p *Project) NextPreviewImage() (image.Image, error) {
 
 // Updating Values -----------------------------------------------------------------------------------------------------
 
+// AddPreviewImage :
+// Adds a new preview image to the project and sets it as the current preview image. The Project attribute originalImage
+// receives the previous preview image value, and then the previous image is pushed into p.previousStates.
+//
+// WARNING: p.nextStates will be cleared if it is not empty.
 func (p *Project) AddPreviewImage(img image.Image) {
 	// if p.nextStates is empty, it means that there is no work to reset
 	if p.nextStates.Empty() {
@@ -104,6 +118,9 @@ func (p *Project) AddPreviewImage(img image.Image) {
 	}
 }
 
+// LoadNewImage :
+// Resets the project when called, setting p.versions to 1, clearing the stacks and setting the new image as both the
+// original and previews.
 func (p *Project) LoadNewImage(img image.Image) {
 	// reset the stacks and the versions count
 	p.versions = 1
@@ -117,6 +134,8 @@ func (p *Project) LoadNewImage(img image.Image) {
 
 // Constructor ---------------------------------------------------------------------------------------------------------
 
+// NewProject :
+// Returns an instance of models.Project with a base image, used to set the size of the images container in Fyne.
 func NewProject() *Project {
 	initialImg := image.NewRGBA(image.Rect(0, 0, 512, 512))
 	return &Project{
