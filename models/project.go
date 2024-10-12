@@ -22,10 +22,14 @@ func (p *Project) String() string {
 
 // Collecting Values ---------------------------------------------------------------------------------------------------
 
+// GetOriginal :
+// Returns the current original image.
 func (p *Project) GetOriginal() image.Image {
 	return p.originalImage
 }
 
+// GetPreview :
+// Returns the current preview image.
 func (p *Project) GetPreview() image.Image {
 	return p.previewImage
 }
@@ -104,6 +108,9 @@ func (p *Project) AddPreviewImage(img image.Image) {
 	}
 }
 
+// LoadNewImage :
+// Resets the project when called, setting p.versions to 1, clearing the stacks and setting the new image as both the
+// original and previews.
 func (p *Project) LoadNewImage(img image.Image) {
 	// reset the stacks and the versions count
 	p.versions = 1
@@ -117,6 +124,8 @@ func (p *Project) LoadNewImage(img image.Image) {
 
 // Constructor ---------------------------------------------------------------------------------------------------------
 
+// NewProject :
+// Returns an instance of models.Project with a base image, used to set the size of the images container in Fyne.
 func NewProject() *Project {
 	initialImg := image.NewRGBA(image.Rect(0, 0, 512, 512))
 	return &Project{
