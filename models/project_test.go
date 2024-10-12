@@ -53,3 +53,38 @@ func TestProject_GetPreview(t *testing.T) {
 		panic(fmt.Sprintf("expected preview color model %v, got %v", expected.ColorModel(), received.GetOriginal().ColorModel()))
 	}
 }
+
+func TestProject_LoadNewImage(t *testing.T) {
+	img := image.NewRGBA(image.Rect(0, 0, 256, 256))
+
+	expected := Project{
+		versions:       1,
+		originalImage:  img,
+		previewImage:   img,
+		previousStates: ChangesStack{},
+		nextStates:     ChangesStack{},
+	}
+
+	received := NewProject()
+	received.LoadNewImage(img)
+
+	if received.versions != expected.versions {
+		panic(fmt.Sprintf("expected versions %d, got %d", expected.versions, received.versions))
+	}
+
+	if received.GetOriginal().Bounds() != expected.GetOriginal().Bounds() {
+		panic(fmt.Sprintf("expected original image bounds %v, got %v", expected.GetOriginal(), received.GetOriginal()))
+	}
+
+	if received.GetOriginal().ColorModel() != expected.GetOriginal().ColorModel() {
+		panic(fmt.Sprintf("expected original color model %v, got %v", expected.GetOriginal().ColorModel(), received.GetOriginal().ColorModel()))
+	}
+
+	if received.GetPreview().Bounds() != expected.GetPreview().Bounds() {
+		panic(fmt.Sprintf("expected preview image bounds %v, got %v", expected.GetPreview().Bounds(), received.GetPreview().Bounds()))
+	}
+
+	if received.GetPreview().ColorModel() != expected.GetPreview().ColorModel() {
+		panic(fmt.Sprintf("expected preview color model %v, got %v", expected.GetPreview().ColorModel(), received.GetPreview().ColorModel()))
+	}
+}
