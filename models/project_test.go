@@ -98,3 +98,19 @@ func TestProject_AddPreviewImage(t *testing.T) {
 		panic(fmt.Sprintf("expected length %d, got %d", expectedLen, received.previousStates.Length()))
 	}
 }
+
+func TestProject_PreviousPreviewImage(t *testing.T) {
+	received := NewProject()
+	expectedImage := received.GetOriginal()
+	received.AddPreviewImage(image.NewRGBA(image.Rect(0, 0, 256, 256)))
+
+	receivedPrevious, err := received.PreviousPreviewImage()
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if receivedPrevious.Bounds() != expectedImage.Bounds() {
+		panic(fmt.Sprintf("expected previous image bounds %v, got %v", expectedImage.Bounds(), receivedPrevious.Bounds()))
+	}
+}
