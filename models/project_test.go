@@ -90,7 +90,7 @@ func TestProject_LoadNewImage(t *testing.T) {
 }
 
 func TestProject_AddPreviewImage(t *testing.T) {
-	expectedLen := 2
+	expectedLen := 1
 	received := NewProject()
 	received.AddPreviewImage(image.NewRGBA(image.Rect(0, 0, 256, 256)))
 
@@ -112,5 +112,27 @@ func TestProject_PreviousPreviewImage(t *testing.T) {
 
 	if receivedPrevious.Bounds() != expectedImage.Bounds() {
 		panic(fmt.Sprintf("expected previous image bounds %v, got %v", expectedImage.Bounds(), receivedPrevious.Bounds()))
+	}
+}
+
+func TestProject_NextPreviewImage(t *testing.T) {
+	received := NewProject()
+	received.AddPreviewImage(image.NewRGBA(image.Rect(0, 0, 256, 256)))
+	received.AddPreviewImage(image.NewRGBA(image.Rect(0, 0, 100, 100)))
+	expectedImage := received.GetPreview()
+	_, err := received.PreviousPreviewImage()
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	receivedImage, err := received.NextPreviewImage()
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if receivedImage.Bounds() != expectedImage.Bounds() {
+		panic(fmt.Sprintf("expected next image bounds %v, got %v", expectedImage.Bounds(), receivedImage.Bounds()))
 	}
 }
