@@ -186,10 +186,8 @@ func (t *CustomTheme) Color(n fyne.ThemeColorName, v fyne.ThemeVariant) color.Co
 	}
 }
 
-func (t *CustomTheme) Font(f fyne.TextStyle) fyne.Resource {
-	return theme.Font(
-		f,
-	)
+func (t *CustomTheme) Font(s fyne.TextStyle) fyne.Resource {
+	return theme.DefaultTheme().Font(s)
 }
 
 func (t *CustomTheme) Icon(n fyne.ThemeIconName) fyne.Resource {
