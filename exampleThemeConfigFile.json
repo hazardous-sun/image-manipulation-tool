@@ -1,173 +1,165 @@
 {
   "name": "example",
   "ColorNameBackground": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 255,
+    "g": 131,
+    "b": 38,
+    "a": 255
   },
   "ColorNameButton": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 99,
+    "g": 255,
+    "b": 171,
+    "a": 255
   },
   "ColorNameDisabledButton": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 84,
+    "g": 94,
+    "b": 164,
+    "a": 255
   },
   "ColorNameDisabled": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 242,
+    "g": 87,
+    "b": 166,
+    "a": 255
   },
   "ColorNameError": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 201,
+    "g": 251,
+    "b": 161,
+    "a": 255
   },
   "ColorNameFocus": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 182,
+    "g": 100,
+    "b": 100,
+    "a": 255
   },
   "ColorNameForeground": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 236,
+    "g": 160,
+    "b": 255,
+    "a": 255
   },
   "ColorNameForegroundOnError": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 223,
+    "g": 82,
+    "b": 193,
+    "a": 255
   },
   "ColorNameForegroundOnPrimary": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 89,
+    "g": 122,
+    "b": 103,
+    "a": 255
   },
   "ColorNameForegroundOnSuccess": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 64,
+    "g": 103,
+    "b": 185,
+    "a": 255
   },
   "ColorNameForegroundOnWarning": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 47,
+    "g": 104,
+    "b": 239,
+    "a": 255
   },
   "ColorNameHeaderBackground": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 228,
+    "g": 100,
+    "b": 194,
+    "a": 255
   },
   "ColorNameHover": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 64,
+    "g": 159,
+    "b": 75,
+    "a": 255
   },
   "ColorNameHyperlink": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 145,
+    "g": 71,
+    "b": 158,
+    "a": 255
   },
   "ColorNameInputBackground": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 59,
+    "g": 31,
+    "b": 36,
+    "a": 255
   },
   "ColorNameInputBorder": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 138,
+    "g": 241,
+    "b": 192,
+    "a": 255
   },
   "ColorNameMenuBackground": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 153,
+    "g": 255,
+    "b": 45,
+    "a": 255
   },
   "ColorNameOverlayBackground": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 221,
+    "g": 240,
+    "b": 62,
+    "a": 255
   },
   "ColorNamePlaceHolder": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 163,
+    "g": 96,
+    "b": 187,
+    "a": 255
   },
   "ColorNamePressed": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 211,
+    "g": 85,
+    "b": 194,
+    "a": 255
   },
   "ColorNamePrimary": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 135,
+    "g": 223,
+    "b": 122,
+    "a": 255
   },
   "ColorNameScrollBar": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 230,
+    "g": 167,
+    "b": 33,
+    "a": 255
   },
   "ColorNameSelection": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 224,
+    "g": 191,
+    "b": 79,
+    "a": 255
   },
   "ColorNameSeparator": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 124,
+    "g": 88,
+    "b": 172,
+    "a": 255
   },
   "ColorNameShadow": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 42,
+    "g": 41,
+    "b": 54,
+    "a": 255
   },
   "ColorNameSuccess": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
+    "r": 203,
+    "g": 211,
+    "b": 243,
+    "a": 255
   },
   "ColorNameWarning": {
-    "r": 0,
-    "g": 0,
-    "b": 0,
-    "a": 0
-  },
-  "font": {
-    "bold": 0,
-    "italic": 0,
-    "monospace": 0,
-    "symbol": 0,
-    "tabWidth": 0,
-    "underline": 0
+    "r": 212,
+    "g": 94,
+    "b": 209,
+    "a": 255
   }
 }
