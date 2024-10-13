@@ -7,18 +7,18 @@ import (
 
 type ThemeSettings struct {
 	currentTheme fyne.Theme
-	themesList   []TestTheme
+	themesList   []CustomTheme
 }
 
 func (s *ThemeSettings) Theme() fyne.Theme {
 	return s.currentTheme
 }
 
-func (s *ThemeSettings) Themes() []TestTheme {
+func (s *ThemeSettings) Themes() []CustomTheme {
 	return s.themesList
 }
 
-func (s *ThemeSettings) AddTheme(theme TestTheme) {
+func (s *ThemeSettings) AddTheme(theme CustomTheme) {
 	s.themesList = append(s.themesList, theme)
 }
 
@@ -29,21 +29,8 @@ func (s *ThemeSettings) NewTheme() {
 func NewThemeSettings() *ThemeSettings {
 	t := ThemeSettings{
 		currentTheme: theme.DefaultTheme(),
-		themesList:   []TestTheme{},
+		themesList:   []CustomTheme{},
 	}
-	t.AddTheme(TestTheme{
-		"Dark",
-		theme.DarkTheme(),
-	})
-	t.AddTheme(TestTheme{
-		"Light",
-		theme.LightTheme(),
-	})
 
 	return &t
-}
-
-type TestTheme struct {
-	Name  string
-	Theme fyne.Theme
 }
