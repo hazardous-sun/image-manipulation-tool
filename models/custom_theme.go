@@ -1,9 +1,12 @@
 package models
 
 import (
+	"encoding/json"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/theme"
 	"image/color"
+	"os"
 )
 
 type CustomTheme struct {
@@ -37,145 +40,145 @@ type CustomTheme struct {
 	colorNameWarning             *color.RGBA
 }
 
-func (c *CustomTheme) Name() string {
-	return c.name
+func (t *CustomTheme) Name() string {
+	return t.name
 }
 
-func (c *CustomTheme) Color(n fyne.ThemeColorName, v fyne.ThemeVariant) color.Color {
+func (t *CustomTheme) Color(n fyne.ThemeColorName, v fyne.ThemeVariant) color.Color {
 	switch n {
 	case theme.ColorNameBackground:
-		if c.colorNameBackground != nil {
-			return c.colorNameBackground
+		if t.colorNameBackground != nil {
+			return t.colorNameBackground
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameButton:
-		if c.colorNameButton != nil {
-			return c.colorNameButton
+		if t.colorNameButton != nil {
+			return t.colorNameButton
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameDisabledButton:
-		if c.colorNameDisabledButton != nil {
-			return c.colorNameDisabledButton
+		if t.colorNameDisabledButton != nil {
+			return t.colorNameDisabledButton
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameDisabled:
-		if c.colorNameDisabled != nil {
-			return c.colorNameDisabled
+		if t.colorNameDisabled != nil {
+			return t.colorNameDisabled
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameError:
-		if c.colorNameError != nil {
-			return c.colorNameError
+		if t.colorNameError != nil {
+			return t.colorNameError
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameFocus:
-		if c.colorNameFocus != nil {
-			return c.colorNameFocus
+		if t.colorNameFocus != nil {
+			return t.colorNameFocus
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameForeground:
-		if c.colorNameForeground != nil {
-			return c.colorNameForeground
+		if t.colorNameForeground != nil {
+			return t.colorNameForeground
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameForegroundOnError:
-		if c.colorNameForegroundOnError != nil {
-			return c.colorNameForegroundOnError
+		if t.colorNameForegroundOnError != nil {
+			return t.colorNameForegroundOnError
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameForegroundOnPrimary:
-		if c.colorNameForegroundOnPrimary != nil {
-			return c.colorNameForegroundOnPrimary
+		if t.colorNameForegroundOnPrimary != nil {
+			return t.colorNameForegroundOnPrimary
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameForegroundOnSuccess:
-		if c.colorNameForegroundOnSuccess != nil {
-			return c.colorNameForegroundOnSuccess
+		if t.colorNameForegroundOnSuccess != nil {
+			return t.colorNameForegroundOnSuccess
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameForegroundOnWarning:
-		if c.colorNameForegroundOnWarning != nil {
-			return c.colorNameForegroundOnWarning
+		if t.colorNameForegroundOnWarning != nil {
+			return t.colorNameForegroundOnWarning
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameHeaderBackground:
-		if c.colorNameHeaderBackground != nil {
-			return c.colorNameHeaderBackground
+		if t.colorNameHeaderBackground != nil {
+			return t.colorNameHeaderBackground
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameHover:
-		if c.colorNameHover != nil {
-			return c.colorNameHover
+		if t.colorNameHover != nil {
+			return t.colorNameHover
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameHyperlink:
-		if c.colorNameHyperlink != nil {
-			return c.colorNameHyperlink
+		if t.colorNameHyperlink != nil {
+			return t.colorNameHyperlink
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameInputBackground:
-		if c.colorNameInputBackground != nil {
-			return c.colorNameInputBackground
+		if t.colorNameInputBackground != nil {
+			return t.colorNameInputBackground
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameInputBorder:
-		if c.colorNameInputBorder != nil {
-			return c.colorNameInputBorder
+		if t.colorNameInputBorder != nil {
+			return t.colorNameInputBorder
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameMenuBackground:
-		if c.colorNameMenuBackground != nil {
-			return c.colorNameMenuBackground
+		if t.colorNameMenuBackground != nil {
+			return t.colorNameMenuBackground
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameOverlayBackground:
-		if c.colorNameOverlayBackground != nil {
-			return c.colorNameOverlayBackground
+		if t.colorNameOverlayBackground != nil {
+			return t.colorNameOverlayBackground
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNamePlaceHolder:
-		if c.colorNamePlaceHolder != nil {
-			return c.colorNamePlaceHolder
+		if t.colorNamePlaceHolder != nil {
+			return t.colorNamePlaceHolder
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNamePressed:
-		if c.colorNamePressed != nil {
-			return c.colorNamePressed
+		if t.colorNamePressed != nil {
+			return t.colorNamePressed
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNamePrimary:
-		if c.colorNamePrimary != nil {
-			return c.colorNamePrimary
+		if t.colorNamePrimary != nil {
+			return t.colorNamePrimary
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameScrollBar:
-		if c.colorNameScrollBar != nil {
-			return c.colorNameScrollBar
+		if t.colorNameScrollBar != nil {
+			return t.colorNameScrollBar
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameSelection:
-		if c.colorNameSelection != nil {
-			return c.colorNameSelection
+		if t.colorNameSelection != nil {
+			return t.colorNameSelection
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameSeparator:
-		if c.colorNameSeparator != nil {
-			return c.colorNameSeparator
+		if t.colorNameSeparator != nil {
+			return t.colorNameSeparator
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameShadow:
-		if c.colorNameShadow != nil {
-			return c.colorNameShadow
+		if t.colorNameShadow != nil {
+			return t.colorNameShadow
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameSuccess:
-		if c.colorNameSuccess != nil {
-			return c.colorNameSuccess
+		if t.colorNameSuccess != nil {
+			return t.colorNameSuccess
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameWarning:
-		if c.colorNameWarning != nil {
-			return c.colorNameWarning
+		if t.colorNameWarning != nil {
+			return t.colorNameWarning
 		}
 		return theme.DefaultTheme().Color(n, v)
 	default:
@@ -183,83 +186,308 @@ func (c *CustomTheme) Color(n fyne.ThemeColorName, v fyne.ThemeVariant) color.Co
 	}
 }
 
-func (c *CustomTheme) Font(f fyne.TextStyle) fyne.Resource {
+func (t *CustomTheme) Font(f fyne.TextStyle) fyne.Resource {
 	return theme.Font(
 		f,
 	)
 }
 
-func (c *CustomTheme) Icon(n fyne.ThemeIconName) fyne.Resource {
+func (t *CustomTheme) Icon(n fyne.ThemeIconName) fyne.Resource {
 	return theme.DefaultTheme().Icon(n)
 }
 
-func (c *CustomTheme) Size(n fyne.ThemeSizeName) float32 {
+func (t *CustomTheme) Size(n fyne.ThemeSizeName) float32 {
 	return theme.DefaultTheme().Size(n)
 }
 
-func NewCustomTheme(options []ThemeLoader) *CustomTheme {
-	newCustom := CustomTheme{}
-	for _, v := range options {
-		colorName := v.id
-		switch colorName {
-		case theme.ColorNameBackground:
-			newCustom.colorNameBackground = &v.rgb
-		case theme.ColorNameButton:
-			newCustom.colorNameButton = &v.rgb
-		case theme.ColorNameDisabledButton:
-			newCustom.colorNameDisabledButton = &v.rgb
-		case theme.ColorNameDisabled:
-			newCustom.colorNameDisabled = &v.rgb
-		case theme.ColorNameError:
-			newCustom.colorNameError = &v.rgb
-		case theme.ColorNameFocus:
-			newCustom.colorNameFocus = &v.rgb
-		case theme.ColorNameForeground:
-			newCustom.colorNameForeground = &v.rgb
-		case theme.ColorNameForegroundOnError:
-			newCustom.colorNameForegroundOnError = &v.rgb
-		case theme.ColorNameForegroundOnPrimary:
-			newCustom.colorNameForegroundOnPrimary = &v.rgb
-		case theme.ColorNameForegroundOnSuccess:
-			newCustom.colorNameForegroundOnSuccess = &v.rgb
-		case theme.ColorNameForegroundOnWarning:
-			newCustom.colorNameForegroundOnWarning = &v.rgb
-		case theme.ColorNameHeaderBackground:
-			newCustom.colorNameHeaderBackground = &v.rgb
-		case theme.ColorNameHover:
-			newCustom.colorNameHover = &v.rgb
-		case theme.ColorNameHyperlink:
-			newCustom.colorNameHyperlink = &v.rgb
-		case theme.ColorNameInputBackground:
-			newCustom.colorNameInputBackground = &v.rgb
-		case theme.ColorNameInputBorder:
-			newCustom.colorNameInputBorder = &v.rgb
-		case theme.ColorNameMenuBackground:
-			newCustom.colorNameMenuBackground = &v.rgb
-		case theme.ColorNameOverlayBackground:
-			newCustom.colorNameOverlayBackground = &v.rgb
-		case theme.ColorNamePlaceHolder:
-			newCustom.colorNamePlaceHolder = &v.rgb
-		case theme.ColorNamePressed:
-			newCustom.colorNamePressed = &v.rgb
-		case theme.ColorNamePrimary:
-			newCustom.colorNamePrimary = &v.rgb
-		case theme.ColorNameScrollBar:
-			newCustom.colorNameScrollBar = &v.rgb
-		case theme.ColorNameSelection:
-			newCustom.colorNameSelection = &v.rgb
-		case theme.ColorNameSeparator:
-			newCustom.colorNameSeparator = &v.rgb
-		case theme.ColorNameShadow:
-			newCustom.colorNameShadow = &v.rgb
-		case theme.ColorNameSuccess:
-			newCustom.colorNameSuccess = &v.rgb
-		case theme.ColorNameWarning:
-			newCustom.colorNameWarning = &v.rgb
-
-		default:
-			continue
+func (t *CustomTheme) UnmarshalJSON(data []byte) error {
+	type RawCustomTheme struct {
+		Name                string
+		colorNameBackground struct {
+			R, G, B, A uint8
+		}
+		colorNameButton struct {
+			R, G, B, A uint8
+		}
+		colorNameDisabledButton struct {
+			R, G, B, A uint8
+		}
+		colorNameDisabled struct {
+			R, G, B, A uint8
+		}
+		colorNameError struct {
+			R, G, B, A uint8
+		}
+		colorNameFocus struct {
+			R, G, B, A uint8
+		}
+		colorNameForeground struct {
+			R, G, B, A uint8
+		}
+		colorNameForegroundOnError struct {
+			R, G, B, A uint8
+		}
+		colorNameForegroundOnPrimary struct {
+			R, G, B, A uint8
+		}
+		colorNameForegroundOnSuccess struct {
+			R, G, B, A uint8
+		}
+		colorNameForegroundOnWarning struct {
+			R, G, B, A uint8
+		}
+		colorNameHeaderBackground struct {
+			R, G, B, A uint8
+		}
+		colorNameHover struct {
+			R, G, B, A uint8
+		}
+		colorNameHyperlink struct {
+			R, G, B, A uint8
+		}
+		colorNameInputBackground struct {
+			R, G, B, A uint8
+		}
+		colorNameInputBorder struct {
+			R, G, B, A uint8
+		}
+		colorNameMenuBackground struct {
+			R, G, B, A uint8
+		}
+		colorNameOverlayBackground struct {
+			R, G, B, A uint8
+		}
+		colorNamePlaceHolder struct {
+			R, G, B, A uint8
+		}
+		colorNamePressed struct {
+			R, G, B, A uint8
+		}
+		colorNamePrimary struct {
+			R, G, B, A uint8
+		}
+		colorNameScrollBar struct {
+			R, G, B, A uint8
+		}
+		colorNameSelection struct {
+			R, G, B, A uint8
+		}
+		colorNameSeparator struct {
+			R, G, B, A uint8
+		}
+		colorNameShadow struct {
+			R, G, B, A uint8
+		}
+		colorNameSuccess struct {
+			R, G, B, A uint8
+		}
+		colorNameWarning struct {
+			R, G, B, A uint8
 		}
 	}
-	return &newCustom
+
+	var raw RawCustomTheme
+
+	err := json.Unmarshal(data, &raw)
+
+	if err != nil {
+		return err
+	}
+
+	t.name = raw.Name
+	t.colorNameBackground = &color.RGBA{
+		R: raw.colorNameBackground.R,
+		G: raw.colorNameBackground.G,
+		B: raw.colorNameBackground.B,
+		A: raw.colorNameBackground.A,
+	}
+	t.colorNameBackground = &color.RGBA{
+		R: raw.colorNameBackground.R,
+		G: raw.colorNameBackground.G,
+		B: raw.colorNameBackground.B,
+		A: raw.colorNameBackground.A,
+	}
+	t.colorNameButton = &color.RGBA{
+		R: raw.colorNameButton.R,
+		G: raw.colorNameButton.G,
+		B: raw.colorNameButton.B,
+		A: raw.colorNameButton.A,
+	}
+	t.colorNameDisabledButton = &color.RGBA{
+		R: raw.colorNameDisabledButton.R,
+		G: raw.colorNameDisabledButton.G,
+		B: raw.colorNameDisabledButton.B,
+		A: raw.colorNameDisabledButton.A,
+	}
+	t.colorNameDisabled = &color.RGBA{
+		R: raw.colorNameDisabled.R,
+		G: raw.colorNameDisabled.G,
+		B: raw.colorNameDisabled.B,
+		A: raw.colorNameDisabled.A,
+	}
+	t.colorNameError = &color.RGBA{
+		R: raw.colorNameError.R,
+		G: raw.colorNameError.G,
+		B: raw.colorNameError.B,
+		A: raw.colorNameError.A,
+	}
+	t.colorNameFocus = &color.RGBA{
+		R: raw.colorNameFocus.R,
+		G: raw.colorNameFocus.G,
+		B: raw.colorNameFocus.B,
+		A: raw.colorNameFocus.A,
+	}
+	t.colorNameForeground = &color.RGBA{
+		R: raw.colorNameForeground.R,
+		G: raw.colorNameForeground.G,
+		B: raw.colorNameForeground.B,
+		A: raw.colorNameForeground.A,
+	}
+	t.colorNameForegroundOnError = &color.RGBA{
+		R: raw.colorNameForegroundOnError.R,
+		G: raw.colorNameForegroundOnError.G,
+		B: raw.colorNameForegroundOnError.B,
+		A: raw.colorNameForegroundOnError.A,
+	}
+	t.colorNameForegroundOnPrimary = &color.RGBA{
+		R: raw.colorNameForegroundOnPrimary.R,
+		G: raw.colorNameForegroundOnPrimary.G,
+		B: raw.colorNameForegroundOnPrimary.B,
+		A: raw.colorNameForegroundOnPrimary.A,
+	}
+	t.colorNameForegroundOnSuccess = &color.RGBA{
+		R: raw.colorNameForegroundOnSuccess.R,
+		G: raw.colorNameForegroundOnSuccess.G,
+		B: raw.colorNameForegroundOnSuccess.B,
+		A: raw.colorNameForegroundOnSuccess.A,
+	}
+	t.colorNameForegroundOnWarning = &color.RGBA{
+		R: raw.colorNameForegroundOnWarning.R,
+		G: raw.colorNameForegroundOnWarning.G,
+		B: raw.colorNameForegroundOnWarning.B,
+		A: raw.colorNameForegroundOnWarning.A,
+	}
+	t.colorNameHeaderBackground = &color.RGBA{
+		R: raw.colorNameHeaderBackground.R,
+		G: raw.colorNameHeaderBackground.G,
+		B: raw.colorNameHeaderBackground.B,
+		A: raw.colorNameHeaderBackground.A,
+	}
+	t.colorNameHover = &color.RGBA{
+		R: raw.colorNameHover.R,
+		G: raw.colorNameHover.G,
+		B: raw.colorNameHover.B,
+		A: raw.colorNameHover.A,
+	}
+	t.colorNameHyperlink = &color.RGBA{
+		R: raw.colorNameHyperlink.R,
+		G: raw.colorNameHyperlink.G,
+		B: raw.colorNameHyperlink.B,
+		A: raw.colorNameHyperlink.A,
+	}
+	t.colorNameInputBackground = &color.RGBA{
+		R: raw.colorNameInputBackground.R,
+		G: raw.colorNameInputBackground.G,
+		B: raw.colorNameInputBackground.B,
+		A: raw.colorNameInputBackground.A,
+	}
+	t.colorNameInputBorder = &color.RGBA{
+		R: raw.colorNameInputBorder.R,
+		G: raw.colorNameInputBorder.G,
+		B: raw.colorNameInputBorder.B,
+		A: raw.colorNameInputBorder.A,
+	}
+	t.colorNameMenuBackground = &color.RGBA{
+		R: raw.colorNameMenuBackground.R,
+		G: raw.colorNameMenuBackground.G,
+		B: raw.colorNameMenuBackground.B,
+		A: raw.colorNameMenuBackground.A,
+	}
+	t.colorNameOverlayBackground = &color.RGBA{
+		R: raw.colorNameOverlayBackground.R,
+		G: raw.colorNameOverlayBackground.G,
+		B: raw.colorNameOverlayBackground.B,
+		A: raw.colorNameOverlayBackground.A,
+	}
+	t.colorNamePlaceHolder = &color.RGBA{
+		R: raw.colorNamePlaceHolder.R,
+		G: raw.colorNamePlaceHolder.G,
+		B: raw.colorNamePlaceHolder.B,
+		A: raw.colorNamePlaceHolder.A,
+	}
+	t.colorNamePressed = &color.RGBA{
+		R: raw.colorNamePressed.R,
+		G: raw.colorNamePressed.G,
+		B: raw.colorNamePressed.B,
+		A: raw.colorNamePressed.A,
+	}
+	t.colorNamePrimary = &color.RGBA{
+		R: raw.colorNamePrimary.R,
+		G: raw.colorNamePrimary.G,
+		B: raw.colorNamePrimary.B,
+		A: raw.colorNamePrimary.A,
+	}
+	t.colorNameScrollBar = &color.RGBA{
+		R: raw.colorNameScrollBar.R,
+		G: raw.colorNameScrollBar.G,
+		B: raw.colorNameScrollBar.B,
+		A: raw.colorNameScrollBar.A,
+	}
+	t.colorNameSelection = &color.RGBA{
+		R: raw.colorNameSelection.R,
+		G: raw.colorNameSelection.G,
+		B: raw.colorNameSelection.B,
+		A: raw.colorNameSelection.A,
+	}
+	t.colorNameSeparator = &color.RGBA{
+		R: raw.colorNameSeparator.R,
+		G: raw.colorNameSeparator.G,
+		B: raw.colorNameSeparator.B,
+		A: raw.colorNameSeparator.A,
+	}
+	t.colorNameShadow = &color.RGBA{
+		R: raw.colorNameShadow.R,
+		G: raw.colorNameShadow.G,
+		B: raw.colorNameShadow.B,
+		A: raw.colorNameShadow.A,
+	}
+	t.colorNameSuccess = &color.RGBA{
+		R: raw.colorNameSuccess.R,
+		G: raw.colorNameSuccess.G,
+		B: raw.colorNameSuccess.B,
+		A: raw.colorNameSuccess.A,
+	}
+	t.colorNameWarning = &color.RGBA{
+		R: raw.colorNameWarning.R,
+		G: raw.colorNameWarning.G,
+		B: raw.colorNameWarning.B,
+		A: raw.colorNameWarning.A,
+	}
+
+	return nil
+}
+
+func NewCustomTheme(path string) (*CustomTheme, error) {
+	file, err := os.Open(path)
+
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		err := file.Close()
+		if err != nil {
+			fmt.Println("error closing file:", err)
+			return
+		}
+	}()
+
+	var customTheme CustomTheme
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&customTheme)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &customTheme, nil
 }
