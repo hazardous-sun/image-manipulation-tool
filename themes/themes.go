@@ -74,6 +74,10 @@ func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
 						dialog.ShowError(err, w)
 						return
 					}
+
+					// append the new CustomTheme to themes
+					themes = append(themes, *customTheme)
+
 					// append the new CustomTheme to themesDI
 					_ = themesDI.Append(*customTheme)
 				},
