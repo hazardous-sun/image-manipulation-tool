@@ -14,11 +14,11 @@ import (
 // ThemeSelectionWindow :
 // Raises a window where the user can toggle between themes.
 func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
-	var selectedTheme *models.TestTheme
+	var selectedTheme *models.CustomTheme
 
 	// initialize window
 	w := a.NewWindow("Choose Theme")
-	w.Resize(fyne.NewSize(300, 400))
+	w.Resize(fyne.NewSize(700, 500))
 
 	// collect themes from ThemeSettings
 	themes := settings.Themes()
@@ -36,9 +36,9 @@ func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
 		},
 		func(di binding.DataItem, object fyne.CanvasObject) {
 			temp, _ := di.(binding.Untyped).Get()
-			theme := temp.(models.TestTheme)
+			theme := temp.(models.CustomTheme)
 			lbl := object.(*widget.Label)
-			lbl.SetText(theme.Name)
+			lbl.SetText(theme.Name())
 		},
 	)
 	themesList.OnSelected = func(id widget.ListItemID) {
@@ -50,7 +50,7 @@ func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
 		"Confirm",
 		func() {
 			if selectedTheme != nil {
-				a.Settings().SetTheme(selectedTheme.Theme)
+				a.Settings().SetTheme(selectedTheme)
 			} else {
 				dialog.ShowError(
 					fmt.Errorf("no theme selected"),
@@ -62,7 +62,23 @@ func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
 	addThemeBtn := widget.NewButton(
 		"Add theme",
 		func() {
-			fmt.Println("add new theme")
+			// raise a new file selection dialog
+			dialog.ShowFileOpen(
+				func(closer fyne.URIReadCloser, err error) {
+					// get the path for the config file
+					path := closer.URI().Path()
+					// parse it into a new CustomTheme
+					customTheme, err := models.NewCustomTheme(path)
+
+					if err != nil {
+						dialog.ShowError(err, w)
+						return
+					}
+					// append the new CustomTheme to themesDI
+					_ = themesDI.Append(*customTheme)
+				},
+				w,
+			)
 		},
 	)
 
