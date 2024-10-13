@@ -201,85 +201,85 @@ func (t *CustomTheme) Size(n fyne.ThemeSizeName) float32 {
 func (t *CustomTheme) UnmarshalJSON(data []byte) error {
 	type RawCustomTheme struct {
 		Name                string
-		colorNameBackground struct {
+		ColorNameBackground struct {
 			R, G, B, A uint8
 		}
-		colorNameButton struct {
+		ColorNameButton struct {
 			R, G, B, A uint8
 		}
-		colorNameDisabledButton struct {
+		ColorNameDisabledButton struct {
 			R, G, B, A uint8
 		}
-		colorNameDisabled struct {
+		ColorNameDisabled struct {
 			R, G, B, A uint8
 		}
-		colorNameError struct {
+		ColorNameError struct {
 			R, G, B, A uint8
 		}
-		colorNameFocus struct {
+		ColorNameFocus struct {
 			R, G, B, A uint8
 		}
-		colorNameForeground struct {
+		ColorNameForeground struct {
 			R, G, B, A uint8
 		}
-		colorNameForegroundOnError struct {
+		ColorNameForegroundOnError struct {
 			R, G, B, A uint8
 		}
-		colorNameForegroundOnPrimary struct {
+		ColorNameForegroundOnPrimary struct {
 			R, G, B, A uint8
 		}
-		colorNameForegroundOnSuccess struct {
+		ColorNameForegroundOnSuccess struct {
 			R, G, B, A uint8
 		}
-		colorNameForegroundOnWarning struct {
+		ColorNameForegroundOnWarning struct {
 			R, G, B, A uint8
 		}
-		colorNameHeaderBackground struct {
+		ColorNameHeaderBackground struct {
 			R, G, B, A uint8
 		}
-		colorNameHover struct {
+		ColorNameHover struct {
 			R, G, B, A uint8
 		}
-		colorNameHyperlink struct {
+		ColorNameHyperlink struct {
 			R, G, B, A uint8
 		}
-		colorNameInputBackground struct {
+		ColorNameInputBackground struct {
 			R, G, B, A uint8
 		}
-		colorNameInputBorder struct {
+		ColorNameInputBorder struct {
 			R, G, B, A uint8
 		}
-		colorNameMenuBackground struct {
+		ColorNameMenuBackground struct {
 			R, G, B, A uint8
 		}
-		colorNameOverlayBackground struct {
+		ColorNameOverlayBackground struct {
 			R, G, B, A uint8
 		}
-		colorNamePlaceHolder struct {
+		ColorNamePlaceHolder struct {
 			R, G, B, A uint8
 		}
-		colorNamePressed struct {
+		ColorNamePressed struct {
 			R, G, B, A uint8
 		}
-		colorNamePrimary struct {
+		ColorNamePrimary struct {
 			R, G, B, A uint8
 		}
-		colorNameScrollBar struct {
+		ColorNameScrollBar struct {
 			R, G, B, A uint8
 		}
-		colorNameSelection struct {
+		ColorNameSelection struct {
 			R, G, B, A uint8
 		}
-		colorNameSeparator struct {
+		ColorNameSeparator struct {
 			R, G, B, A uint8
 		}
-		colorNameShadow struct {
+		ColorNameShadow struct {
 			R, G, B, A uint8
 		}
-		colorNameSuccess struct {
+		ColorNameSuccess struct {
 			R, G, B, A uint8
 		}
-		colorNameWarning struct {
+		ColorNameWarning struct {
 			R, G, B, A uint8
 		}
 	}
@@ -294,172 +294,166 @@ func (t *CustomTheme) UnmarshalJSON(data []byte) error {
 
 	t.name = raw.Name
 	t.colorNameBackground = &color.RGBA{
-		R: raw.colorNameBackground.R,
-		G: raw.colorNameBackground.G,
-		B: raw.colorNameBackground.B,
-		A: raw.colorNameBackground.A,
-	}
-	t.colorNameBackground = &color.RGBA{
-		R: raw.colorNameBackground.R,
-		G: raw.colorNameBackground.G,
-		B: raw.colorNameBackground.B,
-		A: raw.colorNameBackground.A,
+		R: raw.ColorNameBackground.R,
+		G: raw.ColorNameBackground.G,
+		B: raw.ColorNameBackground.B,
+		A: raw.ColorNameBackground.A,
 	}
 	t.colorNameButton = &color.RGBA{
-		R: raw.colorNameButton.R,
-		G: raw.colorNameButton.G,
-		B: raw.colorNameButton.B,
-		A: raw.colorNameButton.A,
+		R: raw.ColorNameButton.R,
+		G: raw.ColorNameButton.G,
+		B: raw.ColorNameButton.B,
+		A: raw.ColorNameButton.A,
 	}
 	t.colorNameDisabledButton = &color.RGBA{
-		R: raw.colorNameDisabledButton.R,
-		G: raw.colorNameDisabledButton.G,
-		B: raw.colorNameDisabledButton.B,
-		A: raw.colorNameDisabledButton.A,
+		R: raw.ColorNameDisabledButton.R,
+		G: raw.ColorNameDisabledButton.G,
+		B: raw.ColorNameDisabledButton.B,
+		A: raw.ColorNameDisabledButton.A,
 	}
 	t.colorNameDisabled = &color.RGBA{
-		R: raw.colorNameDisabled.R,
-		G: raw.colorNameDisabled.G,
-		B: raw.colorNameDisabled.B,
-		A: raw.colorNameDisabled.A,
+		R: raw.ColorNameDisabled.R,
+		G: raw.ColorNameDisabled.G,
+		B: raw.ColorNameDisabled.B,
+		A: raw.ColorNameDisabled.A,
 	}
 	t.colorNameError = &color.RGBA{
-		R: raw.colorNameError.R,
-		G: raw.colorNameError.G,
-		B: raw.colorNameError.B,
-		A: raw.colorNameError.A,
+		R: raw.ColorNameError.R,
+		G: raw.ColorNameError.G,
+		B: raw.ColorNameError.B,
+		A: raw.ColorNameError.A,
 	}
 	t.colorNameFocus = &color.RGBA{
-		R: raw.colorNameFocus.R,
-		G: raw.colorNameFocus.G,
-		B: raw.colorNameFocus.B,
-		A: raw.colorNameFocus.A,
+		R: raw.ColorNameFocus.R,
+		G: raw.ColorNameFocus.G,
+		B: raw.ColorNameFocus.B,
+		A: raw.ColorNameFocus.A,
 	}
 	t.colorNameForeground = &color.RGBA{
-		R: raw.colorNameForeground.R,
-		G: raw.colorNameForeground.G,
-		B: raw.colorNameForeground.B,
-		A: raw.colorNameForeground.A,
+		R: raw.ColorNameForeground.R,
+		G: raw.ColorNameForeground.G,
+		B: raw.ColorNameForeground.B,
+		A: raw.ColorNameForeground.A,
 	}
 	t.colorNameForegroundOnError = &color.RGBA{
-		R: raw.colorNameForegroundOnError.R,
-		G: raw.colorNameForegroundOnError.G,
-		B: raw.colorNameForegroundOnError.B,
-		A: raw.colorNameForegroundOnError.A,
+		R: raw.ColorNameForegroundOnError.R,
+		G: raw.ColorNameForegroundOnError.G,
+		B: raw.ColorNameForegroundOnError.B,
+		A: raw.ColorNameForegroundOnError.A,
 	}
 	t.colorNameForegroundOnPrimary = &color.RGBA{
-		R: raw.colorNameForegroundOnPrimary.R,
-		G: raw.colorNameForegroundOnPrimary.G,
-		B: raw.colorNameForegroundOnPrimary.B,
-		A: raw.colorNameForegroundOnPrimary.A,
+		R: raw.ColorNameForegroundOnPrimary.R,
+		G: raw.ColorNameForegroundOnPrimary.G,
+		B: raw.ColorNameForegroundOnPrimary.B,
+		A: raw.ColorNameForegroundOnPrimary.A,
 	}
 	t.colorNameForegroundOnSuccess = &color.RGBA{
-		R: raw.colorNameForegroundOnSuccess.R,
-		G: raw.colorNameForegroundOnSuccess.G,
-		B: raw.colorNameForegroundOnSuccess.B,
-		A: raw.colorNameForegroundOnSuccess.A,
+		R: raw.ColorNameForegroundOnSuccess.R,
+		G: raw.ColorNameForegroundOnSuccess.G,
+		B: raw.ColorNameForegroundOnSuccess.B,
+		A: raw.ColorNameForegroundOnSuccess.A,
 	}
 	t.colorNameForegroundOnWarning = &color.RGBA{
-		R: raw.colorNameForegroundOnWarning.R,
-		G: raw.colorNameForegroundOnWarning.G,
-		B: raw.colorNameForegroundOnWarning.B,
-		A: raw.colorNameForegroundOnWarning.A,
+		R: raw.ColorNameForegroundOnWarning.R,
+		G: raw.ColorNameForegroundOnWarning.G,
+		B: raw.ColorNameForegroundOnWarning.B,
+		A: raw.ColorNameForegroundOnWarning.A,
 	}
 	t.colorNameHeaderBackground = &color.RGBA{
-		R: raw.colorNameHeaderBackground.R,
-		G: raw.colorNameHeaderBackground.G,
-		B: raw.colorNameHeaderBackground.B,
-		A: raw.colorNameHeaderBackground.A,
+		R: raw.ColorNameHeaderBackground.R,
+		G: raw.ColorNameHeaderBackground.G,
+		B: raw.ColorNameHeaderBackground.B,
+		A: raw.ColorNameHeaderBackground.A,
 	}
 	t.colorNameHover = &color.RGBA{
-		R: raw.colorNameHover.R,
-		G: raw.colorNameHover.G,
-		B: raw.colorNameHover.B,
-		A: raw.colorNameHover.A,
+		R: raw.ColorNameHover.R,
+		G: raw.ColorNameHover.G,
+		B: raw.ColorNameHover.B,
+		A: raw.ColorNameHover.A,
 	}
 	t.colorNameHyperlink = &color.RGBA{
-		R: raw.colorNameHyperlink.R,
-		G: raw.colorNameHyperlink.G,
-		B: raw.colorNameHyperlink.B,
-		A: raw.colorNameHyperlink.A,
+		R: raw.ColorNameHyperlink.R,
+		G: raw.ColorNameHyperlink.G,
+		B: raw.ColorNameHyperlink.B,
+		A: raw.ColorNameHyperlink.A,
 	}
 	t.colorNameInputBackground = &color.RGBA{
-		R: raw.colorNameInputBackground.R,
-		G: raw.colorNameInputBackground.G,
-		B: raw.colorNameInputBackground.B,
-		A: raw.colorNameInputBackground.A,
+		R: raw.ColorNameInputBackground.R,
+		G: raw.ColorNameInputBackground.G,
+		B: raw.ColorNameInputBackground.B,
+		A: raw.ColorNameInputBackground.A,
 	}
 	t.colorNameInputBorder = &color.RGBA{
-		R: raw.colorNameInputBorder.R,
-		G: raw.colorNameInputBorder.G,
-		B: raw.colorNameInputBorder.B,
-		A: raw.colorNameInputBorder.A,
+		R: raw.ColorNameInputBorder.R,
+		G: raw.ColorNameInputBorder.G,
+		B: raw.ColorNameInputBorder.B,
+		A: raw.ColorNameInputBorder.A,
 	}
 	t.colorNameMenuBackground = &color.RGBA{
-		R: raw.colorNameMenuBackground.R,
-		G: raw.colorNameMenuBackground.G,
-		B: raw.colorNameMenuBackground.B,
-		A: raw.colorNameMenuBackground.A,
+		R: raw.ColorNameMenuBackground.R,
+		G: raw.ColorNameMenuBackground.G,
+		B: raw.ColorNameMenuBackground.B,
+		A: raw.ColorNameMenuBackground.A,
 	}
 	t.colorNameOverlayBackground = &color.RGBA{
-		R: raw.colorNameOverlayBackground.R,
-		G: raw.colorNameOverlayBackground.G,
-		B: raw.colorNameOverlayBackground.B,
-		A: raw.colorNameOverlayBackground.A,
+		R: raw.ColorNameOverlayBackground.R,
+		G: raw.ColorNameOverlayBackground.G,
+		B: raw.ColorNameOverlayBackground.B,
+		A: raw.ColorNameOverlayBackground.A,
 	}
 	t.colorNamePlaceHolder = &color.RGBA{
-		R: raw.colorNamePlaceHolder.R,
-		G: raw.colorNamePlaceHolder.G,
-		B: raw.colorNamePlaceHolder.B,
-		A: raw.colorNamePlaceHolder.A,
+		R: raw.ColorNamePlaceHolder.R,
+		G: raw.ColorNamePlaceHolder.G,
+		B: raw.ColorNamePlaceHolder.B,
+		A: raw.ColorNamePlaceHolder.A,
 	}
 	t.colorNamePressed = &color.RGBA{
-		R: raw.colorNamePressed.R,
-		G: raw.colorNamePressed.G,
-		B: raw.colorNamePressed.B,
-		A: raw.colorNamePressed.A,
+		R: raw.ColorNamePressed.R,
+		G: raw.ColorNamePressed.G,
+		B: raw.ColorNamePressed.B,
+		A: raw.ColorNamePressed.A,
 	}
 	t.colorNamePrimary = &color.RGBA{
-		R: raw.colorNamePrimary.R,
-		G: raw.colorNamePrimary.G,
-		B: raw.colorNamePrimary.B,
-		A: raw.colorNamePrimary.A,
+		R: raw.ColorNamePrimary.R,
+		G: raw.ColorNamePrimary.G,
+		B: raw.ColorNamePrimary.B,
+		A: raw.ColorNamePrimary.A,
 	}
 	t.colorNameScrollBar = &color.RGBA{
-		R: raw.colorNameScrollBar.R,
-		G: raw.colorNameScrollBar.G,
-		B: raw.colorNameScrollBar.B,
-		A: raw.colorNameScrollBar.A,
+		R: raw.ColorNameScrollBar.R,
+		G: raw.ColorNameScrollBar.G,
+		B: raw.ColorNameScrollBar.B,
+		A: raw.ColorNameScrollBar.A,
 	}
 	t.colorNameSelection = &color.RGBA{
-		R: raw.colorNameSelection.R,
-		G: raw.colorNameSelection.G,
-		B: raw.colorNameSelection.B,
-		A: raw.colorNameSelection.A,
+		R: raw.ColorNameSelection.R,
+		G: raw.ColorNameSelection.G,
+		B: raw.ColorNameSelection.B,
+		A: raw.ColorNameSelection.A,
 	}
 	t.colorNameSeparator = &color.RGBA{
-		R: raw.colorNameSeparator.R,
-		G: raw.colorNameSeparator.G,
-		B: raw.colorNameSeparator.B,
-		A: raw.colorNameSeparator.A,
+		R: raw.ColorNameSeparator.R,
+		G: raw.ColorNameSeparator.G,
+		B: raw.ColorNameSeparator.B,
+		A: raw.ColorNameSeparator.A,
 	}
 	t.colorNameShadow = &color.RGBA{
-		R: raw.colorNameShadow.R,
-		G: raw.colorNameShadow.G,
-		B: raw.colorNameShadow.B,
-		A: raw.colorNameShadow.A,
+		R: raw.ColorNameShadow.R,
+		G: raw.ColorNameShadow.G,
+		B: raw.ColorNameShadow.B,
+		A: raw.ColorNameShadow.A,
 	}
 	t.colorNameSuccess = &color.RGBA{
-		R: raw.colorNameSuccess.R,
-		G: raw.colorNameSuccess.G,
-		B: raw.colorNameSuccess.B,
-		A: raw.colorNameSuccess.A,
+		R: raw.ColorNameSuccess.R,
+		G: raw.ColorNameSuccess.G,
+		B: raw.ColorNameSuccess.B,
+		A: raw.ColorNameSuccess.A,
 	}
 	t.colorNameWarning = &color.RGBA{
-		R: raw.colorNameWarning.R,
-		G: raw.colorNameWarning.G,
-		B: raw.colorNameWarning.B,
-		A: raw.colorNameWarning.A,
+		R: raw.ColorNameWarning.R,
+		G: raw.ColorNameWarning.G,
+		B: raw.ColorNameWarning.B,
+		A: raw.ColorNameWarning.A,
 	}
 
 	return nil
