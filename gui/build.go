@@ -32,6 +32,11 @@ func Build(a fyne.App) {
 
 	// initialize ThemeSettings
 	settings := models.NewThemeSettings()
+	err := themes.LoadThemes(settings)
+
+	if err != nil {
+		fyne.LogError("Error loading themes", err)
+	}
 
 	// initialize the main window
 	w := a.NewWindow("Image Manipulation Tool")
