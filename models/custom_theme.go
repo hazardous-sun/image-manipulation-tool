@@ -9,6 +9,8 @@ import (
 	"os"
 )
 
+// CustomTheme :
+// The representation of a custom theme for Fyne. It holds all the data referencing the color for each visual element.
 type CustomTheme struct {
 	name                         string
 	colorNameBackground          *color.RGBA
@@ -40,9 +42,15 @@ type CustomTheme struct {
 	colorNameWarning             *color.RGBA
 }
 
+// Name :
+// Returns the theme name.
 func (t *CustomTheme) Name() string {
 	return t.name
 }
+
+// Color, Font, Icon and Size are all part of the fyne.Theme interface.
+// These methods are called for each new element added to a window, so Fyne knows which color, fonts, icons and size
+// to use when drawing the object.
 
 func (t *CustomTheme) Color(n fyne.ThemeColorName, v fyne.ThemeVariant) color.Color {
 	switch n {
@@ -197,6 +205,9 @@ func (t *CustomTheme) Icon(n fyne.ThemeIconName) fyne.Resource {
 func (t *CustomTheme) Size(n fyne.ThemeSizeName) float32 {
 	return theme.DefaultTheme().Size(n)
 }
+
+// UnmarshalJSON is an implementation of an interface that allows the values from a theme to be loaded from a JSON file
+// into an instance of CustomTheme.
 
 func (t *CustomTheme) UnmarshalJSON(data []byte) error {
 	type RawCustomTheme struct {
@@ -459,6 +470,8 @@ func (t *CustomTheme) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// NewCustomTheme :
+// Returns an instance of CustomTheme based on a JSON file provided through the "path" parameter.
 func NewCustomTheme(path string) (*CustomTheme, error) {
 	file, err := os.Open(path)
 

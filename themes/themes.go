@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"image-manipulation-tool/models"
+	"os/user"
 )
 
 // ThemeSelectionWindow :
@@ -104,4 +105,17 @@ func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
 
 	w.SetContent(selectionCtr)
 	w.Show()
+}
+
+// LoadThemes :
+// Tries to load themes from "$HOME/image-manipulation-tool-themes" into the memory.
+func LoadThemes(settings *models.ThemeSettings) {
+	homeDir, err := user.Current()
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(homeDir.HomeDir)
 }
