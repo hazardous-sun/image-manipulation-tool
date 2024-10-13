@@ -8,33 +8,33 @@ import (
 
 type CustomTheme struct {
 	name                         string
-	ColorNameBackground          *color.RGBA
-	ColorNameButton              *color.RGBA
-	ColorNameDisabledButton      *color.RGBA
-	ColorNameDisabled            *color.RGBA
-	ColorNameError               *color.RGBA
-	ColorNameFocus               *color.RGBA
-	ColorNameForeground          *color.RGBA
-	ColorNameForegroundOnError   *color.RGBA
-	ColorNameForegroundOnPrimary *color.RGBA
-	ColorNameForegroundOnSuccess *color.RGBA
-	ColorNameForegroundOnWarning *color.RGBA
-	ColorNameHeaderBackground    *color.RGBA
-	ColorNameHover               *color.RGBA
-	ColorNameHyperlink           *color.RGBA
-	ColorNameInputBackground     *color.RGBA
-	ColorNameInputBorder         *color.RGBA
-	ColorNameMenuBackground      *color.RGBA
-	ColorNameOverlayBackground   *color.RGBA
-	ColorNamePlaceHolder         *color.RGBA
-	ColorNamePressed             *color.RGBA
-	ColorNamePrimary             *color.RGBA
-	ColorNameScrollBar           *color.RGBA
-	ColorNameSelection           *color.RGBA
-	ColorNameSeparator           *color.RGBA
-	ColorNameShadow              *color.RGBA
-	ColorNameSuccess             *color.RGBA
-	ColorNameWarning             *color.RGBA
+	colorNameBackground          *color.RGBA
+	colorNameButton              *color.RGBA
+	colorNameDisabledButton      *color.RGBA
+	colorNameDisabled            *color.RGBA
+	colorNameError               *color.RGBA
+	colorNameFocus               *color.RGBA
+	colorNameForeground          *color.RGBA
+	colorNameForegroundOnError   *color.RGBA
+	colorNameForegroundOnPrimary *color.RGBA
+	colorNameForegroundOnSuccess *color.RGBA
+	colorNameForegroundOnWarning *color.RGBA
+	colorNameHeaderBackground    *color.RGBA
+	colorNameHover               *color.RGBA
+	colorNameHyperlink           *color.RGBA
+	colorNameInputBackground     *color.RGBA
+	colorNameInputBorder         *color.RGBA
+	colorNameMenuBackground      *color.RGBA
+	colorNameOverlayBackground   *color.RGBA
+	colorNamePlaceHolder         *color.RGBA
+	colorNamePressed             *color.RGBA
+	colorNamePrimary             *color.RGBA
+	colorNameScrollBar           *color.RGBA
+	colorNameSelection           *color.RGBA
+	colorNameSeparator           *color.RGBA
+	colorNameShadow              *color.RGBA
+	colorNameSuccess             *color.RGBA
+	colorNameWarning             *color.RGBA
 }
 
 func (c *CustomTheme) Name() string {
@@ -44,138 +44,138 @@ func (c *CustomTheme) Name() string {
 func (c *CustomTheme) Color(n fyne.ThemeColorName, v fyne.ThemeVariant) color.Color {
 	switch n {
 	case theme.ColorNameBackground:
-		if c.ColorNameBackground != nil {
-			return c.ColorNameBackground
+		if c.colorNameBackground != nil {
+			return c.colorNameBackground
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameButton:
-		if c.ColorNameButton != nil {
-			return c.ColorNameButton
+		if c.colorNameButton != nil {
+			return c.colorNameButton
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameDisabledButton:
-		if c.ColorNameDisabledButton != nil {
-			return c.ColorNameDisabledButton
+		if c.colorNameDisabledButton != nil {
+			return c.colorNameDisabledButton
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameDisabled:
-		if c.ColorNameDisabled != nil {
-			return c.ColorNameDisabled
+		if c.colorNameDisabled != nil {
+			return c.colorNameDisabled
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameError:
-		if c.ColorNameError != nil {
-			return c.ColorNameError
+		if c.colorNameError != nil {
+			return c.colorNameError
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameFocus:
-		if c.ColorNameFocus != nil {
-			return c.ColorNameFocus
+		if c.colorNameFocus != nil {
+			return c.colorNameFocus
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameForeground:
-		if c.ColorNameForeground != nil {
-			return c.ColorNameForeground
+		if c.colorNameForeground != nil {
+			return c.colorNameForeground
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameForegroundOnError:
-		if c.ColorNameForegroundOnError != nil {
-			return c.ColorNameForegroundOnError
+		if c.colorNameForegroundOnError != nil {
+			return c.colorNameForegroundOnError
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameForegroundOnPrimary:
-		if c.ColorNameForegroundOnPrimary != nil {
-			return c.ColorNameForegroundOnPrimary
+		if c.colorNameForegroundOnPrimary != nil {
+			return c.colorNameForegroundOnPrimary
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameForegroundOnSuccess:
-		if c.ColorNameForegroundOnSuccess != nil {
-			return c.ColorNameForegroundOnSuccess
+		if c.colorNameForegroundOnSuccess != nil {
+			return c.colorNameForegroundOnSuccess
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameForegroundOnWarning:
-		if c.ColorNameForegroundOnWarning != nil {
-			return c.ColorNameForegroundOnWarning
+		if c.colorNameForegroundOnWarning != nil {
+			return c.colorNameForegroundOnWarning
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameHeaderBackground:
-		if c.ColorNameHeaderBackground != nil {
-			return c.ColorNameHeaderBackground
+		if c.colorNameHeaderBackground != nil {
+			return c.colorNameHeaderBackground
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameHover:
-		if c.ColorNameHover != nil {
-			return c.ColorNameHover
+		if c.colorNameHover != nil {
+			return c.colorNameHover
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameHyperlink:
-		if c.ColorNameHyperlink != nil {
-			return c.ColorNameHyperlink
+		if c.colorNameHyperlink != nil {
+			return c.colorNameHyperlink
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameInputBackground:
-		if c.ColorNameInputBackground != nil {
-			return c.ColorNameInputBackground
+		if c.colorNameInputBackground != nil {
+			return c.colorNameInputBackground
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameInputBorder:
-		if c.ColorNameInputBorder != nil {
-			return c.ColorNameInputBorder
+		if c.colorNameInputBorder != nil {
+			return c.colorNameInputBorder
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameMenuBackground:
-		if c.ColorNameMenuBackground != nil {
-			return c.ColorNameMenuBackground
+		if c.colorNameMenuBackground != nil {
+			return c.colorNameMenuBackground
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameOverlayBackground:
-		if c.ColorNameOverlayBackground != nil {
-			return c.ColorNameOverlayBackground
+		if c.colorNameOverlayBackground != nil {
+			return c.colorNameOverlayBackground
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNamePlaceHolder:
-		if c.ColorNamePlaceHolder != nil {
-			return c.ColorNamePlaceHolder
+		if c.colorNamePlaceHolder != nil {
+			return c.colorNamePlaceHolder
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNamePressed:
-		if c.ColorNamePressed != nil {
-			return c.ColorNamePressed
+		if c.colorNamePressed != nil {
+			return c.colorNamePressed
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNamePrimary:
-		if c.ColorNamePrimary != nil {
-			return c.ColorNamePrimary
+		if c.colorNamePrimary != nil {
+			return c.colorNamePrimary
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameScrollBar:
-		if c.ColorNameScrollBar != nil {
-			return c.ColorNameScrollBar
+		if c.colorNameScrollBar != nil {
+			return c.colorNameScrollBar
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameSelection:
-		if c.ColorNameSelection != nil {
-			return c.ColorNameSelection
+		if c.colorNameSelection != nil {
+			return c.colorNameSelection
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameSeparator:
-		if c.ColorNameSeparator != nil {
-			return c.ColorNameSeparator
+		if c.colorNameSeparator != nil {
+			return c.colorNameSeparator
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameShadow:
-		if c.ColorNameShadow != nil {
-			return c.ColorNameShadow
+		if c.colorNameShadow != nil {
+			return c.colorNameShadow
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameSuccess:
-		if c.ColorNameSuccess != nil {
-			return c.ColorNameSuccess
+		if c.colorNameSuccess != nil {
+			return c.colorNameSuccess
 		}
 		return theme.DefaultTheme().Color(n, v)
 	case theme.ColorNameWarning:
-		if c.ColorNameWarning != nil {
-			return c.ColorNameWarning
+		if c.colorNameWarning != nil {
+			return c.colorNameWarning
 		}
 		return theme.DefaultTheme().Color(n, v)
 	default:
@@ -197,6 +197,69 @@ func (c *CustomTheme) Size(n fyne.ThemeSizeName) float32 {
 	return theme.DefaultTheme().Size(n)
 }
 
-func NewCustomTheme() *CustomTheme {
-	return &CustomTheme{}
+func NewCustomTheme(options []ThemeLoader) *CustomTheme {
+	newCustom := CustomTheme{}
+	for _, v := range options {
+		colorName := v.id
+		switch colorName {
+		case theme.ColorNameBackground:
+			newCustom.colorNameBackground = &v.rgb
+		case theme.ColorNameButton:
+			newCustom.colorNameButton = &v.rgb
+		case theme.ColorNameDisabledButton:
+			newCustom.colorNameDisabledButton = &v.rgb
+		case theme.ColorNameDisabled:
+			newCustom.colorNameDisabled = &v.rgb
+		case theme.ColorNameError:
+			newCustom.colorNameError = &v.rgb
+		case theme.ColorNameFocus:
+			newCustom.colorNameFocus = &v.rgb
+		case theme.ColorNameForeground:
+			newCustom.colorNameForeground = &v.rgb
+		case theme.ColorNameForegroundOnError:
+			newCustom.colorNameForegroundOnError = &v.rgb
+		case theme.ColorNameForegroundOnPrimary:
+			newCustom.colorNameForegroundOnPrimary = &v.rgb
+		case theme.ColorNameForegroundOnSuccess:
+			newCustom.colorNameForegroundOnSuccess = &v.rgb
+		case theme.ColorNameForegroundOnWarning:
+			newCustom.colorNameForegroundOnWarning = &v.rgb
+		case theme.ColorNameHeaderBackground:
+			newCustom.colorNameHeaderBackground = &v.rgb
+		case theme.ColorNameHover:
+			newCustom.colorNameHover = &v.rgb
+		case theme.ColorNameHyperlink:
+			newCustom.colorNameHyperlink = &v.rgb
+		case theme.ColorNameInputBackground:
+			newCustom.colorNameInputBackground = &v.rgb
+		case theme.ColorNameInputBorder:
+			newCustom.colorNameInputBorder = &v.rgb
+		case theme.ColorNameMenuBackground:
+			newCustom.colorNameMenuBackground = &v.rgb
+		case theme.ColorNameOverlayBackground:
+			newCustom.colorNameOverlayBackground = &v.rgb
+		case theme.ColorNamePlaceHolder:
+			newCustom.colorNamePlaceHolder = &v.rgb
+		case theme.ColorNamePressed:
+			newCustom.colorNamePressed = &v.rgb
+		case theme.ColorNamePrimary:
+			newCustom.colorNamePrimary = &v.rgb
+		case theme.ColorNameScrollBar:
+			newCustom.colorNameScrollBar = &v.rgb
+		case theme.ColorNameSelection:
+			newCustom.colorNameSelection = &v.rgb
+		case theme.ColorNameSeparator:
+			newCustom.colorNameSeparator = &v.rgb
+		case theme.ColorNameShadow:
+			newCustom.colorNameShadow = &v.rgb
+		case theme.ColorNameSuccess:
+			newCustom.colorNameSuccess = &v.rgb
+		case theme.ColorNameWarning:
+			newCustom.colorNameWarning = &v.rgb
+
+		default:
+			continue
+		}
+	}
+	return &newCustom
 }
