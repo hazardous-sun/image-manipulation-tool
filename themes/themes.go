@@ -6,12 +6,13 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"image-manipulation-tool/models"
 )
 
-var customThemes []models.CustomTheme
-
+// ThemeSelectionWindow :
+// Raises a window where the user can toggle between themes.
 func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
 	var selectedTheme *models.TestTheme
 
@@ -19,12 +20,14 @@ func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
 	w := a.NewWindow("Choose Theme")
 	w.Resize(fyne.NewSize(300, 400))
 
+	// collect themes from ThemeSettings
 	themes := settings.Themes()
 	themesDI := binding.NewUntypedList()
 	for _, v := range themes {
 		_ = themesDI.Append(v)
 	}
 
+	// initialize the list that displays the themes
 	themesList := widget.NewListWithData(
 		themesDI,
 		func() fyne.CanvasObject {
@@ -42,7 +45,8 @@ func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
 		selectedTheme = &themes[id]
 	}
 
-	btn := widget.NewButton(
+	// initialize the buttons
+	confirmBtn := widget.NewButton(
 		"Confirm",
 		func() {
 			if selectedTheme != nil {
@@ -55,11 +59,26 @@ func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
 			}
 		},
 	)
+	addThemeBtn := widget.NewButton(
+		"Add theme",
+		func() {
+			fmt.Println("add new theme")
+		},
+	)
 
+	// initialize the container that holds the buttons
+	btnsCtr := container.NewGridWithRows(
+		4,
+		layout.NewSpacer(),
+		confirmBtn,
+		addThemeBtn,
+		layout.NewSpacer(),
+	)
+
+	// initialize the container that will be the window's content
 	selectionCtr := container.NewBorder(
-		nil,
-		btn,
-		nil, nil,
+		nil, nil, nil,
+		btnsCtr,
 		themesList,
 	)
 
