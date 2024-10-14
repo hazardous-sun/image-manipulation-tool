@@ -5,10 +5,13 @@
 This is project is being developed as tool to manipulate some aspects of an image. When finished, this project is
 expected to contain a GUI where the user will be able to apply filters and manipulate images.
 
+The user can configure custom themes/color schemes for the app via JSON file. There is a
+sample [here](exampleThemeConfigFile.json) of how to configure a custom theme.
+
 ### TODO
 
 - [X] Basic GUI
-- [ ] Theme customization
+- [X] Theme customization
 - Tools:
     - [X] Open image
     - [X] Save image
@@ -19,7 +22,7 @@ expected to contain a GUI where the user will be able to apply filters and manip
         - [X] Vertical Mirroring
         - [X] Resize
     - [ ] Filters
-        - [ ] Grayscale
+        - [X] Grayscale
         - [ ] Low fade
         - [ ] High fade
         - [ ] Threshold
