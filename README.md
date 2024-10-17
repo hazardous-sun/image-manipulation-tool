@@ -8,6 +8,8 @@ expected to contain a GUI where the user will be able to apply filters and manip
 The user can configure custom themes/color schemes for the app via JSON file. There is a
 sample [here](exampleThemeConfigFile.json) of how to configure a custom theme.
 
+![screen1](https://github.com/user-attachments/assets/095444c4-e240-4c11-86d9-bcf01d8e510b)
+
 ## Requirements
 
 - [go](https://go.dev/dl/) : `1.23.0+`

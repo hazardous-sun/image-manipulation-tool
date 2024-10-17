@@ -69,6 +69,14 @@ func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
 			// raise a new file selection dialog
 			dialog.ShowFileOpen(
 				func(closer fyne.URIReadCloser, err error) {
+					if err != nil {
+						dialog.ShowError(err, w)
+						return
+					} else if closer == nil {
+						dialog.ShowError(fmt.Errorf("no file selected"), w)
+						return
+					}
+
 					// get the path for the config file
 					path := closer.URI().Path()
 					// parse it into a new CustomTheme
