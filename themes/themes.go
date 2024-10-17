@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"image-manipulation-tool/models"
+	"image/color"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -89,12 +90,20 @@ func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
 		},
 	)
 
+	newThemeBtn := widget.NewButton(
+		"New theme",
+		func() {
+			ThemeCreationWindow(a, settings)
+		},
+	)
+
 	// initialize the container that holds the buttons
 	btnsCtr := container.NewGridWithRows(
-		4,
+		5,
 		layout.NewSpacer(),
 		confirmBtn,
 		addThemeBtn,
+		newThemeBtn,
 		layout.NewSpacer(),
 	)
 
@@ -106,6 +115,51 @@ func ThemeSelectionWindow(a fyne.App, settings *models.ThemeSettings) {
 	)
 
 	w.SetContent(selectionCtr)
+	w.Show()
+}
+
+func ThemeCreationWindow(a fyne.App, settings *models.ThemeSettings) {
+	w := a.NewWindow("Create Theme")
+	w.Resize(fyne.NewSize(700, 500))
+
+	itemsAccord := widget.NewAccordion(
+		widget.NewAccordionItem(
+			"Background",
+			widget.NewButton(
+				"Background color",
+				func() {
+					colorPicker := dialog.NewColorPicker(
+						"Background",
+						"Select the color for the background",
+						func(c color.Color) {
+							fmt.Println(c.RGBA())
+						},
+						w,
+					)
+
+					colorPicker.Show()
+				},
+			),
+		),
+		widget.NewAccordionItem(
+			"Button",
+			widget.NewButton(
+				"Button color",
+				func() {
+					dialog.NewColorPicker(
+						"Button",
+						"Select the color for the buttons",
+						func(c color.Color) {
+							fmt.Println(c.RGBA())
+						},
+						w,
+					)
+				},
+			),
+		),
+	)
+
+	w.SetContent(itemsAccord)
 	w.Show()
 }
 
