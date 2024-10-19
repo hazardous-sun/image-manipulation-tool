@@ -522,11 +522,6 @@ func updateAllImages(img image.Image, project *models.Project) {
 	refreshCanvas()
 }
 
-func updatePrevImage(img image.Image, project *models.Project) {
-	previewImageCanvas.Image = project.GetPreview()
-	refreshCanvas()
-}
-
 func refreshCanvas() {
 	originalImageCanvas.Refresh()
 	previewImageCanvas.Refresh()
