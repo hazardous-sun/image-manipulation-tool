@@ -21,3 +21,20 @@ func FilterGrayScale(img image.Image) image.Image {
 	}
 	return grayImage
 }
+
+func FilterContrast(img image.Image, c float64) image.Image {
+	contrastImage := image.NewRGBA(img.Bounds())
+	for x := 0; x < img.Bounds().Dx(); x++ {
+		for y := 0; y < img.Bounds().Dy(); y++ {
+			r, g, b, a := img.At(x, y).RGBA()
+			pixel := color.RGBA{
+				R: uint8(float64(r) * c),
+				G: uint8(float64(g) * c),
+				B: uint8(float64(b) * c),
+				A: uint8(a),
+			}
+			contrastImage.Set(x, y, pixel)
+		}
+	}
+	return contrastImage
+}
