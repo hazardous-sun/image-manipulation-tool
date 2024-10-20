@@ -24,28 +24,25 @@ func FilterGrayScale(img image.Image) image.Image {
 
 func FilterContrast(img image.Image, contrast float64) image.Image {
 	contrastImage := image.NewRGBA(img.Bounds())
-	removedValue := 48 * contrast
+	removedValue := 16896 * contrast
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
 			r, g, b, a := img.At(x, y).RGBA()
-			tempR := float64(r) / 256 * contrast
-			tempR -= removedValue
+			tempR := (float64(r)*contrast - removedValue) / 256
 			if tempR > 255 {
 				tempR = 255
 			} else if tempR < 0 {
 				tempR = 0
 			}
 
-			tempG := float64(g) / 256 * contrast
-			tempG -= removedValue
+			tempG := (float64(g)*contrast - removedValue) / 256
 			if tempG > 255 {
 				tempG = 255
 			} else if tempG < 0 {
 				tempG = 0
 			}
 
-			tempB := float64(b) / 256 * contrast
-			tempB -= removedValue
+			tempB := (float64(b)*contrast - removedValue) / 256
 			if tempB > 255 {
 				tempB = 255
 			} else if tempB < 0 {
