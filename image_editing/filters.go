@@ -22,36 +22,24 @@ func FilterGrayScale(img image.Image) image.Image {
 	return grayImage
 }
 
-func FilterContrast(img image.Image, contrast float64) image.Image {
+func FilterContrast(img image.Image, factor float64) image.Image {
+	if factor == 0 {
+		return img
+	}
+
 	contrastImage := image.NewRGBA(img.Bounds())
-	removedValue := 16896 * contrast
+	contrast := factor / 50
+	if contrast < 0 {
+		contrast *= -1
+	}
+	removedValue := 16896 * (factor * contrast / 100)
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
 			r, g, b, a := img.At(x, y).RGBA()
-			tempR := (float64(r)*contrast - removedValue) / 256
-			if tempR > 255 {
-				tempR = 255
-			} else if tempR < 0 {
-				tempR = 0
-			}
 
-			tempG := (float64(g)*contrast - removedValue) / 256
-			if tempG > 255 {
-				tempG = 255
-			} else if tempG < 0 {
-				tempG = 0
-			}
-
-			tempB := (float64(b)*contrast - removedValue) / 256
-			if tempB > 255 {
-				tempB = 255
-			} else if tempB < 0 {
-				tempB = 0
-			}
-
-			newR := uint8(tempR)
-			newG := uint8(tempG)
-			newB := uint8(tempB)
+			newR := uint8(getNewChannelVal(r, contrast, removedValue))
+			newG := uint8(getNewChannelVal(g, contrast, removedValue))
+			newB := uint8(getNewChannelVal(b, contrast, removedValue))
 
 			pixel := color.RGBA{
 				R: newR,
@@ -63,4 +51,14 @@ func FilterContrast(img image.Image, contrast float64) image.Image {
 		}
 	}
 	return contrastImage
+}
+
+func getNewChannelVal(x uint32, contrast float64, removedValue float64) float64 {
+	temp := (float64(x)*contrast - removedValue) / 256
+	if temp > 255 {
+		temp = 255
+	} else if temp < 0 {
+		temp = 0
+	}
+	return temp
 }
