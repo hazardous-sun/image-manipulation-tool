@@ -314,20 +314,28 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 			}),
 			widget.NewButton("Contrast", func() {
 				w := a.NewWindow("Input values")
-				w.Resize(fyne.NewSize(200, 100))
+				w.Resize(fyne.NewSize(200, 200))
 				w.SetFixedSize(true)
+
+				lblSlider := widget.NewLabel("0")
+				constrastSlider := widget.NewSlider(0.0, 100.0)
+				constrastSlider.OnChanged = func(f float64) {
+					lblSlider.SetText(strconv.FormatFloat(f, 'f', -1, 64))
+				}
 
 				// initialize the confirmation button
 				confirmBtn := widget.NewButton(
 					"Confirm",
 					func() {
 						// transform the inputted string in X into a float64
-						x, err := strconv.ParseFloat(xEntry.Text, 64)
+						x, err := strconv.ParseFloat(lblSlider.Text, 64)
 
 						if err != nil {
 							dialog.ShowError(err, w)
 							return
 						}
+
+						x /= 50
 
 						// apply the contrast
 						img := image_editing.FilterContrast(previewImageCanvas.Image, x)
@@ -341,8 +349,9 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				)
 
 				// pass the values to the container
-				ctr := container.NewGridWithRows(2,
-					xCtr,
+				ctr := container.NewGridWithRows(3,
+					lblSlider,
+					constrastSlider,
 					confirmBtn,
 				)
 				w.SetContent(ctr)
