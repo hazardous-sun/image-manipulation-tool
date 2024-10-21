@@ -67,16 +67,16 @@ func getContrastedChannelVal(x uint32, contrast float64, removedValue float64) f
 
 // FilterBrightness :
 // Applies an amount of brightness to the image.
-func FilterBrightness(img image.Image, factor int64) image.Image {
+func FilterBrightness(img image.Image, brightness int64) image.Image {
 	brightnessImage := image.NewRGBA(img.Bounds())
 
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
 			r, g, b, a := img.At(x, y).RGBA()
 
-			newR := getBrightnessChannelVal(r, factor)
-			newG := getBrightnessChannelVal(g, factor)
-			newB := getBrightnessChannelVal(b, factor)
+			newR := getBrightnessChannelVal(r, brightness)
+			newG := getBrightnessChannelVal(g, brightness)
+			newB := getBrightnessChannelVal(b, brightness)
 
 			pixel := color.RGBA{
 				R: uint8(newR),
@@ -91,8 +91,8 @@ func FilterBrightness(img image.Image, factor int64) image.Image {
 	return brightnessImage
 }
 
-func getBrightnessChannelVal(x uint32, factor int64) int64 {
-	temp := int64(x/255) + factor
+func getBrightnessChannelVal(x uint32, brightness int64) int64 {
+	temp := int64(x/255) + brightness
 	if temp > 255 {
 		temp = 255
 	} else if temp < 0 {
