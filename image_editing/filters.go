@@ -22,6 +22,8 @@ func FilterGrayScale(img image.Image) image.Image {
 	return grayImage
 }
 
+// FilterContrast :
+// Applies an amount of contrast to the image.
 func FilterContrast(img image.Image, factor float64) image.Image {
 	if factor == 0 {
 		return img
@@ -63,26 +65,18 @@ func getContrastedChannelVal(x uint32, contrast float64, removedValue float64) f
 	return temp
 }
 
-func FilterBrightness(img image.Image, factor int64) image.Image {
+// FilterBrightness :
+// Applies an amount of brightness to the image.
+func FilterBrightness(img image.Image, brightness int64) image.Image {
 	brightnessImage := image.NewRGBA(img.Bounds())
 
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
 			r, g, b, a := img.At(x, y).RGBA()
-			newR := int64(r/255) + factor
-			if newR > 255 {
-				newR = 255
-			}
 
-			newG := int64(g/256) + factor
-			if newG > 255 {
-				newG = 255
-			}
-
-			newB := int64(b/256) + factor
-			if newB > 255 {
-				newB = 255
-			}
+			newR := getBrightnessChannelVal(r, brightness)
+			newG := getBrightnessChannelVal(g, brightness)
+			newB := getBrightnessChannelVal(b, brightness)
 
 			pixel := color.RGBA{
 				R: uint8(newR),
@@ -95,4 +89,45 @@ func FilterBrightness(img image.Image, factor int64) image.Image {
 		}
 	}
 	return brightnessImage
+}
+
+func getBrightnessChannelVal(x uint32, brightness int64) int64 {
+	temp := int64(x/255) + brightness
+	if temp > 255 {
+		temp = 255
+	} else if temp < 0 {
+		temp = 0
+	}
+	return temp
+}
+
+// FilterThreshold :
+// Applies the threshold filter to the image.
+func FilterThreshold(img image.Image, threshold uint32) image.Image {
+	grayImage := FilterGrayScale(img)
+	resultImage := image.NewGray(img.Bounds())
+	for x := 0; x < img.Bounds().Dx(); x++ {
+		for y := 0; y < img.Bounds().Dy(); y++ {
+			var pixel color.RGBA
+			r, g, b, a := grayImage.At(x, y).RGBA()
+			pixelValue := (r/256 + g/256 + b/256) / 3
+			if pixelValue > threshold {
+				pixel = color.RGBA{
+					R: 255,
+					G: 255,
+					B: 255,
+					A: uint8(a),
+				}
+			} else {
+				pixel = color.RGBA{
+					R: 0,
+					G: 0,
+					B: 0,
+					A: uint8(a),
+				}
+			}
+			resultImage.Set(x, y, pixel)
+		}
+	}
+	return resultImage
 }

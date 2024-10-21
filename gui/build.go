@@ -392,7 +392,46 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 			}),
 			widget.NewButton("High fade", func() {}),
 			widget.NewButton("Low fade", func() {}),
-			widget.NewButton("Threshold", func() {}),
+			widget.NewButton("Threshold", func() {
+				w := a.NewWindow("Input values")
+				w.Resize(fyne.NewSize(200, 200))
+				w.SetFixedSize(true)
+				value := 128.0
+
+				lblSlider := widget.NewLabel("128")
+				constrastSlider := widget.NewSlider(0.0, 255.0)
+				constrastSlider.Value = value
+				constrastSlider.OnChanged = func(f float64) {
+					value = f
+					lblSlider.SetText(strconv.FormatFloat(f, 'f', -1, 64))
+				}
+
+				// initialize the confirmation button
+				confirmBtn := widget.NewButton(
+					"Confirm",
+					func() {
+						x := value
+
+						// apply the contrast
+						img := image_editing.FilterThreshold(previewImageCanvas.Image, uint32(x))
+
+						// inform the system to update the preview image
+						project.AddPreviewImage(img)
+						updateAllImages(img, project)
+						updateLblCount(1)
+						w.Close()
+					},
+				)
+
+				// pass the values to the container
+				ctr := container.NewGridWithRows(3,
+					lblSlider,
+					constrastSlider,
+					confirmBtn,
+				)
+				w.SetContent(ctr)
+				w.Show()
+			}),
 		},
 	)
 	filterList := getBtnsList(filtersBtns)
