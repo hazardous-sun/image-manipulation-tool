@@ -100,3 +100,34 @@ func getBrightnessChannelVal(x uint32, brightness int64) int64 {
 	}
 	return temp
 }
+
+// FilterThreshold :
+// Applies the threshold filter to the image.
+func FilterThreshold(img image.Image, threshold uint32) image.Image {
+	grayImage := FilterGrayScale(img)
+	resultImage := image.NewGray(img.Bounds())
+	for x := 0; x < img.Bounds().Dx(); x++ {
+		for y := 0; y < img.Bounds().Dy(); y++ {
+			var pixel color.RGBA
+			r, g, b, a := grayImage.At(x, y).RGBA()
+			pixelValue := (r/256 + g/256 + b/256) / 3
+			if pixelValue > threshold {
+				pixel = color.RGBA{
+					R: 255,
+					G: 255,
+					B: 255,
+					A: uint8(a),
+				}
+			} else {
+				pixel = color.RGBA{
+					R: 0,
+					G: 0,
+					B: 0,
+					A: uint8(a),
+				}
+			}
+			resultImage.Set(x, y, pixel)
+		}
+	}
+	return resultImage
+}
