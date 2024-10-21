@@ -540,6 +540,13 @@ func initializeAppMenu(a fyne.App, w fyne.Window, project *models.Project, setti
 			fyne.NewMenuItem("Save", func() {
 				dialog.ShowFileSave(
 					func(closer fyne.URIWriteCloser, err error) {
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						} else if closer == nil {
+							return
+						}
+
 						path := closer.URI().Path()
 						file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, os.ModePerm)
 
@@ -547,7 +554,6 @@ func initializeAppMenu(a fyne.App, w fyne.Window, project *models.Project, setti
 							dialog.ShowError(err, w)
 							return
 						}
-
 						previewImage := project.GetPreview()
 						switch filepath.Ext(path) {
 						case ".png":
