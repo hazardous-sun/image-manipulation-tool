@@ -136,7 +136,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 		yEntry,
 	)
 
-	// geometric transformations
+	// geometric transformations ---------------------------------------------------------------------------------------
 	geoTransfBtns := getBtns(
 		[]*widget.Button{
 			widget.NewButton("Resize", func() {
@@ -303,7 +303,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 	)
 	geoTransfList := getBtnsList(geoTransfBtns)
 
-	// filters
+	// filters ---------------------------------------------------------------------------------------------------------
 	filtersBtns := getBtns(
 		[]*widget.Button{
 			widget.NewButton("Grayscale", func() {
@@ -395,7 +395,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 	)
 	filterList := getBtnsList(filtersBtns)
 
-	// mathematical morphology
+	// mathematical morphology -----------------------------------------------------------------------------------------
 	mathMorphoBtns := getBtns(
 		[]*widget.Button{
 			widget.NewButton("Dilatation", func() {}),
@@ -406,7 +406,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 	)
 	mathMorphoList := getBtnsList(mathMorphoBtns)
 
-	// pass the buttons list to the accordion
+	// pass the buttons list to the accordion --------------------------------------------------------------------------
 	sideBar := widget.NewAccordion(
 		widget.NewAccordionItem(
 			"Geometric trasnformations",
@@ -504,89 +504,103 @@ func getBtnsList(btns binding.UntypedList) *widget.List {
 }
 
 func initializeAppMenu(a fyne.App, w fyne.Window, project *models.Project, settings *models.ThemeSettings) *fyne.MainMenu {
+	// File menu -------------------------------------------------------------------------------------------------------
+	openFile := fyne.NewMenuItem("Open", func() {
+		dialog.ShowFileOpen(
+			func(r fyne.URIReadCloser, err error) {
+				if err != nil {
+					dialog.ShowError(err, w)
+					return
+				}
+
+				if r == nil {
+					dialog.ShowError(fmt.Errorf("no file selected"), w)
+					return
+				} else {
+					content, err := io.ReadAll(r)
+
+					if err != nil {
+						dialog.ShowError(err, w)
+						return
+					}
+
+					img, err := file_handling.LoadImageFromBytes(content)
+
+					if err != nil {
+						dialog.ShowError(err, w)
+					}
+
+					updateAllImagesNewProject(img, project)
+				}
+			},
+			w,
+		)
+	})
+	saveFile := fyne.NewMenuItem("Save", func() {
+		dialog.ShowFileSave(
+			func(closer fyne.URIWriteCloser, err error) {
+				if err != nil {
+					dialog.ShowError(err, w)
+					return
+				} else if closer == nil {
+					return
+				}
+
+				path := closer.URI().Path()
+				file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, os.ModePerm)
+
+				if err != nil {
+					dialog.ShowError(err, w)
+					return
+				}
+				previewImage := project.GetPreview()
+				switch filepath.Ext(path) {
+				case ".png":
+					err = png.Encode(file, previewImage)
+					if err != nil {
+						dialog.ShowError(err, w)
+					}
+				case ".jpg", ".jpeg":
+					err = jpeg.Encode(file, previewImage, &jpeg.Options{Quality: 100})
+					if err != nil {
+						dialog.ShowError(err, w)
+					}
+				default:
+					dialog.ShowError(fmt.Errorf("unsupported file type"), w)
+				}
+			},
+			w,
+		)
+	})
+
+	fileMenu := fyne.NewMenu("File",
+		openFile,
+		saveFile,
+	)
+
+	// Help menu -------------------------------------------------------------------------------------------------------
+	about := fyne.NewMenuItem("About", func() {
+		dialog.ShowInformation(
+			"About",
+			"This is an image manipulation tool written in Go that uses the Fyne framework for "+
+				"building the frontend.",
+			w,
+		)
+	})
+	preferences := fyne.NewMenuItem("Preferences", func() {
+		themes.ThemeSelectionWindow(a, settings)
+	})
+
+	helpMenu := fyne.NewMenu("Help",
+		about,
+		preferences,
+	)
+
+	// -----------------------------------------------------------------------------------------------------------------
+
 	return fyne.NewMainMenu(
-		fyne.NewMenu("File",
-			fyne.NewMenuItem("Open", func() {
-				dialog.ShowFileOpen(
-					func(r fyne.URIReadCloser, err error) {
-						if err != nil {
-							dialog.ShowError(err, w)
-							return
-						}
-
-						if r == nil {
-							dialog.ShowError(fmt.Errorf("no file selected"), w)
-							return
-						} else {
-							content, err := io.ReadAll(r)
-
-							if err != nil {
-								dialog.ShowError(err, w)
-								return
-							}
-
-							img, err := file_handling.LoadImageFromBytes(content)
-
-							if err != nil {
-								dialog.ShowError(err, w)
-							}
-
-							updateAllImagesNewProject(img, project)
-						}
-					},
-					w,
-				)
-			}),
-			fyne.NewMenuItem("Save", func() {
-				dialog.ShowFileSave(
-					func(closer fyne.URIWriteCloser, err error) {
-						if err != nil {
-							dialog.ShowError(err, w)
-							return
-						} else if closer == nil {
-							return
-						}
-
-						path := closer.URI().Path()
-						file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, os.ModePerm)
-
-						if err != nil {
-							dialog.ShowError(err, w)
-							return
-						}
-						previewImage := project.GetPreview()
-						switch filepath.Ext(path) {
-						case ".png":
-							err = png.Encode(file, previewImage)
-							if err != nil {
-								dialog.ShowError(err, w)
-							}
-						case ".jpg", ".jpeg":
-							err = jpeg.Encode(file, previewImage, &jpeg.Options{Quality: 100})
-							if err != nil {
-								dialog.ShowError(err, w)
-							}
-						default:
-							dialog.ShowError(fmt.Errorf("unsupported file type"), w)
-						}
-					},
-					w,
-				)
-			}),
-		),
-		fyne.NewMenu("Help",
-			fyne.NewMenuItem("About", func() {
-				dialog.ShowInformation(
-					"About",
-					"This is an image manipulation tool written in Go that uses the Fyne framework for "+
-						"building the frontend.",
-					w,
-				)
-			}),
-			fyne.NewMenuItem("Preferences", func() {
-				themes.ThemeSelectionWindow(a, settings)
-			}),
-		),
+		fileMenu,
+		helpMenu,
 	)
 }
 
