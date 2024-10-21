@@ -131,3 +131,31 @@ func FilterThreshold(img image.Image, threshold uint32) image.Image {
 	}
 	return resultImage
 }
+
+func FilterMedianBlur(img image.Image) image.Image {
+	/*
+		1. create a resultImage with the bounds of img
+		2. convolute over the image
+			- iterate over each pixel
+			- create an array [3][3]int
+	*/
+	resultImage := image.NewRGBA(img.Bounds())
+	convolution(img, resultImage)
+}
+
+func convolution(sourceImg image.Image, resultImg *image.RGBA) image.Image {
+	for x := 0; x < sourceImg.Bounds().Dx(); x++ {
+		for y := 0; y < sourceImg.Bounds().Dy(); y++ {
+			neighbours := [][]int{
+				{0, 0, 0},
+				{0, 0, 0},
+				{0, 0, 0},
+			}
+			for ly := 0; ly < 3; ly++ {
+				ix := image.LimitX(x + lx - 1)
+				iy := image.LimitY(y + ly - 1)
+				neighbours[lx][ly] = image.Get(c, ix, iy)
+			}
+		}
+	}
+}
