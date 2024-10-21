@@ -146,8 +146,8 @@ func FilterMedianBlur(img image.Image) image.Image {
 			}
 			for lx := 0; lx < 3; lx++ {
 				for ly := 0; ly < 3; ly++ {
-					ix := limitX(x+lx-1, 0, bounds.Dx())
-					iy := limitY(y+ly-1, 0, bounds.Dy())
+					ix := limit(x+lx-1, 0, bounds.Dx())
+					iy := limit(y+ly-1, 0, bounds.Dy())
 
 					r, g, b, a := img.At(ix, iy).RGBA()
 
@@ -181,22 +181,13 @@ func FilterMedianBlur(img image.Image) image.Image {
 	return resultImg
 }
 
-func limitX(x, minX, maxX int) int {
+func limit(x, minX, maxX int) int {
 	if x < minX {
 		return minX
 	} else if x > maxX {
 		return maxX
 	}
 	return x
-}
-
-func limitY(y, minY, maxY int) int {
-	if y < minY {
-		return minY
-	} else if y > maxY {
-		return maxY
-	}
-	return y
 }
 
 func computeCenter(neighbours [][]color.RGBA) color.RGBA {
