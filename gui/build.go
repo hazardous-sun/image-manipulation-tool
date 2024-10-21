@@ -430,6 +430,12 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				w.SetContent(ctr)
 				w.Show()
 			}),
+			widget.NewButton("Median blur", func() {
+				img := image_editing.FilterMedianBlur(previewImageCanvas.Image)
+				project.AddPreviewImage(img)
+				updateAllImages(img, project)
+				updateLblCount(1)
+			}),
 		},
 	)
 	filterList := getBtnsList(filtersBtns)

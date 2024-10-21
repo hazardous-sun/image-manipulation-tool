@@ -132,6 +132,8 @@ func FilterThreshold(img image.Image, threshold uint32) image.Image {
 	return resultImage
 }
 
+// FilterMedianBlur :
+// Applies the median blur filter to the image.
 func FilterMedianBlur(img image.Image) image.Image {
 	/*
 		1. create a resultImage with the bounds of img
@@ -139,7 +141,7 @@ func FilterMedianBlur(img image.Image) image.Image {
 			- iterate over each pixel
 			- create an array [3][3]int
 	*/
-	resultImage = convolution(img)
+	return convolution(img)
 }
 
 func convolution(img image.Image) image.Image {
@@ -180,6 +182,17 @@ func convolution(img image.Image) image.Image {
 				}
 			}
 			newValue := computeCenter(neighbours)
+			r, g, b, a := newValue.RGBA()
+			newR := uint8(r / 256)
+			newG := uint8(g / 256)
+			newB := uint8(b / 256)
+			pixel := color.RGBA{
+				R: newR,
+				G: newG,
+				B: newB,
+				A: uint8(a),
+			}
+			resultImg.Set(x, y, pixel)
 		}
 	}
 	return resultImg
@@ -211,6 +224,7 @@ func computeCenter(neighbours [][]color.RGBA) color.RGBA {
 			values = insert(values, value)
 		}
 	}
+	return values[len(values)/2]
 }
 
 func insert(values []color.RGBA, newValue color.RGBA) []color.RGBA {
