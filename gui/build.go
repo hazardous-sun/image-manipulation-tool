@@ -73,6 +73,7 @@ func Build(a fyne.App) {
 	w.ShowAndRun()
 }
 
+// Initializes the container that holds the images, both the original and the preview.
 func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 	// initialize the original image canvas
 	originalImage := project.GetOriginal()
@@ -115,6 +116,7 @@ func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 	)
 }
 
+// Initializes the sidebar that contains the tools for transforming the image.
 func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 	// initialize X axis input
 	xEntry := widget.NewEntry()
@@ -432,6 +434,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 	)
 }
 
+// Initializes the container that holds the label that displays the current version of the images, as well as the
+// buttons used to move undo and redo changes.
 func initializeVersionsCtr(w fyne.Window, project *models.Project) fyne.CanvasObject {
 	// label
 	versionsCount := strconv.Itoa(currentVersion)
@@ -478,6 +482,7 @@ func initializeVersionsCtr(w fyne.Window, project *models.Project) fyne.CanvasOb
 	return toolBar
 }
 
+// Returns an untyped list of *widget.Button instances.
 func getBtns(btns []*widget.Button) binding.UntypedList {
 	btnsList := binding.NewUntypedList()
 	for _, btn := range btns {
@@ -487,6 +492,7 @@ func getBtns(btns []*widget.Button) binding.UntypedList {
 	return btnsList
 }
 
+// Creates a list containing the buttons from an untyped list.
 func getBtnsList(btns binding.UntypedList) *widget.List {
 	return widget.NewListWithData(
 		btns,
@@ -503,6 +509,7 @@ func getBtnsList(btns binding.UntypedList) *widget.List {
 	)
 }
 
+// Initializes the top bar menu for the application.
 func initializeAppMenu(a fyne.App, w fyne.Window, project *models.Project, settings *models.ThemeSettings) *fyne.MainMenu {
 	// File menu -------------------------------------------------------------------------------------------------------
 	openFile := fyne.NewMenuItem("Open", func() {
@@ -604,6 +611,15 @@ func initializeAppMenu(a fyne.App, w fyne.Window, project *models.Project, setti
 	)
 }
 
+// Sets the image passed as parameter as the value of both the original and preview image.
+func updateAllImages(img image.Image, project *models.Project) {
+	originalImageCanvas.Image = project.GetOriginal()
+	previewImageCanvas.Image = project.GetPreview()
+	refreshCanvas()
+}
+
+// Sets the image passed as parameter as the value of both the original and preview image, also setting the value of
+// versions to 0.
 func updateAllImagesNewProject(img image.Image, project *models.Project) {
 	updateLblCount(-currentVersion)
 	project.LoadNewImage(img)
@@ -612,17 +628,13 @@ func updateAllImagesNewProject(img image.Image, project *models.Project) {
 	refreshCanvas()
 }
 
-func updateAllImages(img image.Image, project *models.Project) {
-	originalImageCanvas.Image = project.GetOriginal()
-	previewImageCanvas.Image = project.GetPreview()
-	refreshCanvas()
-}
-
+// Sends a signal to the GUI to update the canvas that hold the original and preview images.
 func refreshCanvas() {
 	originalImageCanvas.Refresh()
 	previewImageCanvas.Refresh()
 }
 
+// Updates the label that displays the current version of the image.
 func updateLblCount(val int) {
 	currentVersion += val
 	versionsCount := strconv.Itoa(currentVersion)
