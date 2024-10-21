@@ -37,9 +37,9 @@ func FilterContrast(img image.Image, factor float64) image.Image {
 		for y := 0; y < img.Bounds().Dy(); y++ {
 			r, g, b, a := img.At(x, y).RGBA()
 
-			newR := uint8(getNewChannelVal(r, contrast, removedValue))
-			newG := uint8(getNewChannelVal(g, contrast, removedValue))
-			newB := uint8(getNewChannelVal(b, contrast, removedValue))
+			newR := uint8(getContrastedChannelVal(r, contrast, removedValue))
+			newG := uint8(getContrastedChannelVal(g, contrast, removedValue))
+			newB := uint8(getContrastedChannelVal(b, contrast, removedValue))
 
 			pixel := color.RGBA{
 				R: newR,
@@ -53,7 +53,7 @@ func FilterContrast(img image.Image, factor float64) image.Image {
 	return contrastImage
 }
 
-func getNewChannelVal(x uint32, contrast float64, removedValue float64) float64 {
+func getContrastedChannelVal(x uint32, contrast float64, removedValue float64) float64 {
 	temp := (float64(x)*contrast - removedValue) / 256
 	if temp > 255 {
 		temp = 255
@@ -61,4 +61,38 @@ func getNewChannelVal(x uint32, contrast float64, removedValue float64) float64 
 		temp = 0
 	}
 	return temp
+}
+
+func FilterBrightness(img image.Image, factor int64) image.Image {
+	brightnessImage := image.NewRGBA(img.Bounds())
+
+	for x := 0; x < img.Bounds().Dx(); x++ {
+		for y := 0; y < img.Bounds().Dy(); y++ {
+			r, g, b, a := img.At(x, y).RGBA()
+			newR := int64(r/255) + factor
+			if newR > 255 {
+				newR = 255
+			}
+
+			newG := int64(g/256) + factor
+			if newG > 255 {
+				newG = 255
+			}
+
+			newB := int64(b/256) + factor
+			if newB > 255 {
+				newB = 255
+			}
+
+			pixel := color.RGBA{
+				R: uint8(newR),
+				G: uint8(newG),
+				B: uint8(newB),
+				A: uint8(a),
+			}
+
+			brightnessImage.Set(x, y, pixel)
+		}
+	}
+	return brightnessImage
 }
