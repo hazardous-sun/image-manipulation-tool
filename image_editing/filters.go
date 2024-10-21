@@ -34,7 +34,7 @@ func FilterContrast(img image.Image, factor float64) image.Image {
 	if contrast < 0 {
 		contrast *= -1
 	}
-	removedValue := 16896 * (factor * contrast / 100)
+	removedValue := 0.0
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
 			r, g, b, a := img.At(x, y).RGBA()
@@ -139,23 +139,107 @@ func FilterMedianBlur(img image.Image) image.Image {
 			- iterate over each pixel
 			- create an array [3][3]int
 	*/
-	resultImage := image.NewRGBA(img.Bounds())
-	convolution(img, resultImage)
+	resultImage = convolution(img)
 }
 
-func convolution(sourceImg image.Image, resultImg *image.RGBA) image.Image {
-	for x := 0; x < sourceImg.Bounds().Dx(); x++ {
-		for y := 0; y < sourceImg.Bounds().Dy(); y++ {
-			neighbours := [][]int{
-				{0, 0, 0},
-				{0, 0, 0},
-				{0, 0, 0},
+func convolution(img image.Image) image.Image {
+	/*
+		1. iterar sobre cada canal
+		2. iterar sobre cada x
+		3. iterar sobre cada y
+		4. inicializar array de vizinhos
+		5. iterar sobre os vizinhos proximos
+	*/
+	resultImg := image.NewRGBA(img.Bounds())
+	bounds := img.Bounds()
+	for x := 0; x < img.Bounds().Dx(); x++ {
+		for y := 0; y < img.Bounds().Dy(); y++ {
+			neighbours := [][]color.RGBA{
+				{color.RGBA{}, color.RGBA{}, color.RGBA{}},
+				{color.RGBA{}, color.RGBA{}, color.RGBA{}},
+				{color.RGBA{}, color.RGBA{}, color.RGBA{}},
 			}
-			for ly := 0; ly < 3; ly++ {
-				ix := image.LimitX(x + lx - 1)
-				iy := image.LimitY(y + ly - 1)
-				neighbours[lx][ly] = image.Get(c, ix, iy)
+			for lx := 0; lx < 3; lx++ {
+				for ly := 0; ly < 3; ly++ {
+					ix := limitX(x+lx-1, 0, bounds.Dx())
+					iy := limitY(y+ly-1, 0, bounds.Dy())
+
+					r, g, b, a := img.At(ix, iy).RGBA()
+
+					newR := uint8(r / 256)
+					newG := uint8(g / 256)
+					newB := uint8(b / 256)
+
+					pixel := color.RGBA{
+						R: newR,
+						G: newG,
+						B: newB,
+						A: uint8(a),
+					}
+					neighbours[lx][ly] = pixel
+				}
 			}
+			newValue := computeCenter(neighbours)
 		}
 	}
+	return resultImg
+}
+
+func limitX(x, minX, maxX int) int {
+	if x < minX {
+		return minX
+	} else if x > maxX {
+		return maxX
+	}
+	return x
+}
+
+func limitY(y, minY, maxY int) int {
+	if y < minY {
+		return minY
+	} else if y > maxY {
+		return maxY
+	}
+	return y
+}
+
+func computeCenter(neighbours [][]color.RGBA) color.RGBA {
+	values := make([]color.RGBA, len(neighbours)*len(neighbours[0]))
+	for x := 0; x < len(neighbours); x++ {
+		for y := 0; y < len(neighbours[x]); y++ {
+			value := neighbours[x][y]
+			values = insert(values, value)
+		}
+	}
+}
+
+func insert(values []color.RGBA, newValue color.RGBA) []color.RGBA {
+	for i := 0; i < len(values); i++ {
+		r, g, b, _ := values[i].RGBA()
+		originChannelsSum := r + g + b
+
+		r, g, b, _ = newValue.RGBA()
+		newChannelsSum := r + g + b
+
+		if i == len(values)-1 || newChannelsSum > originChannelsSum {
+			for j := len(values) - 2; j >= i; j-- {
+				values[j+1] = values[j]
+			}
+			values[i] = newValue
+		}
+	}
+	return values
+}
+
+func floor(values []color.RGBA) color.RGBA {
+	var chosen color.RGBA
+	var highest uint32 = 0
+	for _, v := range values {
+		r, g, b, _ := v.RGBA()
+		sum := r + g + b
+		if sum > highest {
+			chosen = v
+		}
+	}
+	return chosen
 }
