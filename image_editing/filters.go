@@ -135,23 +135,6 @@ func FilterThreshold(img image.Image, threshold uint32) image.Image {
 // FilterMedianBlur :
 // Applies the median blur filter to the image.
 func FilterMedianBlur(img image.Image) image.Image {
-	/*
-		1. create a resultImage with the bounds of img
-		2. convolute over the image
-			- iterate over each pixel
-			- create an array [3][3]int
-	*/
-	return convolution(img)
-}
-
-func convolution(img image.Image) image.Image {
-	/*
-		1. iterar sobre cada canal
-		2. iterar sobre cada x
-		3. iterar sobre cada y
-		4. inicializar array de vizinhos
-		5. iterar sobre os vizinhos proximos
-	*/
 	resultImg := image.NewRGBA(img.Bounds())
 	bounds := img.Bounds()
 	for x := 0; x < img.Bounds().Dx(); x++ {
@@ -243,17 +226,4 @@ func insert(values []color.RGBA, newValue color.RGBA) []color.RGBA {
 		}
 	}
 	return values
-}
-
-func floor(values []color.RGBA) color.RGBA {
-	var chosen color.RGBA
-	var highest uint32 = 0
-	for _, v := range values {
-		r, g, b, _ := v.RGBA()
-		sum := r + g + b
-		if sum > highest {
-			chosen = v
-		}
-	}
-	return chosen
 }
