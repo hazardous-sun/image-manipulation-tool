@@ -69,20 +69,10 @@ func FilterBrightness(img image.Image, factor int64) image.Image {
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
 			r, g, b, a := img.At(x, y).RGBA()
-			newR := int64(r/255) + factor
-			if newR > 255 {
-				newR = 255
-			}
 
-			newG := int64(g/256) + factor
-			if newG > 255 {
-				newG = 255
-			}
-
-			newB := int64(b/256) + factor
-			if newB > 255 {
-				newB = 255
-			}
+			newR := getBrightnessChannelVal(r, factor)
+			newG := getBrightnessChannelVal(g, factor)
+			newB := getBrightnessChannelVal(b, factor)
 
 			pixel := color.RGBA{
 				R: uint8(newR),
@@ -95,4 +85,14 @@ func FilterBrightness(img image.Image, factor int64) image.Image {
 		}
 	}
 	return brightnessImage
+}
+
+func getBrightnessChannelVal(x uint32, factor int64) int64 {
+	temp := int64(x/255) + factor
+	if temp > 255 {
+		temp = 255
+	} else if temp < 0 {
+		temp = 0
+	}
+	return temp
 }
