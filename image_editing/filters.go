@@ -22,6 +22,8 @@ func FilterGrayScale(img image.Image) image.Image {
 	return grayImage
 }
 
+// FilterContrast :
+// Applies an amount of contrast to the image.
 func FilterContrast(img image.Image, factor float64) image.Image {
 	if factor == 0 {
 		return img
@@ -63,6 +65,8 @@ func getContrastedChannelVal(x uint32, contrast float64, removedValue float64) f
 	return temp
 }
 
+// FilterBrightness :
+// Applies an amount of brightness to the image.
 func FilterBrightness(img image.Image, factor int64) image.Image {
 	brightnessImage := image.NewRGBA(img.Bounds())
 
