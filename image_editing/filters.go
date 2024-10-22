@@ -218,3 +218,45 @@ func insert(values []color.RGBA, newValue color.RGBA) []color.RGBA {
 	}
 	return values
 }
+
+func FilterGaussianBlur(img image.Image, sigma float64, maskSize int) image.Image {
+	kernel := [][]int{
+		{1, 2, 1},
+		{2, 4, 2},
+		{1, 2, 1},
+	}
+	resultImage := image.NewRGBA(img.Bounds())
+	for x := 0; x < img.Bounds().Dx(); x++ {
+		for y := 0; y < img.Bounds().Dy(); y++ {
+			processKernel(kernel, img, resultImage, x, y, sigma, maskSize)
+		}
+	}
+	return resultImage
+}
+
+func processKernel(kernel [][]int, sourceImg image.Image, resultImage *image.RGBA, x int, y int, sigma float64, maskSize int) {
+	sumValue := 0.0
+	valueKernel := 0.0
+	kernelSize := len(kernel)
+	bounds := sourceImg.Bounds()
+	for i := 0; i < kernelSize; i++ {
+		for j := 0; j < kernelSize; j++ {
+			xPos := limit(x+(i-1), 0, bounds.Dx())
+			yPos := limit(y+(j-1), 0, bounds.Dy())
+			r, _, _, _ := sourceImg.At(xPos, yPos).RGBA()
+			pixelValue := float64(r >> 8)
+			sumValue += pixelValue * float64(kernel[i][j])
+			valueKernel += float64(kernel[i][j])
+		}
+	}
+	if valueKernel > 0 {
+		sumValue /= valueKernel
+	}
+	value := limit(int(sumValue), 0, 255)
+	resultImage.Set(x, y, color.RGBA{
+		R: uint8(value),
+		G: uint8(value),
+		B: uint8(value),
+		A: 255,
+	})
+}
