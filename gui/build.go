@@ -437,7 +437,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				updateLblCount(1)
 			}),
 			widget.NewButton("Gaussian blur", func() {
-				img := image_editing.FilterGaussianBlur(previewImageCanvas.Image, 16, 16)
+				img := image_editing.FilterGaussianBlur(previewImageCanvas.Image, 2.0, 5)
 				project.AddPreviewImage(img)
 				updateAllImages(img, project)
 				updateLblCount(1)

@@ -3,6 +3,7 @@ package image_editing
 import (
 	"image"
 	"image/color"
+	"math"
 )
 
 // Filters -------------------------------------------------------------------------------------------------------------
@@ -220,43 +221,43 @@ func insert(values []color.RGBA, newValue color.RGBA) []color.RGBA {
 }
 
 func FilterGaussianBlur(img image.Image, sigma float64, maskSize int) image.Image {
-	kernel := [][]int{
-		{1, 2, 1},
-		{2, 4, 2},
-		{1, 2, 1},
-	}
-	resultImage := image.NewRGBA(img.Bounds())
-	for x := 0; x < img.Bounds().Dx(); x++ {
-		for y := 0; y < img.Bounds().Dy(); y++ {
-			processKernel(kernel, img, resultImage, x, y, sigma, maskSize)
+	kernel := generateGaussianKernel(sigma, maskSize)
+	bounds := img.Bounds()
+	resultImg := image.NewNRGBA(bounds)
+
+	for y := 0; y < bounds.Dy(); y++ {
+		for x := 0; x < bounds.Dx(); x++ {
+			sumR, sumG, sumB := 0.0, 0.0, 0.0
+			for i := 0; i < maskSize; i++ {
+				xPos := limit(x+i-maskSize/2, bounds.Min.X, bounds.Max.X-1)
+				yPos := limit(y+i-maskSize/2, bounds.Min.Y, bounds.Max.Y-1)
+				r, g, b, _ := img.At(xPos, yPos).RGBA()
+				weight := kernel[i]
+				sumR += float64(r) / 256 * weight
+				sumG += float64(g) / 256 * weight
+				sumB += float64(b) / 256 * weight
+			}
+			valueR, valueG, valueB := limit(int(sumR), 0, 255), limit(int(sumG), 0, 255), limit(int(sumB), 0, 255)
+			resultImg.Set(x, y, color.NRGBA{R: uint8(valueR), G: uint8(valueG), B: uint8(valueB), A: 255})
 		}
 	}
-	return resultImage
+	return resultImg
 }
 
-func processKernel(kernel [][]int, sourceImg image.Image, resultImage *image.RGBA, x int, y int, sigma float64, maskSize int) {
-	sumValue := 0.0
-	valueKernel := 0.0
-	kernelSize := len(kernel)
-	bounds := sourceImg.Bounds()
-	for i := 0; i < kernelSize; i++ {
-		for j := 0; j < kernelSize; j++ {
-			xPos := limit(x+(i-1), 0, bounds.Dx())
-			yPos := limit(y+(j-1), 0, bounds.Dy())
-			r, _, _, _ := sourceImg.At(xPos, yPos).RGBA()
-			pixelValue := float64(r >> 8)
-			sumValue += pixelValue * float64(kernel[i][j])
-			valueKernel += float64(kernel[i][j])
-		}
+// generateGaussianKernel generates a 1D Gaussian kernel based on sigma
+func generateGaussianKernel(sigma float64, maskSize int) []float64 {
+	kernel := make([]float64, maskSize)
+	center := maskSize / 2
+	sum := 0.0
+	for i := 0; i < maskSize; i++ {
+		x := i - center
+		exp := math.Exp(-float64(x*x) / (2 * sigma * sigma))
+		kernel[i] = exp
+		sum += exp
 	}
-	if valueKernel > 0 {
-		sumValue /= valueKernel
+	// Normalize the kernel
+	for i := range kernel {
+		kernel[i] /= sum
 	}
-	value := limit(int(sumValue), 0, 255)
-	resultImage.Set(x, y, color.RGBA{
-		R: uint8(value),
-		G: uint8(value),
-		B: uint8(value),
-		A: 255,
-	})
+	return kernel
 }
