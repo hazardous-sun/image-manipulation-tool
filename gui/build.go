@@ -390,8 +390,6 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				w.SetContent(ctr)
 				w.Show()
 			}),
-			widget.NewButton("High fade", func() {}),
-			widget.NewButton("Low fade", func() {}),
 			widget.NewButton("Threshold", func() {
 				w := a.NewWindow("Input values")
 				w.Resize(fyne.NewSize(200, 200))
@@ -431,6 +429,18 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				)
 				w.SetContent(ctr)
 				w.Show()
+			}),
+			widget.NewButton("Median blur", func() {
+				img := image_editing.FilterMedianBlur(previewImageCanvas.Image)
+				project.AddPreviewImage(img)
+				updateAllImages(img, project)
+				updateLblCount(1)
+			}),
+			widget.NewButton("Gaussian blur", func() {
+				img := image_editing.FilterGaussianBlur(previewImageCanvas.Image, 2.0, 5)
+				project.AddPreviewImage(img)
+				updateAllImages(img, project)
+				updateLblCount(1)
 			}),
 		},
 	)
