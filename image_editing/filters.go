@@ -26,24 +26,16 @@ func FilterGrayScale(img image.Image) image.Image {
 
 // FilterContrast :
 // Applies an amount of contrast to the image.
-func FilterContrast(img image.Image, factor float64) image.Image {
-	if factor == 0 {
-		return img
-	}
-
+func FilterContrast(img image.Image, contrast float64) image.Image {
 	contrastImage := image.NewRGBA(img.Bounds())
-	contrast := factor / 50
-	if contrast < 0 {
-		contrast *= -1
-	}
-	removedValue := 0.0
+
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
 			r, g, b, a := img.At(x, y).RGBA()
 
-			newR := uint8(getContrastedChannelVal(r, contrast, removedValue))
-			newG := uint8(getContrastedChannelVal(g, contrast, removedValue))
-			newB := uint8(getContrastedChannelVal(b, contrast, removedValue))
+			newR := uint8(getContrastedChannelVal(r, contrast))
+			newG := uint8(getContrastedChannelVal(g, contrast))
+			newB := uint8(getContrastedChannelVal(b, contrast))
 
 			pixel := color.RGBA{
 				R: newR,
@@ -57,8 +49,8 @@ func FilterContrast(img image.Image, factor float64) image.Image {
 	return contrastImage
 }
 
-func getContrastedChannelVal(x uint32, contrast float64, removedValue float64) float64 {
-	temp := (float64(x)*contrast - removedValue) / 256
+func getContrastedChannelVal(x uint32, contrast float64) float64 {
+	temp := (float64(x) * contrast) / 256
 	if temp > 255 {
 		temp = 255
 	} else if temp < 0 {
