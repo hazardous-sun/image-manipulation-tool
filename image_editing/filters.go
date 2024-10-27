@@ -136,91 +136,6 @@ func FilterThreshold(img image.Image, threshold uint32) image.Image {
 
 // FilterMedianBlur :
 // Applies the median blur filter to the image.
-func oldFilterMedianBlur(img image.Image) image.Image {
-	resultImg := image.NewRGBA(img.Bounds())
-	bounds := img.Bounds()
-	for x := 0; x < img.Bounds().Dx(); x++ {
-		for y := 0; y < img.Bounds().Dy(); y++ {
-			neighbours := [][]color.RGBA{
-				{color.RGBA{}, color.RGBA{}, color.RGBA{}},
-				{color.RGBA{}, color.RGBA{}, color.RGBA{}},
-				{color.RGBA{}, color.RGBA{}, color.RGBA{}},
-			}
-			for lx := 0; lx < 3; lx++ {
-				for ly := 0; ly < 3; ly++ {
-					ix := limit(x+lx-1, 0, bounds.Dx())
-					iy := limit(y+ly-1, 0, bounds.Dy())
-
-					r, g, b, a := img.At(ix, iy).RGBA()
-
-					newR := uint8(r / 256)
-					newG := uint8(g / 256)
-					newB := uint8(b / 256)
-
-					pixel := color.RGBA{
-						R: newR,
-						G: newG,
-						B: newB,
-						A: uint8(a),
-					}
-					neighbours[lx][ly] = pixel
-				}
-			}
-			newValue := computeCenter(neighbours)
-			r, g, b, a := newValue.RGBA()
-			newR := uint8(r / 256)
-			newG := uint8(g / 256)
-			newB := uint8(b / 256)
-			pixel := color.RGBA{
-				R: newR,
-				G: newG,
-				B: newB,
-				A: uint8(a),
-			}
-			resultImg.Set(x, y, pixel)
-		}
-	}
-	return resultImg
-}
-
-func limit(x, minX, maxX int) int {
-	if x < minX {
-		return minX
-	} else if x > maxX {
-		return maxX
-	}
-	return x
-}
-
-func computeCenter(neighbours [][]color.RGBA) color.RGBA {
-	values := make([]color.RGBA, len(neighbours)*len(neighbours[0]))
-	for x := 0; x < len(neighbours); x++ {
-		for y := 0; y < len(neighbours[x]); y++ {
-			value := neighbours[x][y]
-			values = insert(values, value)
-		}
-	}
-	return values[len(values)/2]
-}
-
-func insert(values []color.RGBA, newValue color.RGBA) []color.RGBA {
-	for i := 0; i < len(values); i++ {
-		r, g, b, _ := values[i].RGBA()
-		originChannelsSum := r + g + b
-
-		r, g, b, _ = newValue.RGBA()
-		newChannelsSum := r + g + b
-
-		if i == len(values)-1 || newChannelsSum > originChannelsSum {
-			for j := len(values) - 2; j >= i; j-- {
-				values[j+1] = values[j]
-			}
-			values[i] = newValue
-		}
-	}
-	return values
-}
-
 func FilterMedianBlur(img image.Image, filterSize int) image.Image {
 	resultImg := image.NewRGBA(img.Bounds())
 	for x := 0; x < img.Bounds().Dx(); x++ {
@@ -258,27 +173,13 @@ func medianFilterPixel(img image.Image, row, column, filterSize int) color.Color
 	return values[middle]
 }
 
+// FilterGaussianBlur :
+// Applist the Gaussian blur filter to the image.
 func FilterGaussianBlur(img image.Image, sigma float64, maskSize int) image.Image {
 	kernel := generateGaussianKernel(sigma, maskSize)
 	bounds := img.Bounds()
 	resultImg := image.NewNRGBA(bounds)
 
-	for y := 0; y < bounds.Dy(); y++ {
-		for x := 0; x < bounds.Dx(); x++ {
-			sumR, sumG, sumB := 0.0, 0.0, 0.0
-			for i := 0; i < maskSize; i++ {
-				xPos := limit(x+i-maskSize/2, bounds.Min.X, bounds.Max.X-1)
-				yPos := limit(y+i-maskSize/2, bounds.Min.Y, bounds.Max.Y-1)
-				r, g, b, _ := img.At(xPos, yPos).RGBA()
-				weight := kernel[i]
-				sumR += float64(r) / 256 * weight
-				sumG += float64(g) / 256 * weight
-				sumB += float64(b) / 256 * weight
-			}
-			valueR, valueG, valueB := limit(int(sumR), 0, 255), limit(int(sumG), 0, 255), limit(int(sumB), 0, 255)
-			resultImg.Set(x, y, color.NRGBA{R: uint8(valueR), G: uint8(valueG), B: uint8(valueB), A: 255})
-		}
-	}
 	return resultImg
 }
 
