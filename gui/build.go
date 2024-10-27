@@ -477,7 +477,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 					"Confirm",
 					func() {
 						// transform the inputted string in X into a float64
-						x, err := strconv.ParseInt(xEntry.Text, 10, 64)
+						x, err := strconv.ParseFloat(xEntry.Text, 64)
 
 						if err != nil {
 							dialog.ShowError(err, w)
@@ -485,7 +485,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 						}
 
 						// transform the inputted string in Y into a float64
-						y, err := strconv.ParseFloat(yEntry.Text, 64)
+						y, err := strconv.ParseInt(yEntry.Text, 10, 64)
 
 						if err != nil {
 							dialog.ShowError(err, w)

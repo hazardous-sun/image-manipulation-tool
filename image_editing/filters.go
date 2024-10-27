@@ -174,77 +174,56 @@ func medianFilterPixel(img image.Image, row, column, filterSize int) color.Color
 }
 
 // FilterGaussianBlur :
-// Applist the Gaussian blur filter to the image.
-func FilterGaussianBlur(img image.Image, radius int64, kernelWidth int) image.Image {
-	sigma := math.Max(1, float64(2*radius))
-	kernel := generateGaussianKernel(radius, sigma, kernelWidth)
+// Applies the Gaussian blur filter to the image.
+func FilterGaussianBlur(img image.Image, sigma float64, maskSize int) image.Image {
+	kernel := generateGaussianKernel(sigma, maskSize)
 	bounds := img.Bounds()
 	resultImg := image.NewNRGBA(bounds)
 
-	// apply the blur
-	for x := 0; x < bounds.Dx()-int(radius); x++ {
-		for y := 0; y < bounds.Dy()-int(radius); y++ {
-			r := 0.0
-			g := 0.0
-			b := 0.0
-
-			// convolution
-			for kernelX := -radius; kernelX < radius; kernelX++ {
-				for kernelY := -radius; kernelY < radius; kernelY++ {
-					// load the weight for this pixel from the convolution matrix
-					kernelValue := kernel[kernelX+radius][kernelY+radius]
-
-					// multiply each channel by the weight of the pixel
-					tempR, tempG, tempB, _ := img.At(x, y).RGBA()
-					r += float64(tempR) * kernelValue
-					g += float64(tempG) * kernelValue
-					b += float64(tempB) * kernelValue
-				}
+	for y := 0; y < bounds.Dy(); y++ {
+		for x := 0; x < bounds.Dx(); x++ {
+			sumR, sumG, sumB := 0.0, 0.0, 0.0
+			for i := 0; i < maskSize; i++ {
+				xPos := limit(x+i-maskSize/2, bounds.Min.X, bounds.Max.X-1)
+				yPos := limit(y+i-maskSize/2, bounds.Min.Y, bounds.Max.Y-1)
+				r, g, b, _ := img.At(xPos, yPos).RGBA()
+				weight := kernel[i]
+				sumR += float64(r) / 256 * weight
+				sumG += float64(g) / 256 * weight
+				sumB += float64(b) / 256 * weight
 			}
-
-			_, _, _, a := img.At(x, y).RGBA()
-			pixel := color.RGBA{
-				R: uint8(r / 256),
-				G: uint8(g / 256),
-				B: uint8(b / 256),
-				A: uint8(a / 256),
-			}
-			resultImg.Set(x, y, pixel)
+			valueR, valueG, valueB := limit(int(sumR), 0, 255), limit(int(sumG), 0, 255), limit(int(sumB), 0, 255)
+			resultImg.Set(x, y, color.NRGBA{R: uint8(valueR), G: uint8(valueG), B: uint8(valueB), A: 255})
 		}
 	}
-
 	return resultImg
 }
 
 // generateGaussianKernel generates a 1D Gaussian kernel based on sigma
-func generateGaussianKernel(radius int64, sigma float64, kernelWidth int) [][]float64 {
-	// initialize kernel
-	var kernel [][]float64
-	for x := 0; x < kernelWidth; x++ {
-		kernel = append(kernel, make([]float64, kernelWidth))
-	}
-
-	// populate the kernel
+func generateGaussianKernel(sigma float64, maskSize int) []float64 {
+	kernel := make([]float64, maskSize)
+	center := maskSize / 2
 	sum := 0.0
-	for x := -radius; x < radius; x++ {
-		for y := -radius; y < radius; y++ {
-			exponentNumerator := float64(-(x*x + y*y))
-			exponentDenominator := 2 * sigma * sigma
-			eExpression := math.Pow(math.E, exponentNumerator/exponentDenominator)
-			kernelValue := eExpression / (2 * math.Pi * sigma * sigma)
-			kernel[x+radius][y+radius] = kernelValue
-			sum += kernelValue
-		}
+	for i := 0; i < maskSize; i++ {
+		x := i - center
+		exp := math.Exp(-float64(x*x) / (2 * sigma * sigma))
+		kernel[i] = exp
+		sum += exp
 	}
-
-	// normalize the kernel
-	for x := 0; x < kernelWidth; x++ {
-		for y := 0; y < kernelWidth; y++ {
-			kernel[x][y] /= sum
-		}
+	// Normalize the kernel
+	for i := range kernel {
+		kernel[i] /= sum
 	}
-
 	return kernel
+}
+
+func limit(x, minX, maxX int) int {
+	if x < minX {
+		return minX
+	} else if x > maxX {
+		return maxX
+	}
+	return x
 }
 
 // FilterSobelBorderDetection applies Sobel edge detection filter to the image
