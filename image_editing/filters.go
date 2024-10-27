@@ -175,15 +175,15 @@ func medianFilterPixel(img image.Image, row, column, filterSize int) color.Color
 
 // FilterGaussianBlur :
 // Applist the Gaussian blur filter to the image.
-func FilterGaussianBlur(img image.Image, radius int64, kernelWidth int) image.Image {
-	sigma := math.Max(1, float64(2*radius))
-	kernel := generateGaussianKernel(radius, sigma, kernelWidth)
+func FilterGaussianBlur(img image.Image, radius int) image.Image {
+	sigma := math.Max(1, float64(radius/2))
+	kernel := generateGaussianKernel(radius, sigma)
 	bounds := img.Bounds()
 	resultImg := image.NewNRGBA(bounds)
 
 	// apply the blur
-	for x := 0; x < bounds.Dx()-int(radius); x++ {
-		for y := 0; y < bounds.Dy()-int(radius); y++ {
+	for x := radius; x < bounds.Dx()-radius; x++ {
+		for y := radius; y < bounds.Dy()-radius; y++ {
 			r := 0.0
 			g := 0.0
 			b := 0.0
@@ -217,7 +217,9 @@ func FilterGaussianBlur(img image.Image, radius int64, kernelWidth int) image.Im
 }
 
 // generateGaussianKernel generates a 1D Gaussian kernel based on sigma
-func generateGaussianKernel(radius int64, sigma float64, kernelWidth int) [][]float64 {
+func generateGaussianKernel(radius int, sigma float64) [][]float64 {
+	kernelWidth := (2 * radius) + 1
+
 	// initialize kernel
 	var kernel [][]float64
 	for x := 0; x < kernelWidth; x++ {
