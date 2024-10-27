@@ -191,6 +191,7 @@ func FilterGaussianBlur(img image.Image, sigma float64, maskSize int) image.Imag
 				sumR += float64(r) / 256 * weight
 				sumG += float64(g) / 256 * weight
 				sumB += float64(b) / 256 * weight
+
 			}
 			valueR, valueG, valueB := limit(int(sumR), 0, 255), limit(int(sumG), 0, 255), limit(int(sumB), 0, 255)
 			resultImg.Set(x, y, color.NRGBA{R: uint8(valueR), G: uint8(valueG), B: uint8(valueB), A: 255})
