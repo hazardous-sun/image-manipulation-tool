@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/color"
 	"math"
+	"sort"
 )
 
 // Filters -------------------------------------------------------------------------------------------------------------
@@ -135,7 +136,7 @@ func FilterThreshold(img image.Image, threshold uint32) image.Image {
 
 // FilterMedianBlur :
 // Applies the median blur filter to the image.
-func FilterMedianBlur(img image.Image) image.Image {
+func oldFilterMedianBlur(img image.Image) image.Image {
 	resultImg := image.NewRGBA(img.Bounds())
 	bounds := img.Bounds()
 	for x := 0; x < img.Bounds().Dx(); x++ {
@@ -218,6 +219,41 @@ func insert(values []color.RGBA, newValue color.RGBA) []color.RGBA {
 		}
 	}
 	return values
+}
+
+func FilterMedianBlur(img image.Image, filterSize int) image.Image {
+	resultImg := image.NewRGBA(img.Bounds())
+	for x := 0; x < img.Bounds().Dx(); x++ {
+		for y := 0; y < img.Bounds().Dy(); y++ {
+			pixel := medianFilterPixel(img, x, y, filterSize)
+			resultImg.Set(x, y, pixel)
+		}
+	}
+	return resultImg
+}
+
+func medianFilterPixel(img image.Image, row, column, filterSize int) color.NRGBA {
+	var values []color.NRGBA
+	for i := -filterSize / 2; i <= filterSize/2; i++ {
+		for j := -filterSize / 2; j <= filterSize/2; j++ {
+			x := row + i
+			y := column + j
+
+			if x >= 0 && x < img.Bounds().Dx() && y >= 0 && y < img.Bounds().Dy() {
+				values = append(values, img.At(x, y).(color.NRGBA))
+			}
+		}
+	}
+
+	middle := len(values) / 2
+	// std::nth_element(values.begin(), values.begin() + middle, values.end(), comparePixelsByRGB);
+	sort.Slice(values, func(i, j int) bool {
+		sumA := values[i].A + values[i].G + values[i].B
+		sumB := values[j].A + values[j].G + values[j].B
+		return sumA < sumB
+	})
+
+	return values[middle]
 }
 
 func FilterGaussianBlur(img image.Image, sigma float64, maskSize int) image.Image {
