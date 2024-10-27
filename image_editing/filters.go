@@ -232,15 +232,15 @@ func FilterMedianBlur(img image.Image, filterSize int) image.Image {
 	return resultImg
 }
 
-func medianFilterPixel(img image.Image, row, column, filterSize int) color.NRGBA {
-	var values []color.NRGBA
+func medianFilterPixel(img image.Image, row, column, filterSize int) color.Color {
+	var values []color.Color
 	for i := -filterSize / 2; i <= filterSize/2; i++ {
 		for j := -filterSize / 2; j <= filterSize/2; j++ {
 			x := row + i
 			y := column + j
 
 			if x >= 0 && x < img.Bounds().Dx() && y >= 0 && y < img.Bounds().Dy() {
-				values = append(values, img.At(x, y).(color.NRGBA))
+				values = append(values, img.At(x, y))
 			}
 		}
 	}
@@ -248,8 +248,10 @@ func medianFilterPixel(img image.Image, row, column, filterSize int) color.NRGBA
 	middle := len(values) / 2
 	// std::nth_element(values.begin(), values.begin() + middle, values.end(), comparePixelsByRGB);
 	sort.Slice(values, func(i, j int) bool {
-		sumA := values[i].A + values[i].G + values[i].B
-		sumB := values[j].A + values[j].G + values[j].B
+		r1, g1, b1, _ := values[i].RGBA()
+		sumA := r1 + g1 + b1
+		r2, g2, b2, _ := values[j].RGBA()
+		sumB := r2 + g2 + b2
 		return sumA < sumB
 	})
 
