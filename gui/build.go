@@ -442,6 +442,12 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				updateAllImages(img, project)
 				updateLblCount(1)
 			}),
+			widget.NewButton("Sobel border detection", func() {
+				img := image_editing.FilterSobelBorderDetection(previewImageCanvas.Image)
+				project.AddPreviewImage(img)
+				updateAllImages(img, project)
+				updateLblCount(1)
+			}),
 		},
 	)
 	filterList := getBtnsList(filtersBtns)
