@@ -179,7 +179,6 @@ func FilterGaussianBlur(img image.Image, sigma float64, maskSize int) image.Imag
 	kernel := generateGaussianKernel(sigma, maskSize)
 	bounds := img.Bounds()
 	resultImg := image.NewNRGBA(bounds)
-
 	for y := 0; y < bounds.Dy(); y++ {
 		for x := 0; x < bounds.Dx(); x++ {
 			sumR, sumG, sumB := 0.0, 0.0, 0.0
