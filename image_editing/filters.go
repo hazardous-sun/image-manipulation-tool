@@ -175,8 +175,9 @@ func medianFilterPixel(img image.Image, row, column, filterSize int) color.Color
 
 // FilterGaussianBlur :
 // Applist the Gaussian blur filter to the image.
-func FilterGaussianBlur(img image.Image, sigma float64, maskSize int) image.Image {
-	kernel := generateGaussianKernel(sigma, maskSize)
+func FilterGaussianBlur(img image.Image, radius float64, kernelWidth int) image.Image {
+	sigma := math.Max(1, 2*radius)
+	kernel := generateGaussianKernel(sigma, kernelWidth)
 	bounds := img.Bounds()
 	resultImg := image.NewNRGBA(bounds)
 
@@ -185,20 +186,7 @@ func FilterGaussianBlur(img image.Image, sigma float64, maskSize int) image.Imag
 
 // generateGaussianKernel generates a 1D Gaussian kernel based on sigma
 func generateGaussianKernel(sigma float64, maskSize int) []float64 {
-	kernel := make([]float64, maskSize)
-	center := maskSize / 2
-	sum := 0.0
-	for i := 0; i < maskSize; i++ {
-		x := i - center
-		exp := math.Exp(-float64(x*x) / (2 * sigma * sigma))
-		kernel[i] = exp
-		sum += exp
-	}
-	// Normalize the kernel
-	for i := range kernel {
-		kernel[i] /= sum
-	}
-	return kernel
+
 }
 
 // FilterSobelBorderDetection applies Sobel edge detection filter to the image
