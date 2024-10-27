@@ -261,3 +261,54 @@ func generateGaussianKernel(sigma float64, maskSize int) []float64 {
 	}
 	return kernel
 }
+
+// FilterSobelBorderDetection applies Sobel edge detection filter to the image
+func FilterSobelBorderDetection(img image.Image) image.Image {
+	grayImg := FilterGrayScale(img)
+	resultImage := image.NewGray(img.Bounds())
+
+	sobelX := [3][3]int{
+		{-1, 0, 1},
+		{-2, 0, 2},
+		{-1, 0, 1},
+	}
+
+	sobelY := [3][3]int{
+		{-1, -2, -1},
+		{0, 0, 0},
+		{1, 2, 1},
+	}
+
+	for x := 1; x < img.Bounds().Dx()-1; x++ {
+		for y := 1; y < img.Bounds().Dy()-1; y++ {
+			pixelX := 0
+
+			for i := 0; i < 3; i++ {
+				for j := 0; j < 3; j++ {
+					gx := x + j - 1
+					gy := y + i - 1
+					r, g, b, _ := grayImg.At(gx, gy).RGBA()
+					pixelX += sobelX[i][j] * int((r+g+b)/3)
+				}
+			}
+
+			pixelY := 0
+			for i := 0; i < 3; i++ {
+				for j := 0; j < 3; j++ {
+					gx := x + j - 1
+					gy := y + i - 1
+					r, g, b, _ := grayImg.At(gx, gy).RGBA()
+					pixelY += sobelY[i][j] * int((r+g+b)/3)
+				}
+			}
+
+			val := math.Max(0, math.Floor(math.Sqrt(float64(pixelX*pixelX+pixelY*pixelY))))
+			if val > 255 {
+				val = 255
+			}
+			resultImage.Set(x, y, color.Gray{Y: uint8(val)})
+		}
+	}
+
+	return resultImage
+}
