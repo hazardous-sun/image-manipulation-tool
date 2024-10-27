@@ -279,33 +279,49 @@ func FilterSobelBorderDetection(img image.Image) image.Image {
 		{1, 2, 1},
 	}
 
-	for x := 1; x < img.Bounds().Dx()-1; x++ {
-		for y := 1; y < img.Bounds().Dy()-1; y++ {
-			pixelX := 0
+	for x := 1; x < img.Bounds().Dx()-2; x++ {
+		for y := 1; y < img.Bounds().Dy()-2; y++ {
 
-			for i := 0; i < 3; i++ {
-				for j := 0; j < 3; j++ {
-					gx := x + j - 1
-					gy := y + i - 1
-					r, g, b, _ := grayImg.At(gx, gy).RGBA()
-					pixelX += sobelX[i][j] * int((r+g+b)/3)
-				}
-			}
+			// first row
+			r1, g1, b1, _ := grayImg.At(x-1, y-1).RGBA()
+			val1 := int((r1 + g1 + b1) / 3)
+			r2, g2, b2, _ := grayImg.At(x, y-1).RGBA()
+			val2 := int((r2 + g2 + b2) / 3)
+			r3, g3, b3, _ := grayImg.At(x+1, y-1).RGBA()
+			val3 := int((r3 + g3 + b3) / 3)
 
-			pixelY := 0
-			for i := 0; i < 3; i++ {
-				for j := 0; j < 3; j++ {
-					gx := x + j - 1
-					gy := y + i - 1
-					r, g, b, _ := grayImg.At(gx, gy).RGBA()
-					pixelY += sobelY[i][j] * int((r+g+b)/3)
-				}
-			}
+			// second row
+			r4, g4, b4, _ := grayImg.At(x-1, y).RGBA()
+			val4 := int((r4 + g4 + b4) / 3)
+			r5, g5, b5, _ := grayImg.At(x, y).RGBA()
+			val5 := int((r5 + g5 + b5) / 3)
+			r6, g6, b6, _ := grayImg.At(x+1, y).RGBA()
+			val6 := int((r6 + g6 + b6) / 3)
 
-			val := math.Max(0, math.Floor(math.Sqrt(float64(pixelX*pixelX+pixelY*pixelY))))
+			// third row
+			r7, g7, b7, _ := grayImg.At(x-1, y+1).RGBA()
+			val7 := int((r7 + g7 + b7) / 3)
+			r8, g8, b8, _ := grayImg.At(x, y+1).RGBA()
+			val8 := int((r8 + g8 + b8) / 3)
+			r9, g9, b9, _ := grayImg.At(x+1, y+1).RGBA()
+			val9 := int((r9 + g9 + b9) / 3)
+
+			pixelX := ((sobelX[0][0] * val1) + (sobelX[0][1] * val2) + (sobelX[0][2] * val3)) *
+				((sobelX[1][0] * val4) + (sobelX[1][1] * val5) + (sobelX[1][2]*val6)*
+					((sobelX[2][0]*val7)+(sobelX[2][1]*val8)+(sobelX[2][2]*val9)))
+			pixelX = pixelX / 256
+
+			pixelY := ((sobelY[0][0] * val1) + (sobelY[0][1] * val2) + (sobelY[0][2] * val3)) *
+				((sobelY[1][0] * val4) + (sobelY[1][1] * val5) + (sobelY[1][2]*val6)*
+					((sobelY[2][0]*val7)+(sobelY[2][1]*val8)+(sobelY[2][2]*val9)))
+			pixelY = pixelY / 256
+
+			val := math.Ceil(math.Sqrt(float64(pixelX*pixelX + pixelY*pixelY)))
+
 			if val > 255 {
 				val = 255
 			}
+
 			resultImage.Set(x, y, color.Gray{Y: uint8(val)})
 		}
 	}
