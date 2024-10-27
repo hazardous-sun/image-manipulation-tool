@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/color"
 	"math"
+	"sort"
 )
 
 // Filters -------------------------------------------------------------------------------------------------------------
@@ -135,129 +136,182 @@ func FilterThreshold(img image.Image, threshold uint32) image.Image {
 
 // FilterMedianBlur :
 // Applies the median blur filter to the image.
-func FilterMedianBlur(img image.Image) image.Image {
+func FilterMedianBlur(img image.Image, filterSize int) image.Image {
 	resultImg := image.NewRGBA(img.Bounds())
-	bounds := img.Bounds()
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		for y := 0; y < img.Bounds().Dy(); y++ {
-			neighbours := [][]color.RGBA{
-				{color.RGBA{}, color.RGBA{}, color.RGBA{}},
-				{color.RGBA{}, color.RGBA{}, color.RGBA{}},
-				{color.RGBA{}, color.RGBA{}, color.RGBA{}},
-			}
-			for lx := 0; lx < 3; lx++ {
-				for ly := 0; ly < 3; ly++ {
-					ix := limit(x+lx-1, 0, bounds.Dx())
-					iy := limit(y+ly-1, 0, bounds.Dy())
-
-					r, g, b, a := img.At(ix, iy).RGBA()
-
-					newR := uint8(r / 256)
-					newG := uint8(g / 256)
-					newB := uint8(b / 256)
-
-					pixel := color.RGBA{
-						R: newR,
-						G: newG,
-						B: newB,
-						A: uint8(a),
-					}
-					neighbours[lx][ly] = pixel
-				}
-			}
-			newValue := computeCenter(neighbours)
-			r, g, b, a := newValue.RGBA()
-			newR := uint8(r / 256)
-			newG := uint8(g / 256)
-			newB := uint8(b / 256)
-			pixel := color.RGBA{
-				R: newR,
-				G: newG,
-				B: newB,
-				A: uint8(a),
-			}
+			pixel := medianFilterPixel(img, x, y, filterSize)
 			resultImg.Set(x, y, pixel)
 		}
 	}
 	return resultImg
 }
 
-func limit(x, minX, maxX int) int {
-	if x < minX {
-		return minX
-	} else if x > maxX {
-		return maxX
-	}
-	return x
-}
+func medianFilterPixel(img image.Image, row, column, filterSize int) color.Color {
+	var values []color.Color
+	for i := -filterSize / 2; i <= filterSize/2; i++ {
+		for j := -filterSize / 2; j <= filterSize/2; j++ {
+			x := row + i
+			y := column + j
 
-func computeCenter(neighbours [][]color.RGBA) color.RGBA {
-	values := make([]color.RGBA, len(neighbours)*len(neighbours[0]))
-	for x := 0; x < len(neighbours); x++ {
-		for y := 0; y < len(neighbours[x]); y++ {
-			value := neighbours[x][y]
-			values = insert(values, value)
-		}
-	}
-	return values[len(values)/2]
-}
-
-func insert(values []color.RGBA, newValue color.RGBA) []color.RGBA {
-	for i := 0; i < len(values); i++ {
-		r, g, b, _ := values[i].RGBA()
-		originChannelsSum := r + g + b
-
-		r, g, b, _ = newValue.RGBA()
-		newChannelsSum := r + g + b
-
-		if i == len(values)-1 || newChannelsSum > originChannelsSum {
-			for j := len(values) - 2; j >= i; j-- {
-				values[j+1] = values[j]
+			if x >= 0 && x < img.Bounds().Dx() && y >= 0 && y < img.Bounds().Dy() {
+				values = append(values, img.At(x, y))
 			}
-			values[i] = newValue
 		}
 	}
-	return values
+
+	middle := len(values) / 2
+	// std::nth_element(values.begin(), values.begin() + middle, values.end(), comparePixelsByRGB);
+	sort.Slice(values, func(i, j int) bool {
+		r1, g1, b1, _ := values[i].RGBA()
+		sumA := r1 + g1 + b1
+		r2, g2, b2, _ := values[j].RGBA()
+		sumB := r2 + g2 + b2
+		return sumA < sumB
+	})
+
+	return values[middle]
 }
 
-func FilterGaussianBlur(img image.Image, sigma float64, maskSize int) image.Image {
-	kernel := generateGaussianKernel(sigma, maskSize)
+// FilterGaussianBlur :
+// Applist the Gaussian blur filter to the image.
+func FilterGaussianBlur(img image.Image, radius int) image.Image {
+	sigma := math.Max(1, float64(radius/2))
+	kernel := generateGaussianKernel(radius, sigma)
 	bounds := img.Bounds()
 	resultImg := image.NewNRGBA(bounds)
 
-	for y := 0; y < bounds.Dy(); y++ {
-		for x := 0; x < bounds.Dx(); x++ {
-			sumR, sumG, sumB := 0.0, 0.0, 0.0
-			for i := 0; i < maskSize; i++ {
-				xPos := limit(x+i-maskSize/2, bounds.Min.X, bounds.Max.X-1)
-				yPos := limit(y+i-maskSize/2, bounds.Min.Y, bounds.Max.Y-1)
-				r, g, b, _ := img.At(xPos, yPos).RGBA()
-				weight := kernel[i]
-				sumR += float64(r) / 256 * weight
-				sumG += float64(g) / 256 * weight
-				sumB += float64(b) / 256 * weight
+	// apply the blur
+	for x := radius; x < bounds.Dx()-radius; x++ {
+		for y := radius; y < bounds.Dy()-radius; y++ {
+			r := 0.0
+			g := 0.0
+			b := 0.0
+
+			// convolution
+			for kernelX := -radius; kernelX < radius; kernelX++ {
+				for kernelY := -radius; kernelY < radius; kernelY++ {
+					// load the weight for this pixel from the convolution matrix
+					kernelValue := kernel[kernelX+radius][kernelY+radius]
+
+					// multiply each channel by the weight of the pixel
+					tempR, tempG, tempB, _ := img.At(x, y).RGBA()
+					r += float64(tempR) * kernelValue
+					g += float64(tempG) * kernelValue
+					b += float64(tempB) * kernelValue
+				}
 			}
-			valueR, valueG, valueB := limit(int(sumR), 0, 255), limit(int(sumG), 0, 255), limit(int(sumB), 0, 255)
-			resultImg.Set(x, y, color.NRGBA{R: uint8(valueR), G: uint8(valueG), B: uint8(valueB), A: 255})
+
+			_, _, _, a := img.At(x, y).RGBA()
+			pixel := color.RGBA{
+				R: uint8(r / 256),
+				G: uint8(g / 256),
+				B: uint8(b / 256),
+				A: uint8(a / 256),
+			}
+			resultImg.Set(x, y, pixel)
 		}
 	}
+
 	return resultImg
 }
 
 // generateGaussianKernel generates a 1D Gaussian kernel based on sigma
-func generateGaussianKernel(sigma float64, maskSize int) []float64 {
-	kernel := make([]float64, maskSize)
-	center := maskSize / 2
+func generateGaussianKernel(radius int, sigma float64) [][]float64 {
+	kernelWidth := (2 * radius) + 1
+
+	// initialize kernel
+	var kernel [][]float64
+	for x := 0; x < kernelWidth; x++ {
+		kernel = append(kernel, make([]float64, kernelWidth))
+	}
+
+	// populate the kernel
 	sum := 0.0
-	for i := 0; i < maskSize; i++ {
-		x := i - center
-		exp := math.Exp(-float64(x*x) / (2 * sigma * sigma))
-		kernel[i] = exp
-		sum += exp
+	for x := -radius; x < radius; x++ {
+		for y := -radius; y < radius; y++ {
+			exponentNumerator := float64(-(x*x + y*y))
+			exponentDenominator := 2 * sigma * sigma
+			eExpression := math.Pow(math.E, exponentNumerator/exponentDenominator)
+			kernelValue := eExpression / (2 * math.Pi * sigma * sigma)
+			kernel[x+radius][y+radius] = kernelValue
+			sum += kernelValue
+		}
 	}
-	// Normalize the kernel
-	for i := range kernel {
-		kernel[i] /= sum
+
+	// normalize the kernel
+	for x := 0; x < kernelWidth; x++ {
+		for y := 0; y < kernelWidth; y++ {
+			kernel[x][y] /= sum
+		}
 	}
+
 	return kernel
+}
+
+// FilterSobelBorderDetection applies Sobel edge detection filter to the image
+func FilterSobelBorderDetection(img image.Image) image.Image {
+	grayImg := FilterGrayScale(img)
+	resultImage := image.NewGray(img.Bounds())
+
+	sobelX := [3][3]int{
+		{-1, 0, 1},
+		{-2, 0, 2},
+		{-1, 0, 1},
+	}
+
+	sobelY := [3][3]int{
+		{-1, -2, -1},
+		{0, 0, 0},
+		{1, 2, 1},
+	}
+
+	for x := 1; x < img.Bounds().Dx()-2; x++ {
+		for y := 1; y < img.Bounds().Dy()-2; y++ {
+
+			// first row
+			r1, g1, b1, _ := grayImg.At(x-1, y-1).RGBA()
+			val1 := int((r1 + g1 + b1) / 3)
+			r2, g2, b2, _ := grayImg.At(x, y-1).RGBA()
+			val2 := int((r2 + g2 + b2) / 3)
+			r3, g3, b3, _ := grayImg.At(x+1, y-1).RGBA()
+			val3 := int((r3 + g3 + b3) / 3)
+
+			// second row
+			r4, g4, b4, _ := grayImg.At(x-1, y).RGBA()
+			val4 := int((r4 + g4 + b4) / 3)
+			r5, g5, b5, _ := grayImg.At(x, y).RGBA()
+			val5 := int((r5 + g5 + b5) / 3)
+			r6, g6, b6, _ := grayImg.At(x+1, y).RGBA()
+			val6 := int((r6 + g6 + b6) / 3)
+
+			// third row
+			r7, g7, b7, _ := grayImg.At(x-1, y+1).RGBA()
+			val7 := int((r7 + g7 + b7) / 3)
+			r8, g8, b8, _ := grayImg.At(x, y+1).RGBA()
+			val8 := int((r8 + g8 + b8) / 3)
+			r9, g9, b9, _ := grayImg.At(x+1, y+1).RGBA()
+			val9 := int((r9 + g9 + b9) / 3)
+
+			pixelX := ((sobelX[0][0] * val1) + (sobelX[0][1] * val2) + (sobelX[0][2] * val3)) *
+				((sobelX[1][0] * val4) + (sobelX[1][1] * val5) + (sobelX[1][2]*val6)*
+					((sobelX[2][0]*val7)+(sobelX[2][1]*val8)+(sobelX[2][2]*val9)))
+			pixelX = pixelX / 256
+
+			pixelY := ((sobelY[0][0] * val1) + (sobelY[0][1] * val2) + (sobelY[0][2] * val3)) *
+				((sobelY[1][0] * val4) + (sobelY[1][1] * val5) + (sobelY[1][2]*val6)*
+					((sobelY[2][0]*val7)+(sobelY[2][1]*val8)+(sobelY[2][2]*val9)))
+			pixelY = pixelY / 256
+
+			val := math.Ceil(math.Sqrt(float64(pixelX*pixelX + pixelY*pixelY)))
+
+			if val > 255 {
+				val = 255
+			}
+
+			resultImage.Set(x, y, color.Gray{Y: uint8(val)})
+		}
+	}
+
+	return resultImage
 }

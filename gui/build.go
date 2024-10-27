@@ -431,13 +431,89 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				w.Show()
 			}),
 			widget.NewButton("Median blur", func() {
-				img := image_editing.FilterMedianBlur(previewImageCanvas.Image)
-				project.AddPreviewImage(img)
-				updateAllImages(img, project)
-				updateLblCount(1)
+				w := a.NewWindow("Input values")
+				w.Resize(fyne.NewSize(200, 100))
+				w.SetFixedSize(true)
+
+				// initialize the confirmation button
+				confirmBtn := widget.NewButton(
+					"Confirm",
+					func() {
+						// transform the inputted string in X into a float64
+						x, err := strconv.ParseInt(xEntry.Text, 10, 64)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						// run the transformation process
+						img := image_editing.FilterMedianBlur(previewImageCanvas.Image, int(x))
+
+						// inform the system to update the preview image
+						project.AddPreviewImage(img)
+						updateAllImages(img, project)
+						updateLblCount(1)
+						w.Close()
+					},
+				)
+
+				// pass the values to the container
+				ctr := container.NewGridWithRows(2,
+					xCtr,
+					confirmBtn,
+				)
+				w.SetContent(ctr)
+				w.Show()
 			}),
 			widget.NewButton("Gaussian blur", func() {
-				img := image_editing.FilterGaussianBlur(previewImageCanvas.Image, 2.0, 5)
+				// initialize new window
+				w := a.NewWindow("Input values")
+				w.Resize(fyne.NewSize(200, 100))
+				w.SetFixedSize(true)
+
+				// initialize the confirmation button
+				confirmBtn := widget.NewButton(
+					"Confirm",
+					func() {
+						// transform the inputted string in X into a float64
+						x, err := strconv.ParseInt(xEntry.Text, 10, 64)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						// transform the inputted string in Y into a float64
+						//y, err := strconv.ParseFloat(yEntry.Text, 64)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						// run the transformation process
+						img := image_editing.FilterGaussianBlur(previewImageCanvas.Image, int(x))
+
+						// inform the system to update the preview image
+						project.AddPreviewImage(img)
+						updateAllImages(img, project)
+						updateLblCount(1)
+						w.Close()
+					},
+				)
+
+				// pass the values to the container
+				ctr := container.NewGridWithRows(3,
+					xCtr,
+					yCtr,
+					confirmBtn,
+				)
+				w.SetContent(ctr)
+				w.Show()
+			}),
+			widget.NewButton("Sobel border detection", func() {
+				img := image_editing.FilterSobelBorderDetection(previewImageCanvas.Image)
 				project.AddPreviewImage(img)
 				updateAllImages(img, project)
 				updateLblCount(1)
