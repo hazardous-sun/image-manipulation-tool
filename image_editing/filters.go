@@ -223,20 +223,31 @@ func FilterSobelBorderDetection(img image.Image) image.Image {
 	grayImg := FilterGrayScale(img)
 	resultImage := image.NewGray(img.Bounds())
 
-	sobelX := [3][3]int{
-		{-1, 0, 1},
-		{-2, 0, 2},
-		{-1, 0, 1},
+	xKernel := [3][3]int{
+		{1, 0, -1},
+		{2, 0, -2},
+		{1, 0, -1},
 	}
 
-	sobelY := [3][3]int{
-		{-1, -2, -1},
-		{0, 0, 0},
+	yKernel := [3][3]int{
 		{1, 2, 1},
+		{0, 0, 0},
+		{-1, -2, -1},
 	}
 
-	for x := 1; x < img.Bounds().Dx()-2; x++ {
-		for y := 1; y < img.Bounds().Dy()-2; y++ {
+	width := img.Bounds().Dx()
+	height := img.Bounds().Dy()
+
+	widthM1 := img.Bounds().Dx() - 1
+	heightM1 := img.Bounds().Dy() - 1
+
+	var i int
+	var j int
+
+	for x := 1; x < heightM1; x++ {
+		for y := 1; y < widthM1-2; y++ {
+			gx := 0
+			gy := 0
 
 			// first row
 			r1, g1, b1, _ := grayImg.At(x-1, y-1).RGBA()
@@ -262,14 +273,14 @@ func FilterSobelBorderDetection(img image.Image) image.Image {
 			r9, g9, b9, _ := grayImg.At(x+1, y+1).RGBA()
 			val9 := int((r9 + g9 + b9) / 3)
 
-			pixelX := ((sobelX[0][0] * val1) + (sobelX[0][1] * val2) + (sobelX[0][2] * val3)) *
-				((sobelX[1][0] * val4) + (sobelX[1][1] * val5) + (sobelX[1][2]*val6)*
-					((sobelX[2][0]*val7)+(sobelX[2][1]*val8)+(sobelX[2][2]*val9)))
+			pixelX := ((xKernel[0][0] * val1) + (xKernel[0][1] * val2) + (xKernel[0][2] * val3)) *
+				((xKernel[1][0] * val4) + (xKernel[1][1] * val5) + (xKernel[1][2]*val6)*
+					((xKernel[2][0]*val7)+(xKernel[2][1]*val8)+(xKernel[2][2]*val9)))
 			pixelX = pixelX / 256
 
-			pixelY := ((sobelY[0][0] * val1) + (sobelY[0][1] * val2) + (sobelY[0][2] * val3)) *
-				((sobelY[1][0] * val4) + (sobelY[1][1] * val5) + (sobelY[1][2]*val6)*
-					((sobelY[2][0]*val7)+(sobelY[2][1]*val8)+(sobelY[2][2]*val9)))
+			pixelY := ((yKernel[0][0] * val1) + (yKernel[0][1] * val2) + (yKernel[0][2] * val3)) *
+				((yKernel[1][0] * val4) + (yKernel[1][1] * val5) + (yKernel[1][2]*val6)*
+					((yKernel[2][0]*val7)+(yKernel[2][1]*val8)+(yKernel[2][2]*val9)))
 			pixelY = pixelY / 256
 
 			val := math.Ceil(math.Sqrt(float64(pixelX*pixelX + pixelY*pixelY)))
