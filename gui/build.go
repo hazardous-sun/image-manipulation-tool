@@ -119,21 +119,23 @@ func initializeImgsCtr(project *models.Project) fyne.CanvasObject {
 // Initializes the sidebar that contains the tools for transforming the image.
 func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 	// initialize X axis input
+	xLbl := widget.NewLabel("")
 	xEntry := widget.NewEntry()
-	xEntry.PlaceHolder = "1"
+	xEntry.PlaceHolder = "0"
 	xCtr := container.NewBorder(
 		nil, nil,
-		widget.NewLabel("X:"),
+		xLbl,
 		nil,
 		xEntry,
 	)
 
 	// initialize Y axis input
+	yLbl := widget.NewLabel("")
 	yEntry := widget.NewEntry()
-	yEntry.PlaceHolder = "1"
+	yEntry.PlaceHolder = "0"
 	yCtr := container.NewBorder(
 		nil, nil,
-		widget.NewLabel("Y:"),
+		yLbl,
 		nil,
 		yEntry,
 	)
@@ -181,6 +183,9 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 					},
 				)
 
+				xLbl.SetText("X:")
+				yLbl.SetText("Y:")
+
 				// pass the values to the container
 				ctr := container.NewGridWithRows(3,
 					xCtr,
@@ -221,6 +226,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 						w.Close()
 					},
 				)
+
+				xLbl.SetText("Angle:")
 
 				// pass the values to the container
 				ctr := container.NewGridWithRows(2,
@@ -269,6 +276,9 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 						w.Close()
 					},
 				)
+
+				xLbl.SetText("X:")
+				yLbl.SetText("Y:")
 
 				// pass the values to the container
 				ctr := container.NewGridWithRows(3,
@@ -342,6 +352,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 					},
 				)
 
+				xLbl.SetText("Contrast:")
+
 				// pass the values to the container
 				ctr := container.NewGridWithRows(2,
 					xCtr,
@@ -350,7 +362,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				w.SetContent(ctr)
 				w.Show()
 			}),
-			widget.NewButton("Brighthness", func() {
+			widget.NewButton("Brightness", func() {
 				w := a.NewWindow("Input values")
 				w.Resize(fyne.NewSize(200, 100))
 				w.SetFixedSize(true)
@@ -378,6 +390,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 					},
 				)
 
+				xLbl.SetText("Brightness:")
+
 				// pass the values to the container
 				ctr := container.NewGridWithRows(2,
 					xCtr,
@@ -392,7 +406,12 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 				w.SetFixedSize(true)
 				value := 128.0
 
+				lblTitle := widget.NewLabel("Threshold")
+				lblTitle.Alignment = fyne.TextAlignCenter
+
 				lblSlider := widget.NewLabel("128")
+				lblSlider.Alignment = fyne.TextAlignCenter
+
 				constrastSlider := widget.NewSlider(0.0, 255.0)
 				constrastSlider.Value = value
 				constrastSlider.OnChanged = func(f float64) {
@@ -417,8 +436,11 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 					},
 				)
 
+				xLbl.SetText("Threshold:")
+
 				// pass the values to the container
-				ctr := container.NewGridWithRows(3,
+				ctr := container.NewGridWithRows(4,
+					lblTitle,
 					lblSlider,
 					constrastSlider,
 					confirmBtn,
@@ -453,6 +475,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 						w.Close()
 					},
 				)
+
+				xLbl.SetText("Mask size:")
 
 				// pass the values to the container
 				ctr := container.NewGridWithRows(2,
@@ -499,6 +523,9 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 					},
 				)
 
+				xLbl.SetText("Mask size:")
+				yLbl.SetText("Sigma:")
+
 				// pass the values to the container
 				ctr := container.NewGridWithRows(3,
 					xCtr,
@@ -535,6 +562,8 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 						w.Close()
 					},
 				)
+
+				xLbl.SetText("Threshold:")
 
 				// pass the values to the container
 				ctr := container.NewGridWithRows(2,
