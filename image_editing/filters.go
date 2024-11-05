@@ -219,79 +219,50 @@ func limit(x, minX, maxX int) int {
 }
 
 // FilterSobelBorderDetection applies Sobel edge detection filter to the image
-func FilterSobelBorderDetection(img image.Image) image.Image {
+func FilterSobelBorderDetection(img image.Image, threshold float64) image.Image {
 	grayImg := FilterGrayScale(img)
 	resultImage := image.NewGray(img.Bounds())
-
-	xKernel := [3][3]int{
+	xKernel := [][]int{
 		{1, 0, -1},
 		{2, 0, -2},
 		{1, 0, -1},
 	}
-
-	yKernel := [3][3]int{
+	yKernel := [][]int{
 		{1, 2, 1},
 		{0, 0, 0},
 		{-1, -2, -1},
 	}
-
-	width := img.Bounds().Dx()
-	height := img.Bounds().Dy()
-
-	widthM1 := img.Bounds().Dx() - 1
-	heightM1 := img.Bounds().Dy() - 1
-
-	var i int
-	var j int
-
+	widthM1 := grayImg.Bounds().Dx() - 1
+	heightM1 := grayImg.Bounds().Dy() - 1
 	for x := 1; x < heightM1; x++ {
-		for y := 1; y < widthM1-2; y++ {
+		for y := 1; y < widthM1; y++ {
 			gx := 0
 			gy := 0
+			for i := 0; i < 3; i++ {
+				for j := 0; j < 3; j++ {
+					r, g, b, _ := grayImg.At(x+(i-1), y+(j-1)).RGBA()
+					r1 := int(r) * xKernel[i][j]
+					g1 := int(g) * xKernel[i][j]
+					b1 := int(b) * xKernel[i][j]
 
-			// first row
-			r1, g1, b1, _ := grayImg.At(x-1, y-1).RGBA()
-			val1 := int((r1 + g1 + b1) / 3)
-			r2, g2, b2, _ := grayImg.At(x, y-1).RGBA()
-			val2 := int((r2 + g2 + b2) / 3)
-			r3, g3, b3, _ := grayImg.At(x+1, y-1).RGBA()
-			val3 := int((r3 + g3 + b3) / 3)
+					gx += r1 + g1 + b1
 
-			// second row
-			r4, g4, b4, _ := grayImg.At(x-1, y).RGBA()
-			val4 := int((r4 + g4 + b4) / 3)
-			r5, g5, b5, _ := grayImg.At(x, y).RGBA()
-			val5 := int((r5 + g5 + b5) / 3)
-			r6, g6, b6, _ := grayImg.At(x+1, y).RGBA()
-			val6 := int((r6 + g6 + b6) / 3)
+					r2 := int(r) * yKernel[i][j]
+					g2 := int(g) * yKernel[i][j]
+					b2 := int(b) * yKernel[i][j]
 
-			// third row
-			r7, g7, b7, _ := grayImg.At(x-1, y+1).RGBA()
-			val7 := int((r7 + g7 + b7) / 3)
-			r8, g8, b8, _ := grayImg.At(x, y+1).RGBA()
-			val8 := int((r8 + g8 + b8) / 3)
-			r9, g9, b9, _ := grayImg.At(x+1, y+1).RGBA()
-			val9 := int((r9 + g9 + b9) / 3)
+					gy += r2 + g2 + b2
+				}
+			}
+			g := math.Sqrt(math.Pow(float64(gx), 2) + math.Pow(float64(gy), 2))
+			p := 0
 
-			pixelX := ((xKernel[0][0] * val1) + (xKernel[0][1] * val2) + (xKernel[0][2] * val3)) *
-				((xKernel[1][0] * val4) + (xKernel[1][1] * val5) + (xKernel[1][2]*val6)*
-					((xKernel[2][0]*val7)+(xKernel[2][1]*val8)+(xKernel[2][2]*val9)))
-			pixelX = pixelX / 256
-
-			pixelY := ((yKernel[0][0] * val1) + (yKernel[0][1] * val2) + (yKernel[0][2] * val3)) *
-				((yKernel[1][0] * val4) + (yKernel[1][1] * val5) + (yKernel[1][2]*val6)*
-					((yKernel[2][0]*val7)+(yKernel[2][1]*val8)+(yKernel[2][2]*val9)))
-			pixelY = pixelY / 256
-
-			val := math.Ceil(math.Sqrt(float64(pixelX*pixelX + pixelY*pixelY)))
-
-			if val > 255 {
-				val = 255
+			if (g / 256) > threshold {
+				p = 255
 			}
 
-			resultImage.Set(x, y, color.Gray{Y: uint8(val)})
+			resultImage.Set(x, y, color.Gray{Y: uint8(p)})
 		}
 	}
-
 	return resultImage
 }
