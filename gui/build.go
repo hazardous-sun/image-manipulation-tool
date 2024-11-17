@@ -580,8 +580,18 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 	// mathematical morphology -----------------------------------------------------------------------------------------
 	mathMorphoBtns := getBtns(
 		[]*widget.Button{
-			widget.NewButton("Dilatation", func() {}),
-			widget.NewButton("Erosion", func() {}),
+			widget.NewButton("Dilation", func() {
+				img := image_editing.MathMorpDilation(previewImageCanvas.Image)
+				project.AddPreviewImage(img)
+				updateAllImages(img, project)
+				updateLblCount(1)
+			}),
+			widget.NewButton("Erosion", func() {
+				img := image_editing.MathMorpErosion(previewImageCanvas.Image)
+				project.AddPreviewImage(img)
+				updateAllImages(img, project)
+				updateLblCount(1)
+			}),
 			widget.NewButton("Opening", func() {}),
 			widget.NewButton("Closing", func() {}),
 		},
