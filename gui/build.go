@@ -598,6 +598,19 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 	)
 	mathMorphoList := getBtnsList(mathMorphoBtns)
 
+	// feature extraction ----------------------------------------------------------------------------------------------
+	featureExtractBtns := getBtns(
+		[]*widget.Button{
+			widget.NewButton("Domino dots count", func() {
+				img := image_editing.FeatureExtractCountDominoDots(previewImageCanvas.Image)
+				project.AddPreviewImage(img)
+				updateAllImages(img, project)
+				updateLblCount(1)
+			}),
+		},
+	)
+	featureExtractList := getBtnsList(featureExtractBtns)
+
 	// pass the buttons list to the accordion --------------------------------------------------------------------------
 	sideBar := widget.NewAccordion(
 		widget.NewAccordionItem(
@@ -614,7 +627,7 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 		),
 		widget.NewAccordionItem(
 			"Feature extraction",
-			widget.NewLabel("Nothing here yet"),
+			featureExtractList,
 		),
 	)
 
