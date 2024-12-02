@@ -602,10 +602,49 @@ func initializeSideBar(a fyne.App, project *models.Project) fyne.CanvasObject {
 	featureExtractBtns := getBtns(
 		[]*widget.Button{
 			widget.NewButton("Domino dots count", func() {
-				img := image_editing.FeatureExtractCountDominoDots(previewImageCanvas.Image)
-				project.AddPreviewImage(img)
-				updateAllImages(img, project)
-				updateLblCount(1)
+
+				// -----------------------------------------------------------------------------------------------------
+
+				w := a.NewWindow("Input values")
+				w.Resize(fyne.NewSize(200, 100))
+				w.SetFixedSize(true)
+
+				// initialize the confirmation button
+				confirmBtn := widget.NewButton(
+					"Confirm",
+					func() {
+						// transform the inputted string in X into an integer
+						x, err := strconv.Atoi(xEntry.Text)
+
+						if err != nil {
+							dialog.ShowError(err, w)
+							return
+						}
+
+						// run the challenge
+						count := image_editing.FeatureExtractCountDominoDots(previewImageCanvas.Image, uint32(x))
+
+						dialog.ShowInformation(
+							"Amount of dots found",
+							fmt.Sprintf("%d dots were found!", count),
+							w,
+						)
+						w.Close()
+					},
+				)
+
+				xLbl.SetText("Max number of dots per row:")
+
+				// pass the values to the container
+				ctr := container.NewGridWithRows(2,
+					xCtr,
+					confirmBtn,
+				)
+				w.SetContent(ctr)
+				w.Show()
+
+				// -----------------------------------------------------------------------------------------------------
+
 			}),
 		},
 	)
