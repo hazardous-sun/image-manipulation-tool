@@ -14,8 +14,8 @@ func MathMorpDilation(img image.Image) image.Image {
 	}
 
 	// iterate over each element in the image
-	for x := 1; x < resultImg.Bounds().Dx(); x++ {
-		for y := 1; y < resultImg.Bounds().Dy(); y++ {
+	for x := 1; x < resultImg.Bounds().Dx()-1; x++ {
+		for y := 1; y < resultImg.Bounds().Dy()-1; y++ {
 			temp := [][][]uint8{
 				{
 					{0, 0, 0}, {0, 0, 0}, {0, 0, 0},
@@ -31,7 +31,7 @@ func MathMorpDilation(img image.Image) image.Image {
 			// ITERAR SOBRE OS VALORES AO REDOR DO PIXEL ATUAL QUE ENGLOBAM O KERNEL
 			for i := -1; i <= 1; i++ {
 				for j := -1; j <= 1; j++ {
-					r, g, b, _ := img.At(x+i, y+j).RGBA()
+					r, g, b, _ := img.At(x-i, y-j).RGBA()
 
 					r /= 256
 					r += uint32(kernel[1-i][1-j])
@@ -79,9 +79,9 @@ func MathMorpDilation(img image.Image) image.Image {
 				B: uint8(b / 256),
 				A: uint8(a / 256),
 			}
-			for i := -1; i <= 1; i++ {
-				for j := -1; j <= 1; j++ {
-					resultImg.Set(x+i, y+j, pixel)
+			for i := -1; i < 1; i++ {
+				for j := -1; j < 1; j++ {
+					resultImg.Set(x-i, y-j, pixel)
 				}
 			}
 		}
@@ -164,8 +164,8 @@ func MathMorpErosion(img image.Image) image.Image {
 				B: uint8(b / 256),
 				A: uint8(a / 256),
 			}
-			for i := -1; i <= 1; i++ {
-				for j := -1; j <= 1; j++ {
+			for i := -1; i < 1; i++ {
+				for j := -1; j < 1; j++ {
 					resultImg.Set(x+i, y+j, pixel)
 				}
 			}
