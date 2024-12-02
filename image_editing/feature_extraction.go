@@ -27,13 +27,21 @@ func FeatureExtractCountDominoDots(img image.Image) image.Image {
 
 	// erode the image twice
 	tempImage = MathMorpErosion(tempImage)
-	tempImage = MathMorpErosion(tempImage)
 
-	// dilate the image thrice
+	// new ------------------------------------------------------
+	// median blur
+	tempImage = FilterMedianBlur(tempImage, 9)
+	// dilation
 	tempImage = MathMorpDilation(tempImage)
-	tempImage = MathMorpDilation(tempImage)
-	tempImage = MathMorpDilation(tempImage)
+	// new ------------------------------------------------------
 
+	//tempImage = MathMorpErosion(tempImage)
+	//
+	//// dilate the image thrice
+	//tempImage = MathMorpDilation(tempImage)
+	//tempImage = MathMorpDilation(tempImage)
+	//tempImage = MathMorpDilation(tempImage)
+	//
 	resultImg := image.NewRGBA(img.Bounds())
 
 	// iterate over all x and y, when a white spot is found, increase count
