@@ -232,24 +232,25 @@ func FilterSobelBorderDetection(img image.Image, threshold float64) image.Image 
 		{0, 0, 0},
 		{-1, -2, -1},
 	}
-	widthM1 := grayImg.Bounds().Dx() - 1
-	heightM1 := grayImg.Bounds().Dy() - 1
-	for x := 1; x < heightM1; x++ {
-		for y := 1; y < widthM1; y++ {
+	for x := 1; x < grayImg.Bounds().Dx()-1; x++ {
+		for y := 1; y < grayImg.Bounds().Dy()-1; y++ {
 			gx := 0
 			gy := 0
-			for i := 0; i < 3; i++ {
-				for j := 0; j < 3; j++ {
-					r, g, b, _ := grayImg.At(x+(i-1), y+(j-1)).RGBA()
-					r1 := int(r) * xKernel[i][j]
-					g1 := int(g) * xKernel[i][j]
-					b1 := int(b) * xKernel[i][j]
+			for i := -1; i < 1; i++ {
+				for j := -1; j < 1; j++ {
+					if x-i < 0 || y-j < 0 {
+						continue
+					}
+					r, g, b, _ := grayImg.At(x-i, y-j).RGBA()
+					r1 := int(r) * xKernel[1-i][1-j]
+					g1 := int(g) * xKernel[1-i][1-j]
+					b1 := int(b) * xKernel[1-i][1-j]
 
 					gx += r1 + g1 + b1
 
-					r2 := int(r) * yKernel[i][j]
-					g2 := int(g) * yKernel[i][j]
-					b2 := int(b) * yKernel[i][j]
+					r2 := int(r) * yKernel[1-i][1-j]
+					g2 := int(g) * yKernel[1-i][1-j]
+					b2 := int(b) * yKernel[1-i][1-j]
 
 					gy += r2 + g2 + b2
 				}
@@ -257,7 +258,7 @@ func FilterSobelBorderDetection(img image.Image, threshold float64) image.Image 
 			g := math.Sqrt(math.Pow(float64(gx), 2) + math.Pow(float64(gy), 2))
 			p := 0
 
-			if (g / 256) > threshold {
+			if (g / 2048) > threshold {
 				p = 255
 			}
 
