@@ -6,12 +6,13 @@ import (
 	"log"
 )
 
+const SpotValue = 10
+
 func FeatureExtractCountDominoDots(img image.Image) image.Image {
 	found := false
 	alreadyIncremented := false
 	rowCompleted := 0
-	matrix := generateMatrix(img)
-	count := 0
+	var positionsFound [][]int
 
 	// apply the grayscale filter
 	tempImage := FilterGrayScale(img)
@@ -20,56 +21,37 @@ func FeatureExtractCountDominoDots(img image.Image) image.Image {
 	tempImage = FilterMedianBlur(tempImage, 9)
 
 	// apply sobel border detection
-	tempImage = FilterSobelBorderDetection(tempImage, 255)
+	tempImage = FilterSobelBorderDetection(tempImage, 175)
 
 	// erode the image once
-	tempImage = MathMorpDilation(tempImage)
-
-	// erode the image twice
 	tempImage = MathMorpErosion(tempImage)
 
-	// new ------------------------------------------------------
-	// median blur
-	tempImage = FilterMedianBlur(tempImage, 9)
-	// dilation
-	tempImage = MathMorpDilation(tempImage)
-	// new ------------------------------------------------------
-
-	//tempImage = MathMorpErosion(tempImage)
-	//
-	//// dilate the image thrice
-	//tempImage = MathMorpDilation(tempImage)
-	//tempImage = MathMorpDilation(tempImage)
-	//tempImage = MathMorpDilation(tempImage)
-	//
 	resultImg := image.NewRGBA(img.Bounds())
 
 	// iterate over all x and y, when a white spot is found, increase count
-	for y := 0; y < img.Bounds().Dx(); y++ {
-		for x := 0; x < img.Bounds().Dy(); x++ {
+	for y := 1; y < img.Bounds().Dy()-5; y++ {
+		for x := 1; x < img.Bounds().Dx()-5; x++ {
 			r, _, _, _ := tempImage.At(x, y).RGBA()
-			if found == false && (r/256) >= 100 {
+			if found == false && (r/256) <= SpotValue {
 				if alreadyIncremented == false {
 					alreadyIncremented = true
-					count++
+					positionsFound = append(positionsFound, []int{x, y})
 					rowCompleted++
+
+					pixel := color.NRGBA{
+						R: 0,
+						G: 0,
+						B: 255,
+						A: 255,
+					}
+					resultImg.Set(x, y, pixel)
 				}
 				found = true
-			} else if found == true && (r/256) == 0 {
+			} else if found == true && (r/256) > SpotValue {
 				found = false
-				if noWhiteNeighboursUpdated(x, y, tempImage) {
+				if noSpotsNeighbours(x, y, tempImage) {
 					alreadyIncremented = false
 				}
-			}
-			if (r / 256) >= 100 {
-				matrix[x][y] = 1
-				pixel := color.NRGBA{
-					R: 0,
-					G: 0,
-					B: 255,
-					A: 255,
-				}
-				resultImg.Set(x, y, pixel)
 			}
 			if rowCompleted == 2 {
 				rowCompleted = 0
@@ -79,44 +61,49 @@ func FeatureExtractCountDominoDots(img image.Image) image.Image {
 		}
 	}
 
-	log.Printf("Count: %d \n", count)
+	positionsFound = validatePositions(positionsFound)
+	log.Printf("Count: %d \n", len(positionsFound))
 	return resultImg
 }
 
-func generateMatrix(img image.Image) [][]int {
-	var matrix [][]int
-	for x := 0; x < img.Bounds().Dx(); x++ {
-		var row []int
-		for y := 0; y < img.Bounds().Dy(); y++ {
-			row = append(row, 0)
-		}
-		matrix = append(matrix, row)
-	}
-	return matrix
-}
-
-func noWhiteNeighbours(x, y int, matrix [][]int) bool {
-	for innerX := -2; innerX < 2; innerX++ {
-		for innerY := -2; innerY < 2; innerY++ {
-			if matrix[x-innerX][y-innerY] == 1 {
-				return false
-			}
-		}
-	}
-	return true
-}
-
-func noWhiteNeighboursUpdated(x, y int, img image.Image) bool {
+func noSpotsNeighbours(x, y int, img image.Image) bool {
 	for innerX := -1; innerX < 1; innerX++ {
-		for innerY := -1; innerY < 1; innerY++ {
+		for innerY := -1; innerY <= 1; innerY++ {
 			r, _, _, _ := img.At(x-innerX, y-innerY).RGBA()
 			newR := uint8(r / 256)
-			if newR >= 255 {
+			if newR <= SpotValue {
 				return false
 			}
 		}
 	}
 	return true
+}
+
+func validatePositions(positions [][]int) [][]int {
+	removedValues := 0
+	for i, value := range positions {
+		if invalidPos(i, removedValues, value[0], value[1], positions) {
+			positions = append(positions[:i-removedValues], positions[i+1-removedValues:]...)
+			removedValues++
+		}
+	}
+	return positions
+}
+
+func invalidPos(index, removedValues, x, y int, positions [][]int) bool {
+	for i := -2; i <= 2; i++ {
+		for j := -2; j <= 2; j++ {
+			for innerIndex, v := range positions {
+				if innerIndex-removedValues == index-removedValues || i == 0 && j == 0 {
+					continue
+				}
+				if v[0] == x-i && v[1] == y-j {
+					return true
+				}
+			}
+		}
+	}
+	return false
 }
 
 /*
